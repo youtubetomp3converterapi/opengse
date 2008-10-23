@@ -1,0 +1,176 @@
+=== JSR-000154 (Maintenance Release 2) Servlet 2.5 ===
+
+>>> Note: the following "metrics" are extracted from the spec doc in its original order/format. For tracking purpose, do not alter or remove.
+
+Recommended Behaviors:
+
+    [N/A] SRV.19.0.1 Session Clarification - cross-context session propagation (dispatcher)
+    [YES] SRV.19.0.2 Filter All Dispatches - * matching servlets
+    [YES] SRV.19.0.3 Multiple Occurrences of Servlet Mappings - web.xml schema update
+    [YES] SRV.19.0.4 Multiple Occurrences Filter Mappings - web.xml                                 
+    [N/A] SRV.19.0.8 SRV.9.9 ("Error Handling") Requirement Removed
+
+Incremental Changes (since 2.3):
+
+    [2.4] Optional "X-Powered-By" header is added in the response (5.2)
+    [N/A] Clarification of "overlapping constraint" (12.8.1, 12.8.2)                                *** EE
+    [N/A] Add the section to clarify the process order at the time of web application deployment (9.12)
+    [N/A] Clarification that the security model is also applied to filter (12.2)                    *** EE
+    [YES] Change the status code from 401 to 200 when FORM authentication is failed as there is no appropriate error status code in HTTP/1.1 (12.5.3)        *** TBD
+    [N/A] Clarification of the wrapper objects (6.2.2)
+    [N/A] Clarification of overriding the platform classes (9.7.2)
+    [N/A] Clarification of welcome file (9.10)
+    [N/A] Clarification of internationalization - the relationship among setLocale, set-ContentType, and setCharacterEncoding (5.4, 14.2.22)                 *** TBD
+    [YES] Clarification of ServletRequestListener and ServletRequestAttributeListener description (14.2.18, 14.2.20)
+    [N/A] Add HttpSessionActivationListener and HttpSessionBindingListener into the Table 10-1.
+    [N/A] Change the word "auth constraint" to "authorization constraint" (12.8)
+    [N/A] Add "Since" tag in the newly added methods in javadoc(14.2.16, 14.2.22)
+    [N/A] Fix the data type of <session-timeout> to xsdIntegerType in schema(13.3)
+    [2.4] Clarification when the listener throws the unhandled exception(10.6)
+    [N/A] Clarification of the "shared library"(9.7.1)
+    [2.4] Clarification of the container's mechanism for the extension(9.7.1, third paragraph)
+    [N/A] HttpSession.logout method was removed. The portable authentication mechanism will be addressed in the next version of this specification and logout will also be discussed in that scope.(12.10)
+    [N/A] It is now a recommendation, instead of a requirement, that the reference to the request and response object should not be given to the object in other threads - based on the requirement from JSR-168. Warnings are added when the thread created by the application uses the objects managed by the container.(2.3.3.3)
+    [N/A] It is now a recommendation, that the dispatch should occur in the same thread of the same JVM as the original request - based on the requirement from JSR-168(8.2)
+    [N/A] Clarification of "wrap" (6.2.2)
+    [N/A] Clarification of handling the path parameter for the mapping(11.1)
+    [N/A] Add the description about the "HTTP chunk" in HttpServlet.doGet method (15.1.2)
+    [N/A] J2SE 1.3 is the minimum version of the underlying Java platform with which servlet containers must be built (1.2)
+    [YES] Clarification of ServletResponse.setBufferSize method (5.1)
+    [2.4] Clarification of ServletRequest.getServerName and getServerPort (14.2.16.1)
+    [N/A] Clarification of Internationalization (5.4, 14.2.22)
+    [YES] Clarification of the redirection of the welcome file (9.10)
+    [YES] Clarification of ServletContextListener.contextInitialized (14.2.12.1)
+    [N/A] Clarification of HttpServletRequest.getRequestedSessionId - making it clear that it returns the session ID specified by the client (15.1.3.2)
+    [N/A] Clarification of the class loader for the extensions - the class loader must be the same for all web applications within the same JVM (9.7.1)
+    [YES] Clarification of the case when ServletRequestListener throws an unhandled exception (10.6, 14.2.20)
+    [YES] Clarification of the scope of ServletRequestListener (14.2.20)
+    [N/A] Add the description about the case when the container has a caching mechanism (1.2)
+    [N/A] Validating deployment descriptor against the schema is required for Java EE containers (13.2)                 *** EE
+    [N/A] Sub elements under <web-app> can be in an arbitrary order (13.2)
+    [N/A] One example of the container's rejecting the web application was removed due to the contradiction with SRV.11.1 (9.5)
+    [N/A] url-patternType is changed from j2ee:string to xsd:string (13)
+    [N/A] The sub-elements under <web-app> in deployment descriptor can be in the arbitrary order (13)
+    [N/A] The container must inform a developer with a descriptive error message when deployment descriptor file contains an illegal character or multiple elements of <session-config>, <jsp-config>, or <login-config> (13)
+    [2.4] Extensibility of deployment descriptor was removed (13)
+    [2.4] Section SRV.1.6 added - describing the compatibility issue with the previous version of this specification (1.6)
+    [YES] New attributes are added in RequestDispatcher.forward method (8.4.2)
+    [YES] New methods in ServletRequest interface and ServletRequestWrapper (14.2.16.1)
+    [2.4] The interface SingleThreadModel was deprecated ((2.2.1, 2.3.3.1, 14.2.24)
+    [YES] Change the name of the method ServletRequestEvent.getRequest to ServletRequestEvent.getServletRequest (14.2.19.2)
+    [2.4] Clarification of the "request" to access to WEB-INF directory (9.5)
+    [N/A] Clarification of the behavior of ServletRequest.setAttribute - change "value" to "object" in "If the value passed in is null," (14.2.16.1)
+    [YES] Fix the inconsistency between this specification and HttpServletRequest, get-ServletPath - the return value starts with "/" (15.1.3.2)
+    [YES] Fix the inconsistency between this specification and HttpServletRequest.get-PathInfo - the return value starts with "/" (15.1.3.2)
+    [YES] Fix the inconsistency between this specification and HttpServletRequest.get-PathTranslated - add the case when the container cannot translate the path (15.1.3.2)
+    [N/A] Allow HttpServletRequest.getAuthType to return not only pre-defined fourauthentication scheme but also the container-specific scheme (15.1.3.2)                             *** TBD
+    [2.4] Change the behavior of ttpSessionListener.sessionDestroyed to notify before the session is invalidated (15.1.14.1)
+    [N/A] Fix the wrong status code of 403 to 404 (9.5, 9.6)
+    [N/A] Element "taglib" should be "jsp-config" (13.2)
+    [N/A] Fix the version number of JSP specification to 2.0
+    [N/A] Fix the wrong formats (5.5, 6.2.5, 12.8.3, 12.9)
+    [N/A] HTTP/1.1 is now required (1.2)
+    [N/A] <url-pattern> in <web-resource-collection> is mandatory (13.4)              *** EE
+    [N/A] Clarification of IllegalArgumentException in the distributed environments(7.7.2)
+    [YES] Clarification of error page handling (9.9.1, 9.9.2, 9.9.3, 6.2.5)
+    [N/A] Clarification of Security Constraints, especially in the case of overlapping constraints (12.8)         *** EE
+    [YES] Clarification of the case when <session-timeout> element is not specified (13.4)
+    [YES] Clarification of the case when the resource is permanently unavailable (2.3.3.2)
+    [N/A] Add missing getParameterMap() in the enumerated list (4.1)
+    [YES] Clarification of the status code when /WEB-INF/ resource is accessed (9.5)
+    [YES] Clarification of the status code when /META-INF/ resource is accessed (9.6)
+    [N/A] Change xsd:string to j2ee:string in deployment descriptor (13.4)
+    [N/A] Extensibility of deployment descriptors (SRV.13)
+    [N/A] XML Schema definition of deployment descriptor (SRV.13)
+    [2.4] Request listeners (SRV.10 and API change) New API: ServletRequestListener, ServletRequestAttributeListener and associated event classes
+    [2.4] Ability to use Filters under the Request Dispatcher (6.2.5)
+    [N/A] Required class loader extension mechanism (9.7.1)
+    [2.4] Listener exception handling (10.6)
+    [2.4] Listener order vs. servlet init()/destroy() clarification (ServletContextListener javadoc change)
+    [YES] Servlets mapped to WEB-INF / response handling (9.5)
+    [2.4] Request dispatcher / path matching rules (8.1)
+    [2.4] Welcome files can be servlets (9.10)
+    [N/A] Internationalization enhancements (5.4, 14,2,22, 15.1.5)
+    [2.4] SC_FOUND(302) addition (15.1.5)
+    [2.4] "Relative path" in getRequestDispatcher() must be relative against the current servlet (8.1)
+    [N/A] Bug fix in the example of XML (13.7.2)
+    [2.4] Clarification of access by getResource "only to the resource" (3.5)
+    [2.4] Clarification of SERVER_NAME and SERVER_PORT in getServerName() and getServerPort() (14.2.16)
+    [N/A] Clarification: "run-as" identity must apply to all calls from a servlet including init() and destroy() (12.7)        *** EE
+    [N/A] Login/logout description and methods added (12.10, 15.1.7)                 *** EE
+
+
+
+
+Appendix:
+
+SRV.19.0.2 Filter All Dispatches
+
+    Modified Section SRV.6.2.5, “Filters and the RequestDispatcher” to clarify a way to
+    map a filter to all servlet dispatches by appending the following text to the end of the
+    section:
+
+    Finally, the following code uses the special servlet name '*':
+        <filter-mapping>
+        <filter-name>All Dispatch Filter</filter-name>
+        <servlet-name>*</servlet-name>
+        <dispatcher>FORWARD</dispatcher>
+        </filter-mapping>
+
+    This code would result in the All Dispatch Filter being invoked on request dispatcher
+    forward() calls for all request dispatchers obtained by name or by path.
+    SRV.19.0.3 Multiple Occurrences of Servlet Mappings
+    Previous versions of the servlet schema allows only a single url-pattern or servlet
+    name per servlet mapping. For servlets mapped to multiple URLs this results in
+    needless repetition of whole mapping clauses.
+
+    The deployment descriptor servlet-mappingType was updated to:
+        <xsd:complexType name="servlet-mappingType">
+        <xsd:sequence>
+        <xsd:element name="servlet-name" type="j2ee:servlet-nameType"/>
+        <xsd:element name="url-pattern" type="j2ee:url-patternType" minOccurs="1"
+        maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+        </xsd:complexType>
+
+
+SRV.19.0.4 Multiple Occurrences Filter Mappings
+    Previous versions of the servlet schema allows only a single url-pattern in a filter
+    mapping. For filters mapped to multiple URLs this results in needless repetition of
+    whole mapping clauses.
+    The deployment descriptor schema the filter-mappingType was updated
+    to:
+        <xsd:complexType name="filter-mappingType">
+        <xsd:sequence>
+        <xsd:element name="filter-name" type="j2ee:filter-nameType"/>
+        <xsd:choice minOccurs="1" maxOccurs="unbounded">
+        <xsd:element name="url-pattern" type="j2ee:url-patternType"/>
+        <xsd:element name="servlet-name" type="j2ee:servlet-nameType"/>
+        </xsd:choice>
+        <xsd:element name="dispatcher" type="j2ee:dispatcherType" minOccurs="0"
+        maxOccurs="4"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID"/>
+        </xsd:complexType>
+    This change allows multiple patterns and servlet names to be defined in a single
+    mapping as can be seen in the following example:
+        <filter-mapping>
+        <filter-name>Demo Filter</filter-name>
+        <url-pattern>/foo/*</url-pattern>
+        <url-pattern>/bar/*</url-pattern>
+        <servlet-name>Logger</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+        </filter-mapping>
+
+
+Section SRV.6.2.4, “Configuration of Filters in a Web Application” was
+
+    updated to clarify the cases where there are multiple mappings with the following
+    text:
+    "If a filter mapping contains both <servlet-name> and <url-pattern>, the
+    container must expand the filter mapping into multiple filter mappings (one for
+    each <servlet-name> and <url-pattern>), preserving the order of the <servletname>
+    and <url-pattern> elements."
+    

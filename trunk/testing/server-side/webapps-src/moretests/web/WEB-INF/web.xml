@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+           version="2.5">
+
+  <display-name>MoreTests</display-name>
+  <description>More Tests for 2.4/2.5 compliance.</description>
+
+  <listener>
+    <listener-class>
+      com.google.opengse.testlet.ServletContext.MyServletContextListener
+    </listener-class>
+  </listener>
+
+  <listener>
+    <listener-class>
+      com.google.opengse.testlet.ServletRequest.MyServletRequestListener
+    </listener-class>
+  </listener>
+
+  <listener>
+    <listener-class>
+      com.google.opengse.testlet.ServletRequest.MyServletRequestAttributeListener
+    </listener-class>
+  </listener>
+
+  <listener>
+    <listener-class>
+      com.google.opengse.testlet.ServletContext.ServletContextListener1
+    </listener-class>
+  </listener>
+  <listener>
+    <listener-class>
+      com.google.opengse.testlet.ServletContext.ServletContextListener2
+    </listener-class>
+  </listener>
+
+  <servlet>
+    <servlet-name>SessionCookieTestlet</servlet-name>
+    <servlet-class>com.google.opengse.testlet.HttpSession.SessionCookieTestlet</servlet-class>
+  </servlet>
+
+
+  <servlet>
+    <servlet-name>URITestlet</servlet-name>
+    <servlet-class>com.google.opengse.testlet.URITestlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>HeaderTestlet</servlet-name>
+    <servlet-class>com.google.opengse.testlet.HeaderTestlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Forward</servlet-name>
+    <servlet-class>com.google.opengse.testlet.ForwardTestlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>RequestInitializedEventTest</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.ServletRequest.RequestInitializedEventTestlet
+    </servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>RequestDestroyedEventTest</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.ServletRequest.RequestDestroyedEventTestlet
+    </servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>AttributeAddedEventTest</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.ServletRequest.AttributeAddedEventTestlet
+    </servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>AttributeRemovedEventTest</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.ServletRequest.AttributeRemovedEventTestlet
+    </servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>AttributeReplacedEventTest</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.ServletRequest.AttributeReplacedEventTestlet
+    </servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>GetContextPathTest</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.ServletContext.GetContextPathTestlet
+    </servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>GetServletContextNameTest</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.ServletContext.GetServletContextNameTestlet
+    </servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>XPoweredByHeaderTest</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.ServletResponse.XPoweredByHeaderTestlet
+    </servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>SessionCookieTestlet</servlet-name>
+    <url-pattern>/gimmecookie</url-pattern>
+  </servlet-mapping>
+
+
+  <servlet-mapping>
+    <servlet-name>Forward</servlet-name>
+    <url-pattern>/fwd</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>GetContextPathTest</servlet-name>
+    <url-pattern>/GetContextPathTest</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>GetServletContextNameTest</servlet-name>
+    <url-pattern>/GetServletContextNameTest</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>URITestlet</servlet-name>
+    <url-pattern>*.test</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>HeaderTestlet</servlet-name>
+    <url-pattern>*.hdr</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>RequestInitializedEventTest</servlet-name>
+    <url-pattern>/RequestInitializedEventTest</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>RequestDestroyedEventTest</servlet-name>
+    <url-pattern>/RequestDestroyedEventTest</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>AttributeAddedEventTest</servlet-name>
+    <url-pattern>/AttributeAddedEventTest</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>AttributeRemovedEventTest</servlet-name>
+    <url-pattern>/AttributeRemovedEventTest</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>AttributeReplacedEventTest</servlet-name>
+    <url-pattern>/AttributeReplacedEventTest</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>XPoweredByHeaderTest</servlet-name>
+    <url-pattern>/XPoweredByHeaderTest</url-pattern>
+  </servlet-mapping>
+
+  <filter>
+    <filter-name>ServletRequestFilter</filter-name>
+    <filter-class>com.google.opengse.testlet.Filter.ServletRequestFilter</filter-class>
+  </filter>
+
+  <filter>
+    <filter-name>ServletIncludeFilter</filter-name>
+    <filter-class>com.google.opengse.testlet.Filter.ServletIncludeFilter</filter-class>
+  </filter>
+
+  <filter>
+    <filter-name>ServletForwardFilter</filter-name>
+    <filter-class>com.google.opengse.testlet.Filter.ServletForwardFilter</filter-class>
+  </filter>
+
+  <filter>
+    <filter-name>ServletErrorFilter</filter-name>
+    <filter-class>com.google.opengse.testlet.Filter.ServletErrorFilter</filter-class>
+  </filter>
+
+  <servlet>
+    <servlet-name>DispatcherFilterTest</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.Filter.DispatcherFilterTestlet
+    </servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>DispatcherForward</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.Filter.DispatcherForwardServlet
+    </servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>DispatcherInclude</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.Filter.DispatcherIncludeServlet
+    </servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>DispatcherFilterTest</servlet-name>
+    <url-pattern>/DispatcherFilterTest</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>DispatcherFilterTest</servlet-name>
+    <url-pattern>/ForwardedDispatcherFilterTest</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>DispatcherFilterTest</servlet-name>
+    <url-pattern>/IncludedDispatcherFilterTest</url-pattern>
+  </servlet-mapping>
+
+  <filter-mapping>
+    <filter-name>ServletRequestFilter</filter-name>
+    <url-pattern>/DispatcherFilterTest</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
+
+  <servlet-mapping>
+    <servlet-name>DispatcherForward</servlet-name>
+    <url-pattern>/DispatcherForward</url-pattern>
+  </servlet-mapping>
+
+  <filter-mapping>
+    <filter-name>ServletForwardFilter</filter-name>
+    <url-pattern>/ForwardedDispatcherFilterTest</url-pattern>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <servlet-mapping>
+    <servlet-name>DispatcherInclude</servlet-name>
+    <url-pattern>/DispatcherInclude</url-pattern>
+  </servlet-mapping>
+
+  <filter-mapping>
+    <filter-name>ServletIncludeFilter</filter-name>
+    <url-pattern>/IncludedDispatcherFilterTest</url-pattern>
+    <dispatcher>INCLUDE</dispatcher>
+  </filter-mapping>
+
+
+  <!-- error dispatch -->
+
+  <servlet-mapping>
+    <servlet-name>DispatcherFilterTest</servlet-name>
+    <url-pattern>/ErroredDispatcherFilterTest</url-pattern>
+  </servlet-mapping>
+
+  <filter-mapping>
+    <filter-name>ServletErrorFilter</filter-name>
+    <url-pattern>/ErroredDispatcherFilterTest</url-pattern>
+    <dispatcher>ERROR</dispatcher>
+  </filter-mapping>
+
+  <error-page>
+    <error-code>599</error-code>
+    <location>/ErroredDispatcherFilterTest</location>
+  </error-page>
+
+  <servlet>
+    <servlet-name>Error599</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.Filter.Error599Servlet
+    </servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>Error599</servlet-name>
+    <url-pattern>/Error599</url-pattern>
+  </servlet-mapping>
+
+  <!-- end error dispatch -->
+
+  <filter>
+    <filter-name>WildcardServleDispatchFilter</filter-name>
+    <filter-class>com.google.opengse.testlet.Filter.WildcardServleDispatchFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>WildcardServleDispatchFilter</filter-name>
+    <servlet-name>*</servlet-name>   
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>MixedMatchingFilter</filter-name>
+    <filter-class>com.google.opengse.testlet.Filter.MixedMatchingFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>MixedMatchingFilter</filter-name>
+    <url-pattern>/DispatcherInclude</url-pattern>
+    <url-pattern>/DispatcherForward</url-pattern>
+    <servlet-name>DispatcherFilterTest</servlet-name>  <!-- request dispatch test servlet -->
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+
+  <!-- following two servlets and two filters are used to verify the ordering of filters and the multiple servlet filter mapping -->
+
+  <servlet>
+    <servlet-name>FilterOrder1Testlet</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.Filter.FilterOrder1Testlet
+    </servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>FilterOrder1Testlet</servlet-name>
+    <url-pattern>/FilterOrder1Testlet</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>FilterOrder2Testlet</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.Filter.FilterOrder2Testlet
+    </servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>FilterOrder2Testlet</servlet-name>
+    <url-pattern>/FilterOrder2Testlet</url-pattern>
+  </servlet-mapping>
+
+  <filter>
+    <filter-name>FilterOrder1Filter</filter-name>
+    <filter-class>com.google.opengse.testlet.Filter.FilterOrder1Filter</filter-class>
+  </filter>
+
+  <filter>
+    <filter-name>FilterOrder2Filter</filter-name>
+    <filter-class>com.google.opengse.testlet.Filter.FilterOrder2Filter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>FilterOrder2Filter</filter-name>        <!-- No. 2 comes first -->
+    <servlet-name>FilterOrder1Testlet</servlet-name>
+    <servlet-name>FilterOrder2Testlet</servlet-name>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>FilterOrder1Filter</filter-name>
+    <servlet-name>FilterOrder2Testlet</servlet-name>
+    <servlet-name>FilterOrder1Testlet</servlet-name>
+  </filter-mapping>
+
+  <!-- end -->
+
+
+  <listener>
+    <listener-class>com.google.opengse.testlet.Error.SessionAttributeChangeListener</listener-class>
+  </listener>
+
+  <listener>
+    <listener-class>com.google.opengse.testlet.Error.SessionTimeoutListener</listener-class>
+  </listener>
+
+  <servlet>
+    <servlet-name>UnhandledSessionExceptionTest</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.Error.UnhandledSessionExceptionTestlet
+    </servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>UnhandledSessionExceptionTest</servlet-name>
+    <url-pattern>/UnhandledSessionExceptionTest</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ServletContextListenerOrderTest</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.ServletContext.ServletContextListenerOrderTestlet
+    </servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ServletContextListenerOrderTest</servlet-name>
+    <url-pattern>/ServletContextListenerOrderTest</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>WebInfResourceTest</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.WebApp.WebInfResourceTestlet
+    </servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>WebInfResourceTest</servlet-name>
+    <url-pattern>/WebInfResourceTest</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>GetRequestDispatcherPathTest</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.ServletRequest.GetRequestDispatcherPathTestlet
+    </servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>GetRequestDispatcherPathTest</servlet-name>
+    <url-pattern>/subcontextpath/GetRequestDispatcherPathTest</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>DispatchTargetServlet</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.ServletRequest.DispatchTargetServlet
+    </servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>DispatchTargetServlet</servlet-name>
+    <url-pattern>/subcontextpath/DispatchTargetServlet</url-pattern>
+  </servlet-mapping>
+
+  <welcome-file-list>
+    <welcome-file>welcome1.txt</welcome-file>
+    <welcome-file>welcome2.txt</welcome-file>
+  </welcome-file-list>
+
+  <servlet>
+    <servlet-name>StaticFileIncludeTest</servlet-name>
+    <servlet-class>
+      com.google.opengse.testlet.WebApp.StaticFileIncludeTestlet
+    </servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>StaticFileIncludeTest</servlet-name>
+    <url-pattern>/StaticFileIncludeTest</url-pattern>
+  </servlet-mapping>
+
+
+
+
+
+</web-app>

@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	     version="2.4"> 
+	
+    <display-name>Test web.xml file</display-name>
+    <description>
+        Test web.xml file
+    </description>
+
+	<filter>
+		<filter-name>filter1</filter-name>
+		<filter-class>com.google.experimental.mwomack.webxml.WebXmlConfiguratorTest$MockFilter1</filter-class>
+		<init-param>
+			<param-name>param1</param-name>
+			<param-value>value1</param-value>
+		</init-param>
+		<init-param>
+			<param-name>param2</param-name>
+			<param-value>value2</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>filter2</filter-name>
+		<filter-class>com.google.experimental.mwomack.webxml.WebXmlConfiguratorTest$MockFilter2</filter-class>
+		<init-param>
+			<param-name>param11</param-name>
+			<param-value>value11</param-value>
+		</init-param>
+		<init-param>
+			<param-name>param22</param-name>
+			<param-value>value22</param-value>
+		</init-param>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>filter1</filter-name>
+		<servlet-name>servlet1</servlet-name>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>filter2</filter-name>
+		<servlet-name>servlet1</servlet-name>
+	</filter-mapping>
+	
+	<servlet>
+		<servlet-name>servlet1</servlet-name>
+		<servlet-class>com.google.experimental.mwomack.webxml.WebXmlConfiguratorTest$MockServlet1</servlet-class>
+	</servlet>
+	
+</web-app>

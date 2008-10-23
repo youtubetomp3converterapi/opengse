@@ -1,0 +1,5 @@
+=== JSR-000053 Servlet 2.3 ===
+
+Evaluated with jakarta-watchdog-4.0.0, all tests passed.
+
+** It seems that we can't deploy more than one webapp at the same time, and therefore the two servlet "compat" TCs will "fail".  

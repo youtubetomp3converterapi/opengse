@@ -1,0 +1,13 @@
+URL: http://jakarta.apache.org/builds/jakarta-watchdog-4.0/test/v4.0.0/
+License File: LICENSE
+Licenses: The Apache Software License, Version 1.1 
+
+Description:
+"Watchdog 4.0 is a set of validation tests that can be run against a
+ Servlet 2.3 / JSP 1.2 container (such as Tomcat 4.0 or Tomcat 4.1)
+ to identify potential problems with conformance to the corresponding specifications.
+ While it is not the official TCK for the Servlet or JSP specifications,
+ the tests it performs are similar."
+
+Local Modifications: none
+

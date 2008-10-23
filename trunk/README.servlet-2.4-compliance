@@ -1,0 +1,151 @@
+=== JSR-000154 (Final Release) Servlet 2.4 ===
+
+>>> Note: the following "metrics" are extracted from the spec doc in its original order/format. For tracking purpose, do not alter or remove.
+
+API:
+
+    [YES] HttpSessionListener.sessionDestroyed occurs before the session is destroyed
+    [YES] ServletRequest:   getRemotePort()?  getLocalName()? getLocalAddr()? getLocalPort()
+    [YES] deprecated SingleThreadModel              *** we are not using this anyway
+    [N/A] JSESSIONID                                *** no need to comply
+
+Recommended Behaviors:
+
+    [YES] X-Powered-By header support
+    [N/A] "distributed" container support, HttpSessionActivationListener          *** optional
+    [N/A] dynamic reloading                                                       *** optional
+
+Incremental Changes (since 2.3):
+
+    [N/A] Extensibility of deployment descriptors (SRV.13)         *** EE
+    [N/A] XML Schema definition of deployment descriptor (SRV.13)
+    [YES] Request listeners (SRV.10 and API change) New API: ServletRequestListener, ServletRequestAttributeListener and associated event classes
+    [YES] Ability to use Filters under the Request Dispatcher (6.2.5)
+    [N/A] Required class loader extension mechanism (9.7.1)        *** EE
+    [YES] Listener exception handling (10.6)                        
+    [YES] Listener order vs. servlet init()/destroy() clarification (ServletContextListener javadoc change)    
+    [YES] Servlets mapped to WEB-INF / response handling (9.5)           
+    [YES] Request dispatcher / path matching rules (8.1)
+    [YES] Welcome files can be servlets (9.10)
+    [N/A] Internationalization enhancements (5.4, 14,2,22, 15.1.5)        *** TBD
+    [N/A] SC_FOUND(302) addition (15.1.5)   n/a
+    [YES] "Relative path" in getRequestDispatcher() must be relative against the current servlet (8.1)     
+    [N/A] Bug fix in the example of XML (13.7.2)
+    [N/A] Clarification of access by getResource "only to the resource" (3.5)
+    [N/A] Clarification of SERVER_NAME and SERVER_PORT in getServerName() and getServerPort() (14.2.16)
+    [N/A] Clarification: "run-as" identity must apply to all calls from a servlet including init() and destroy() (12.7)    *** EE
+    [N/A] Login/logout description and methods added (12.10, 15.1.7)       *** EE
+
+
+
+Appedix:
+
+SRV.6.2.5         Filters and the RequestDispatcher
+
+    New for version 2.4 of the Java Servlet specification is the ability to configure filters
+    to be invoked under request dispatcher forward() and include() calls.
+
+    By using the new <dispatcher> element in the deployment descriptor, the
+    developer can indicate for a filter-mapping whether he would like the filter to be
+    applied to requests when:
+      1. The request comes directly from the client.
+         This is indicated by a <dispatcher> element with value REQUEST,
+         or by the absence of any <dispatcher> elements.
+      2. The request is being processed under a request dispatcher representing the
+         Web component matching the <url-pattern> or <servlet-name> using a for-
+         ward() call.
+         This is indicated by a <dispatcher> element with value FORWARD.
+      3. The request is being processed under a request dispatcher representing the
+         Web component matching the <url-pattern> or <servlet-name> using an in-
+         clude() call.
+         This is indicated by a <dispatcher> element with value INCLUDE.
+      4. The request is being processed with the error page mechanism specified in Er-
+         ror Handling on page 73 to an error resource matching the <url-pattern>.
+         This is indicated by a <dispatcher> element with the value ERROR.
+      5. Or any combination of 1, 2, 3, or 4 above.
+         For example:
+           <filter-mapping>
+           <filter-name>Logging Filter</filter-name>
+           <url-pattern>/products/*</url-pattern>
+           </filter-mapping>
+    would result in the Logging Filter being invoked by client requests starting /
+    but not underneath a request dispatcher call where the request products/...
+    dispatcher has path commencing /products/.... The following code:
+           <filter-mapping>
+           <filter-name>Logging Filter</filter-name>
+           <servlet-name>ProductServlet</servlet-name>
+           <dispatcher>INCLUDE</dispatcher>
+           </filter-mapping>
+    would result in the Logging Filter not being invoked by client requests to the
+    ProductServlet, nor underneath a request dispatcher forward() call to the Prod-
+    uctServlet, but would be invoked underneath a request dispatcher include() call
+    where the request dispatcher has a name commencing ProductServlet.
+
+    Finally,
+           <filter-mapping>
+           <filter-name>Logging Filter</filter-name>
+           <url-pattern>/products/*</url-pattern>
+           <dispatcher>FORWARD</dispatcher>
+           <dispatcher>REQUEST</dispatcher>
+           </filter-mapping>
+    would result in the Logging Filter being invoked by client requests starting /
+    products/... and underneath a request dispatcher forward() call where the
+    request dispatcher has path commencing /products/....
+
+
+SRV.9.10 Welcome Files
+
+    Web Application developers can define an ordered list of partial URIs called
+    welcome files in the Web application deployment descriptor. The deployment
+    descriptor syntax for the list is described in the Web application deployment
+    descriptor schema.
+
+    The purpose of this mechanism is to allow the deployer to specify an ordered
+    list of partial URIs for the container to use for appending to URIs when there is a
+    request for a URI that corresponds to a directory entry in the WAR not mapped to
+    a Web component. This kind of request is known as a valid partial request.
+    The use for this facility is made clear by the following common example: A
+    welcome file of ‘index.html’ can be defined so that a request to a URL like
+    host:port/webapp/directory/, where ‘directory’ is an entry in theWAR that is
+    not mapped to a servlet or JSP page, is returned to the client as ‘host:port/
+    webapp/directory/index.html’.
+
+    If a Web container receives a valid partial request, the Web container must
+    examine the welcome file list defined in the deployment descriptor. The welcome
+    file list is an ordered list of partial URLs with no trailing or leading /. The Web
+    server must append each welcome file in the order specified in the deployment
+    descriptor to the partial request and check whether a static resource or servlet in
+    theWAR is mapped to that request URI. TheWeb container must send the request
+    to the first resource in the WAR that matches. The container may send the request
+    to the welcome resource with a forward, a redirect, or a container specific
+    mechanism that is indistinguishable from a direct request.
+
+    If no matching welcome file is found in the manner described, the container
+    may handle the request in a manner it finds suitable. For some configurations this
+    may mean returning a directory listing or for others returning a 404 response.
+    Consider a Web application where:
+      • The deployment descriptor lists the following welcome files.
+          <welcome-file-list>
+          <welcome-file>index.html</welcome-file>
+          <welcome-file>default.jsp</welcome-file>
+          </welcome-file-list>
+      • The static content in the WAR is as follows
+          /foo/index.html
+          /foo/default.jsp
+          /foo/orderform.html
+          /foo/home.gif
+          /catalog/default.jsp
+          /catalog/products/shop.jsp
+          /catalog/products/register.jsp
+      • A request URI of /foo will be redirected to a URI of /foo/.
+      • A request URI of /foo/ will be returned as /foo/index.html.
+      • A request URI of /catalog will be redirected to a URI of /catalog/.
+      • A request URI of /catalog/ will be returned as /catalog/default.jsp.
+      • A request URI of /catalog/index.html will cause a 404 not found
+      • A request URI of /catalog/products will be redirected to a URI of /catalog/products/.
+      • A request URI of /catalog/products/ will be passed to the “default” servlet,
+
+    if any. If no “default” servlet is mapped, the request may cause a 404 not
+    found, may cause a directory listing including shop.jsp and register.jsp, or
+    may cause other behavior defined by the container. See Section SRV.11.2,
+    “Specification of Mappings” for the definition of “default” servlet.

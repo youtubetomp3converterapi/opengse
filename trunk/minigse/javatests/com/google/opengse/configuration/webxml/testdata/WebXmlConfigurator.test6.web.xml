@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	     version="2.4"> 
+	
+    <display-name>Test web.xml file</display-name>
+    <description>
+        Test web.xml file
+    </description>
+
+	<filter>
+		<filter-name>filter1</filter-name>
+		<filter-class>com.google.experimental.mwomack.webxml.WebXmlConfiguratorTest$MockFilter1</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>filter1</filter-name>
+		<url-pattern>urlPattern</url-pattern>
+	</filter-mapping>
+	
+	<servlet>
+		<servlet-name>servlet1</servlet-name>
+		<servlet-class>com.google.experimental.mwomack.webxml.WebXmlConfiguratorTest$MockServlet1</servlet-class>
+	</servlet>
+	
+</web-app>
