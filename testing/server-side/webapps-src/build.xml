@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="webapps" default="build">
+
+  <property name="jsp-tests.dir" value="${basedir}/jsp-tests"/>
+  <property name="moretests.dir" value="${basedir}/moretests"/>
+  <property name="servlet-compat.dir" value="${basedir}/servlet-compat"/>
+  <property name="servlet-tests.dir" value="${basedir}/servlet-tests"/>
+  <property name="performance.dir" value="${basedir}/performance"/>
+
+  <target name="build">
+    <ant dir="${jsp-tests.dir}"/>
+    <ant dir="${moretests.dir}"/>
+    <ant dir="${servlet-compat.dir}"/>
+    <ant dir="${servlet-tests.dir}" />
+    <ant dir="${performance.dir}"/>
+  </target>
+
+</project>

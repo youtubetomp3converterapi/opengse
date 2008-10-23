@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="opengse" default="help">
+
+  <property name="opengse.jar" value="${basedir}/minigse/opengse.jar"/>
+  
+  <target name="help">
+    <echo>
+  Helpful targets:
+
+    build-minigse:  Creates the opengse.jar file in ${basedir}/minigse
+      Use this "mini" servlet engine to run the server-side tests
+
+    build-wars: Creates the war files used for server-side testing. These
+      war files can be deployed in any servlet engine (not just the "mini" servlet engine)
+
+    deploy-wars-in-mini-engine: Deploys the war files used for server-side testing
+      in the "mini" servlet engine
+    </echo>
+  </target>
+
+
+  <target name="build-minigse">
+    <ant dir="${basedir}/minigse"/>
+  </target>
+
+
+  <target name="build-wars">
+    <ant dir="${basedir}/testing/server-side/webapps-src"/>
+  </target>
+
+  <target name="deploy-wars-in-mini-engine">
+    <available property="opengse.jar.exists" file="${opengse.jar}"/>
+    <fail unless="opengse.jar.exists"
+          message="Cannot find ${opengse.jar} please build it with the build-minigse target"/>
+    <java
+        jar="${opengse.jar}"
+        fork="true"
+        >
+      <arg value="--webapps=${basedir}/testing/server-side/webapps"/>
+      <arg value="--port=8080"/>
+    </java>
+
+  </target>
+
+</project>

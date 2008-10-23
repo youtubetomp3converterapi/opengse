@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="minigse" default="build">
+
+  <!-- Define some directories -->
+  <property name="opengse.dir" location="${basedir}/.."/>
+  <property name="out.dir" value="${opengse.dir}/out"/>
+  <property name="classes.dir" value="${out.dir}/minigse/classes"/>
+  <property name="java.dir" value="${basedir}/java"/>
+  <property name="lib.dir" value="${basedir}/lib" />
+  <property name="global-lib.dir" value="${opengse.dir}/lib"/>
+
+  <taskdef name="propertyfile" classname="org.apache.tools.ant.taskdefs.optional.PropertyFile"
+   classpath="${opengse.dir}/lib/ant-nodeps.jar"/>
+
+  <!-- define our output jars -->
+  <property name="jar.file" value="${basedir}/opengse.jar"/>
+  <property name="src-zip.file" value="${basedir}/opengse-src.zip"/>
+  <property name="thin-jar.file" value="${basedir}/opengse-thin.jar"/>
+  <property name="jsp-support.jar" value="${basedir}/jsp-support.jar"/>
+
+  <!-- define the file that will hold the version information that we will "bake in" -->
+  <property name="version.properties" value="${classes.dir}/GSE-INF/version.properties"/>
+
+
+  <!-- Define some jars we will need -->
+  <property name="servlet.jar" value="${lib.dir}/servlet-api-2.5.jar" />
+  <property name="jsp-api.jar" value="${lib.dir}/jsp-api-2.4.jar" />
+  <property name="jstl.jar" value="${lib.dir}/jstl-1.1.jar" />
+
+  <property name="commons-logging.jar" value="${lib.dir}/commons-logging-1.1.jar" />
+  <property name="jasper-compiler.jar" value="${lib.dir}/jasper-compiler-5.0.28.jar" />
+  <property name="jasper-runtime.jar" value="${lib.dir}/jasper-runtime-5.0.28.jar" />
+  <property name="commons-el.jar" value="${lib.dir}/commons-el-1.0.jar" />
+  <property name="ant.jar" value="${lib.dir}/ant.jar" />
+  <property name="ant-launcher.jar" value="${lib.dir}/ant-launcher.jar" />
+
+  <!-- testing-related libraries -->
+  <property name="ant-junit.jar" value="${global-lib.dir}/ant-junit.jar"/>
+  <property name="junit.jar" value="${global-lib.dir}/junit-4.4.jar"/>
+
+  <!-- testing-related classpath -->
+  <path id="test.libs">
+    <pathelement path="${ant-junit.jar}"/>
+    <pathelement path="${junit.jar}"/>
+  </path>
+
+  <patternset id="compiler.resources">
+    <include name="**/?*.properties" />
+    <include name="**/?*.txt" />
+    <include name="**/?*.xml" />
+    <include name="**/?*.gif" />
+    <include name="**/?*.png" />
+    <include name="**/?*.jpeg" />
+    <include name="**/?*.jpg" />
+    <include name="**/?*.html" />
+    <include name="**/?*.dtd" />
+    <include name="**/?*.tld" />
+    <include name="**/?*.ser" />
+  </patternset>
+  
+
+  <target name="build" depends="create-classes-dir, update-version">
+
+    <echo>
+      opengse.dir = ${opengse.dir}
+      java.dir = ${java.dir}
+      opengse.version = ${opengse.version}
+      jar.file = ${jar.file}
+      thin-jar.file = ${thin-jar.file}
+      global-lib.dir = ${global-lib.dir}
+    </echo>
+
+    <touch file="${version.properties}" mkdirs="true" verbose="true" />
+
+    <propertyfile file="${version.properties}" comment="Contains version information">
+      <entry key="version" value="${opengse.version}"/>
+    </propertyfile>
+
+    <javac srcdir="${java.dir}" destdir="${classes.dir}" debug="true">
+      <!-- Notice how we only depend on javax.servlet.* classes to compile -->
+      <classpath>
+        <pathelement location="${servlet.jar}"/>
+      </classpath>
+    </javac>
+    <copy todir="${classes.dir}">
+      <fileset dir="${java.dir}">
+        <patternset refid="compiler.resources" />
+        <type type="file" />
+      </fileset>
+    </copy>
+
+    <!-- Create the source zip file -->
+    <delete file="${src-zip.file}"/>
+    <zip file="${src-zip.file}" basedir="${java.dir}"/>
+
+    <delete file="${thin-jar.file}"/>
+    <jar destfile="${thin-jar.file}" duplicate="preserve">
+      <manifest>
+        <attribute name="Main-Class" value="com.google.opengse.webapp.war.Main" />
+        <attribute name="Created-By" value="ANT" />
+        <attribute name="Manifest-Version" value="1.0" />
+      </manifest>
+      <zipfileset src="${servlet.jar}" prefix=""/>
+      <fileset dir="${classes.dir}" />
+    </jar>
+
+    <delete file="${jsp-support.jar}"/>
+    <jar destfile="${jsp-support.jar}">
+      <!-- We list each jar explicitly so we can keep the classes in the output
+           jar file to a minimum.
+           If we instead used a zipgroupfileset and a directory, then any old
+           jars thrown into the directory would get included in the output jar file
+           which would be bad. Jars get added/removed from this list rarely, so
+           listing explicitly is no big deal.
+       -->
+      <zipfileset src="${jsp-api.jar}" prefix=""/>
+      <zipfileset src="${jstl.jar}" prefix=""/>
+      <zipfileset src="${jasper-compiler.jar}" prefix=""/>
+      <zipfileset src="${jasper-runtime.jar}" prefix=""/>
+      <zipfileset src="${commons-logging.jar}" prefix=""/>
+      <zipfileset src="${commons-el.jar}" prefix=""/>
+      <zipfileset src="${ant.jar}" prefix=""/>
+      <zipfileset src="${ant-launcher.jar}" prefix=""/>
+    </jar>
+
+
+    <delete file="${jar.file}"/>
+    <jar destfile="${jar.file}" duplicate="preserve">
+      <manifest>
+        <attribute name="Main-Class" value="com.google.opengse.webapp.war.Main" />
+        <attribute name="Created-By" value="ANT" />
+        <attribute name="Manifest-Version" value="1.0" />
+      </manifest>
+      <!-- We list each jar explicitly so we can keep the classes in the output
+           jar file to a minimum.
+           If we instead used a zipgroupfileset and a directory, then any old
+           jars thrown into the directory would get included in the output jar file
+           which would be bad. Jars get added/removed from this list rarely, so
+           listing explicitly is no big deal.
+       -->
+      <zipfileset src="${servlet.jar}" prefix=""/>
+      <zipfileset src="${jsp-support.jar}" prefix=""/>
+      <fileset dir="${classes.dir}" />
+    </jar>
+    
+
+  </target>
+
+
+  <target name="create-classes-dir">
+    <delete dir="${classes.dir}"/>
+    <mkdir  dir="${classes.dir}"/>
+  </target>
+
+  <target name="update-version">
+    <tstamp/>
+    <buildnumber/>
+    <property name="opengse.version" value="0.${build.number}/${DSTAMP}${TSTAMP}" />
+  </target>
+
+
+</project>
