@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	     version="2.4"> 
+	
+    <display-name>Test web.xml file</display-name>
+    <description>
+        Test web.xml file
+    </description>
+
+    <servlet>
+		<servlet-name>servlet1</servlet-name>
+		<servlet-class>class1</servlet-class>
+	</servlet>
+
+    <servlet>
+		<servlet-name>servlet2</servlet-name>
+		<jsp-file>jspFile2</jsp-file>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+
+    <servlet>
+		<description>ignored</description>
+		<servlet-name>servlet3</servlet-name>
+		<servlet-class>class3</servlet-class>
+		<init-param>
+			<description>ignored</description>
+			<param-name>init-param1</param-name>
+			<param-value>init-value1</param-value>
+		</init-param>
+		<init-param>
+			<description>ignored</description>
+			<param-name>init-param2</param-name>
+			<param-value>init-value2</param-value>
+		</init-param>
+		<load-on-startup>4</load-on-startup>
+	</servlet>
+</web-app>

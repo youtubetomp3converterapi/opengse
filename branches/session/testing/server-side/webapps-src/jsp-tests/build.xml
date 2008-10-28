@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="jsp-tests" default="build">
+  <!-- global build properties -->
+  <property name="web.dir" value="${basedir}/web"/>
+  <property name="opengse.dir" location="${basedir}/../../../.."/>
+  <property name="server-side.dir" location="${basedir}/../.."/>
+  <property name="webapps.dir" value="${server-side.dir}/webapps"/>
+  <property name="war.file" value="${webapps.dir}/jsp-tests.war"/>
+  <property name="java.dir" value="${web.dir}/WEB-INF/java" />
+  <property name="out.dir" value="${opengse.dir}/out"/>
+  <property name="exploded.dir" value="${out.dir}/exploded"/>
+  <property name="web.exploded.dir" value="${exploded.dir}/jsp-tests"/>
+  <property name="classes.dir" value="${web.exploded.dir}/WEB-INF/classes"/>
+
+  <property name="main.lib.dir" value="${opengse.dir}/minigse/lib" />
+  <property name="servlet.jar" value="${main.lib.dir}/servlet-api-2.5.jar" />
+  <property name="jsp-api.jar" value="${main.lib.dir}/jsp-api-2.4.jar" />
+
+  <patternset id="compiler.resources">
+    <include name="**/?*.properties" />
+    <include name="**/?*.txt" />
+    <include name="**/?*.xml" />
+    <include name="**/?*.gif" />
+    <include name="**/?*.png" />
+    <include name="**/?*.jpeg" />
+    <include name="**/?*.jpg" />
+    <include name="**/?*.html" />
+    <include name="**/?*.dtd" />
+    <include name="**/?*.tld" />
+    <include name="**/?*.ser" />
+  </patternset>
+  
+
+  <target name="build" depends="create-exploded-dir">
+    <echo>
+      copying files from ${web.dir} to ${web.exploded.dir}
+    </echo>
+    <copy todir="${web.exploded.dir}">
+      <fileset dir="${web.dir}" excludes="**/WEB-INF/java/**"/>
+    </copy>
+
+    <mkdir dir="${classes.dir}"/>
+    <javac srcdir="${java.dir}"
+      destdir="${classes.dir}">
+      <classpath>
+        <pathelement location="${servlet.jar}"/>
+        <pathelement location="${jsp-api.jar}"/>
+      </classpath>
+    </javac>
+    <copy todir="${classes.dir}">
+      <fileset dir="${java.dir}">
+        <patternset refid="compiler.resources" />
+        <type type="file" />
+      </fileset>
+    </copy>
+
+    <delete file="${war.file}"/>
+
+    <war destfile="${war.file}"
+         webxml="${web.exploded.dir}/WEB-INF/web.xml">
+      <fileset dir="${web.exploded.dir}"/>
+    </war>
+
+  </target>
+
+  <target name="create-exploded-dir">
+    <delete dir="${web.exploded.dir}"/>
+    <mkdir dir="${web.exploded.dir}"/>
+  </target>
+</project>

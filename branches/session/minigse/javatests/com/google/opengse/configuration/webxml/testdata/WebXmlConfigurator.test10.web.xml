@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+
+<web-app>
+
+  <icon>
+    <large-icon>/images/largeicon.gif</large-icon>
+    <small-icon>/images/smallicon.gif</small-icon>
+  </icon>
+
+  <display-name>Test web.xml file</display-name>
+  <description>
+    Test web.xml file
+  </description>
+
+  <distributable/>
+
+  <context-param>
+    <description>context param1 description</description>
+    <param-name>context.param1</param-name>
+    <param-value>context.value1</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>context.param2</param-name>
+    <param-value>context.value2</param-value>
+  </context-param>
+
+  <filter>
+    <icon>
+      <small-icon>/images/small-filter-icon.gif</small-icon>
+      <large-icon>/images/large-filter-icon.gif</large-icon>
+    </icon>
+    <description>filter1 description</description>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>Mapping number 1</filter-name>
+    <url-pattern>/uri/path/*.ext</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>Mapping number 2</filter-name>
+    <servlet-name>com.google.servlet.TakeoverTheWorld</servlet-name>
+  </filter-mapping>
+
+  <listener>
+    <listener-class>com.google.servlet.WebAppListener</listener-class>
+  </listener>
+
+  <servlet>
+    <icon>
+      <small-icon>/images/small-servlet-icon.gif</small-icon>
+      <large-icon>/images/large-servlet-icon.gif</large-icon>
+    </icon>
+    <servlet-name>servlet1</servlet-name>
+    <display-name>Servlet1 display name</display-name>
+    <description>Servlet1 description</description>
+    <servlet-class>
+      com.google.experimental.mwomack.webxml.WebXmlConfiguratorTest$MockServlet1
+    </servlet-class>
+    <init-param>
+      <description>First init-param</description>
+      <param-name>initparam1</param-name>
+      <param-value>initvalue2</param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+    <run-as>
+      <description>admin role</description>
+      <role-name>Administrator</role-name>
+    </run-as>
+    <security-role-ref>
+      <description>security role ref description</description>
+      <role-name>user</role-name>
+      <role-link>userlink</role-link>
+    </security-role-ref>
+  </servlet>
+
+  <servlet>
+    <icon>
+      <small-icon>/images/small-servlet-icon.gif</small-icon>
+      <large-icon>/images/large-servlet-icon.gif</large-icon>
+    </icon>
+    <servlet-name>servlet1</servlet-name>
+    <display-name>Servlet1 display name</display-name>
+    <description>Servlet1 description</description>
+    <jsp-file>/path/to/jsp/file.jsp</jsp-file>
+  </servlet>
+
+  <servlet>
+    <servlet-name>servlet2</servlet-name>
+    <servlet-class>
+      com.google.experimental.mwomack.webxml.WebXmlConfiguratorTest$MockServlet2
+    </servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>servlet1</servlet-name>
+    <url-pattern>/test1/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>servlet2</servlet-name>
+    <url-pattern>/test2/*</url-pattern>
+  </servlet-mapping>
+
+  <session-config>
+    <session-timeout>60</session-timeout>
+  </session-config>
+
+  <mime-mapping>
+    <extension>html</extension>
+    <mime-type>text/html</mime-type>
+  </mime-mapping>
+
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+
+  <error-page>
+    <error-code>404</error-code>
+    <exception-type>java.io.FileNotFoundException</exception-type>
+    <location>/path/to/fnf.jsp</location>
+  </error-page>
+
+  <taglib>
+    <taglib-uri>http://java.sun.com/jstl/core_rt</taglib-uri>
+    <taglib-location>/WEB-INF/c-1_0-rt.tld</taglib-location>
+  </taglib>
+
+
+  <resource-env-ref>
+    <description>Resource env reference</description>
+    <resource-env-ref-name>jms/stockQueue</resource-env-ref-name>
+    <resource-env-ref-type>javax.jms.Queue</resource-env-ref-type>
+  </resource-env-ref>
+
+  <resource-ref>
+    <description>The default DS</description>
+    <res-ref-name>jdbc/DefaultDS</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+  </resource-ref>
+  <!-- URL Connection Factories (java:comp/env/url) -->
+  <resource-ref>
+    <description>The default URL</description>
+    <res-ref-name>url/defaultUrl</res-ref-name>
+    <res-type>java.net.url</res-type>
+    <res-auth>Container</res-auth>
+  </resource-ref>
+  <!-- JavaMail Connection Factories (java:comp/env/mail) -->
+  <resource-ref>
+    <description>Default Mail</description>
+    <res-ref-name>mail/DefaultMail</res-ref-name>
+    <res-type>javax.mail.Session</res-type>
+    <res-auth>Container</res-auth>
+    <res-sharing-scope>Shareable</res-sharing-scope>
+  </resource-ref>
+  <!-- JMS Connection Factories (java:comp/env/jms) -->
+  <resource-ref>
+    <description>Default QueueFactory</description>
+    <res-ref-name>jms/QueFactory</res-ref-name>
+    <res-type>javax.jms.QueueConnectionFactory</res-type>
+    <res-auth>Container</res-auth>
+  </resource-ref>
+
+
+  <security-constraint>
+    <display-name>Example security constraint</display-name>
+    <web-resource-collection>
+      <description>Web resource collection example</description>
+      <web-resource-name>ProtectedFolder</web-resource-name>
+      <url-pattern>/jsp/*</url-pattern>
+      <http-method>DELETE</http-method>
+      <http-method>GET</http-method>
+      <http-method>POST</http-method>
+      <http-method>PUT</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+      <description>Admin constraint</description>
+      <role-name>Administrator</role-name>
+      <role-name>bossman</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+  <login-config>
+    <auth-method>FORM</auth-method>
+    <realm-name>BASICREALM</realm-name>
+    <form-login-config>
+      <form-login-page>/login.jsp</form-login-page>
+      <form-error-page>/login-error.jsp</form-error-page>
+    </form-login-config>
+  </login-config>
+
+  <security-role>
+    <description>The boss</description>
+    <role-name>bossman</role-name>
+  </security-role>
+
+  <security-role>
+    <description>The admin</description>
+    <role-name>Administrator</role-name>
+  </security-role>
+
+  <env-entry>
+    <description>First env entry</description>
+    <env-entry-name>env1</env-entry-name>
+    <env-entry-type>java.lang.String</env-entry-type>
+    <env-entry-value>Foo</env-entry-value>
+  </env-entry>
+
+  <ejb-ref>
+    <description>ejb reference description</description>
+    <ejb-link>EJBLINK</ejb-link>
+    <ejb-ref-name>EJBREF</ejb-ref-name>
+    <ejb-ref-type>java.lang.String</ejb-ref-type>
+    <home>com.google.BeanHome</home>
+    <remote>com.google.BeanRemote</remote>
+  </ejb-ref>
+
+  <ejb-local-ref>
+    <description>ejb local reference</description>
+    <ejb-link>LOCALEJBLINK</ejb-link>
+    <ejb-ref-name>EJBLOCALREF</ejb-ref-name>
+    <ejb-ref-type>java.lang.String</ejb-ref-type>
+    <local>com.google.LocalBean</local>
+    <local-home>com.google.LocalHome</local-home>
+  </ejb-local-ref>
+
+</web-app>

@@ -1,0 +1,16 @@
+requestURI=/contextpath/foo/bar.test
+requestURL=http://${host}:${port}/contextpath/foo/bar.test
+contextPath=/contextpath
+servletPath=/foo/bar.test
+pathInfo=null
+queryString=source=open
+attribute javax.servlet.include.request_uri=null
+attribute javax.servlet.include.context_path=null
+attribute javax.servlet.include.servlet_path=null
+attribute javax.servlet.include.path_info=null
+attribute javax.servlet.include.query_string=null
+attribute javax.servlet.forward.request_uri=null
+attribute javax.servlet.forward.context_path=null
+attribute javax.servlet.forward.servlet_path=null
+attribute javax.servlet.forward.path_info=null
+attribute javax.servlet.forward.query_string=null

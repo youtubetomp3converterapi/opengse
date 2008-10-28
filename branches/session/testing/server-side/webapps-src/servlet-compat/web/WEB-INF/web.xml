@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app PUBLIC '-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN' 'http://java.sun.com/j2ee/dtds/web-app_2_2.dtd'>
+
+<web-app>
+    <display-name>Servlet-Compat</display-name>
+    <description>Validated 2.3 container compatibility with a 2.2 WAR</description>
+    <servlet>
+        <servlet-name>WithLeadingSlashTest</servlet-name>
+        <display-name>WithLeadingSlashTest</display-name>
+        <description>no description</description>
+        <servlet-class>tests.compat.WithLeadingSlashTestServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>WithoutLeadingSlashTest</servlet-name>
+        <display-name>WithoutLeadingSlashTest</display-name>
+        <description>no description</description>
+        <servlet-class>tests.compat.WithoutLeadingSlashTestServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WithLeadingSlashTest</servlet-name>
+        <url-pattern>/WithLeadingSlashTest</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>WithoutLeadingSlashTest</servlet-name>
+        <url-pattern>WithoutLeadingSlashTest</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>54</session-timeout>
+    </session-config>
+</web-app>
+

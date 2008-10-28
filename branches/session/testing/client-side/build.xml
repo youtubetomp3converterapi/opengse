@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="client-side-tests" default="run-tests">
+
+  <property name="port" value="8080"/>
+  <property name="host" value="localhost" />
+
+  <!-- Define some directories -->
+  <property name="opengse.dir" location="${basedir}/../.."/>
+  <property name="out.dir" value="${opengse.dir}/out"/>
+  <property name="classes.dir" value="${out.dir}/testing/client-side/classes"/>
+  <property name="java.dir" value="${basedir}/java"/>
+  <property name="global-lib.dir" value="${opengse.dir}/lib"/>
+
+  <taskdef name="propertyfile" classname="org.apache.tools.ant.taskdefs.optional.PropertyFile"
+   classpath="${opengse.dir}/lib/ant-nodeps.jar"/>
+
+  <!-- define the file that will hold the version information that we will "bake in" -->
+  <property name="version.properties" value="${classes.dir}/version.properties"/>
+
+  <!-- define our output jars -->
+  <property name="jar.file" value="${basedir}/client-side-tests.jar"/>
+  <property name="src-zip.file" value="${basedir}/client-side-tests-src.zip"/>
+
+  <!-- testing-related libraries -->
+  <property name="ant-junit.jar" value="${global-lib.dir}/ant-junit.jar"/>
+  <property name="junit.jar" value="${global-lib.dir}/junit-4.4.jar"/>
+
+  <!-- testing-related classpath -->
+  <path id="test.libs">
+    <pathelement path="${ant-junit.jar}"/>
+    <pathelement path="${junit.jar}"/>
+  </path>
+
+  <taskdef name="junit4" classpathref="test.libs"
+    classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask">
+  </taskdef>
+
+  <taskdef name="junit4report" classpathref="test.libs"
+    classname="org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator"/>
+  
+
+  <patternset id="compiler.resources">
+    <include name="**/?*.properties" />
+    <include name="**/?*.txt" />
+    <include name="**/?*.xml" />
+    <include name="**/?*.gif" />
+    <include name="**/?*.png" />
+    <include name="**/?*.jpeg" />
+    <include name="**/?*.jpg" />
+    <include name="**/?*.html" />
+    <include name="**/?*.dtd" />
+    <include name="**/?*.tld" />
+    <include name="**/?*.ser" />
+  </patternset>
+
+
+  <target name="run-tests" depends="build">
+    <echo>
+      Running tests in ${jar.file} against server at http://${host}:${port}
+    </echo>
+    
+    <junit4 printsummary="on" showoutput="true" timeout="180000"
+            fork="no"
+            errorproperty="junit.errors"
+            failureproperty="junit.failures">
+      <sysproperty key="host" value="${host}"/>
+      <sysproperty key="port" value="${port}"/>
+      <classpath>
+        <pathelement path="${jar.file}"/>
+        <path refid="test.libs"/>
+      </classpath>
+      <formatter type="plain" usefile="false" />
+      <test name="com.google.opengse.clienttests.Servlet25ComplianceTests"/>
+    </junit4>
+
+    <echo>
+      junit.failures=${junit.failures}
+    </echo>
+
+  </target>
+
+  <target name="build" depends="create-classes-dir, update-version">
+
+    <echo>
+      opengse.dir = ${opengse.dir}
+      java.dir = ${java.dir}
+      testsuite.version = ${testsuite.version}
+      jar.file = ${jar.file}
+      global-lib.dir = ${global-lib.dir}
+    </echo>
+
+    <touch file="${version.properties}" mkdirs="true" verbose="true" />
+
+    <propertyfile file="${version.properties}" comment="Contains version information">
+      <entry key="version" value="${testsuite.version}"/>
+    </propertyfile>
+
+    <javac srcdir="${java.dir}" destdir="${classes.dir}">
+      <!-- Notice how we only depend on javax.servlet.* classes to compile -->
+      <classpath>
+        <path refid="test.libs"/>
+        <!-- pathelement location="${servlet.jar}"/ -->
+      </classpath>
+    </javac>
+    <copy todir="${classes.dir}">
+      <fileset dir="${java.dir}">
+        <patternset refid="compiler.resources" />
+        <type type="file" />
+      </fileset>
+    </copy>
+
+    <!-- Create the source zip file -->
+    <delete file="${src-zip.file}"/>
+    <zip file="${src-zip.file}" basedir="${java.dir}"/>
+
+    <delete file="${jar.file}"/>
+    <jar destfile="${jar.file}" duplicate="preserve">
+      <!-- We list each jar explicitly so we can keep the classes in the output
+           jar file to a minimum.
+           If we instead used a zipgroupfileset and a directory, then any old
+           jars thrown into the directory would get included in the output jar file
+           which would be bad. Jars get added/removed from this list rarely, so
+           listing explicitly is no big deal.
+       -->
+      <fileset dir="${classes.dir}" />
+    </jar>
+
+  </target>
+
+
+  <target name="create-classes-dir">
+    <delete dir="${classes.dir}"/>
+    <mkdir  dir="${classes.dir}"/>
+  </target>
+
+  <target name="update-version">
+    <tstamp/>
+    <buildnumber file="${basedir}/../build.number"/>
+    <property name="testsuite.version" value="0.${build.number}/${DSTAMP}${TSTAMP}" />
+  </target>
+
+
+</project>

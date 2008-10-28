@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	     version="2.4"> 
+
+    <display-name>Test web.xml file</display-name>
+    <description>
+        Test web.xml file
+    </description>
+
+    <context-param>
+        <param-name>param1</param-name>
+        <param-value>value1</param-value>
+    </context-param>
+
+    <context-param>
+        <description>ignored</description>
+        <param-name>param2</param-name>
+        <param-value>value2</param-value>
+    </context-param>
+</web-app>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib
+        PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+        "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+
+<!-- a tab library descriptor -->
+
+<taglib>
+  <!-- after this the default space is
+	"http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd"
+   -->
+
+  <tlib-version>1.0</tlib-version>
+  <jsp-version>1.2</jsp-version>
+  <short-name>tests</short-name>
+  <description>
+	A simple tab library for JSP tests
+  </description>
+
+  <tag>
+    <name>count</name>
+    <tag-class>tags.Count</tag-class>
+    <description>
+	A simple nestable tag that validates transitions.
+	It also counts invocations.
+    </description>
+
+    <attribute>
+      <name>att1</name>
+      <required>false</required>
+    </attribute>
+    <attribute>
+      <name>att2</name>
+      <required>false</required>
+    </attribute>
+    <attribute>
+      <name>includeBody</name>
+      <required>false</required>
+    </attribute>
+    <attribute>
+      <name>skipPage</name>
+      <required>false</required>
+    </attribute>
+  </tag>
+
+  <!-- several checks on a count tag -->
+  <tag>
+    <name>checkCount</name>
+    <tag-class>tags.CheckCount</tag-class>
+    <description>
+	Several checks on a count tag
+    </description>
+
+    <attribute>
+      <name>nested</name>
+      <required>false</required>
+    </attribute>
+    <attribute>
+      <name>start</name>
+      <required>false</required>
+    </attribute>
+    <attribute>
+      <name>end</name>
+      <required>false</required>
+    </attribute>
+
+  </tag>
+
+  <!-- silly arguments to test isValid -->
+  <tag>
+    <name>silly</name>
+    <tag-class>tags.SillyArgs</tag-class>
+    <tei-class>tags.SillyArgsExtraInfo</tei-class>
+    <description>
+       takes three arguments: a, b, and c, they must satisfy a+b==c
+       The optional argument testLibInfo is ignored at runtime but
+       forces a check at translation time for tagInfo data.
+    </description>
+
+    <attribute>
+      <name>a</name>
+      <required>true</required>
+    </attribute>
+    <attribute>
+      <name>b</name>
+      <required>true</required>
+    </attribute>
+    <attribute>
+      <name>c</name>
+      <required>true</required>
+    </attribute>
+   
+    <attribute>
+      <name>testLibInfo</name>
+      <required>false</required>
+    </attribute>
+  </tag>
+
+  <!-- aTag is a simple Tag that does not extend TagSupport -->
+  <tag>
+    <name>aTag</name>
+    <tag-class>tags.ATag</tag-class>
+    <description>A simple action handler that does not extend TagSupport</description>
+
+    <attribute>
+      <name>att</name>
+      <required>true</required>
+    </attribute>
+  </tag>
+
+  <!-- bTag is a simple BodyTag that does not extend BodyTagSupport -->
+  <tag>
+    <name>bTag</name>
+    <tag-class>tags.BTag</tag-class>
+    <description>A simple action handler that does not extend BodyTagSupport</description>
+
+    <attribute>
+      <name>att</name>
+      <required>true</required>
+    </attribute>
+  </tag>
+
+
+  <!-- STILL TO BE DONE -->
+  <!-- verbatim tag using different mechanisms -->
+  <tag>
+    <name>verbatim</name>
+    <tag-class>tags.Verbatim</tag-class>
+    <description>
+       Emits the body verbatim unprocessed (after scripts and the such, of
+       course).
+       The how attribute indicates what mechanism to use.  The value can be:
+       "reader", "string", and "writeOut"
+    </description>
+
+    <attribute>
+      <name>how</name>
+      <required>true</required>
+    </attribute>
+  </tag>
+
+<tag>
+    <name>iterator</name>
+    <tag-class>tags.SimpleIteratorTag</tag-class>
+    <description>
+        A simple tag that prints a message iteratively depending
+        on one of its attributes. A test for doAfterBody()
+    </description>
+    <attribute>
+      <name>iteration</name>
+      <required>true</required>
+    </attribute>
+    <attribute>
+      <name>setget</name>
+      <required>false</required>
+    </attribute>
+    <attribute>
+      <name>tagid</name>
+      <required>false</required>
+    </attribute>
+</tag>
+
+<tag>
+    <name>default</name>
+    <tag-class>tags.TagSupport.DefaultReturnValues</tag-class>
+    <description>
+        A simple tag that prints te default return values 
+        as returned from TagSupport class
+    </description>
+</tag>
+
+<tag>
+    <name>persistence</name>
+    <tag-class>tags.misc.PersistenceTag</tag-class>
+    <description>
+      A tag that prints the value of its attribute at beginning and
+      end of the tag.  
+    </description>
+    <attribute>
+      <name>tagid</name>
+      <required>true</required>
+    </attribute>
+</tag>
+
+<tag>
+    <name>ReqTime</name>
+    <tag-class>tags.misc.ReqTimeAttributesTag</tag-class>
+    <description>
+   A tag that prints the values of its 
+   Attributes in order.To tests the order of evaluation.
+    </description>
+    <attribute>
+      <name>attr1</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>attr2</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>attr3</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+</tag>
+
+<tag>
+    <name>firstWinner</name>
+    <tag-class>tags.TagSupport.FirstPrizeTag</tag-class>
+    <description>
+    A tag that sets the First prize winner and also returns it to a 
+    nested tag  
+    </description>
+    <attribute>
+      <name>winner</name>
+      <required>true</required>
+    </attribute>
+</tag>
+
+<tag>
+    <name>secondWinner</name>
+    <tag-class>tags.TagSupport.SecondPrizeTag</tag-class>
+    <description>
+    A tag that sets the second prize winner and also returns it to a   
+    nested tag
+    </description>
+    <attribute>
+      <name>winner</name>
+      <required>true</required>
+    </attribute>
+</tag>
+
+
+
+
+
+</taglib>

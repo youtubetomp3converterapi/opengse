@@ -1,0 +1,1 @@
+this file is accessible from servlet via getResource; not accessible from client via direct URL (404).
