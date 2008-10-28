@@ -29,9 +29,9 @@ import java.util.Enumeration;
  * @author jennings
  *         Date: Jul 6, 2008
  */
-class SessionHandlingRequestWrapper extends HttpServletRequestWrapper {
+class SessionHandlingRequestWrapper2 extends HttpServletRequestWrapper {
   private static final Logger LOGGER =
-      Logger.getLogger(SessionHandlingRequestWrapper.class.getName());
+      Logger.getLogger(SessionHandlingRequestWrapper2.class.getName());
   protected static final String SESSION_COOKIE_NAME = "S";
   protected static final String SESSION_PARAM_NAME = "gsessionid";
 
@@ -50,7 +50,7 @@ class SessionHandlingRequestWrapper extends HttpServletRequestWrapper {
    *
    * @throws IllegalArgumentException if the request is null
    */
-  public SessionHandlingRequestWrapper(HttpServletRequest request,
+  public SessionHandlingRequestWrapper2(HttpServletRequest request,
                                        SessionCache sessionCache,
                                        ServletResponse resp) {
     super(request);
