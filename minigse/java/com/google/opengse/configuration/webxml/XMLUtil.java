@@ -20,12 +20,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.EntityResolver;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,8 +53,10 @@ public final class XMLUtil {
     dFactory.setValidating(validating);
     dFactory.setExpandEntityReferences(false);
     DocumentBuilder dBuilder = dFactory.newDocumentBuilder();
-    // the following line was added so Mike could do stuff on the plane
-    // dBuilder.setEntityResolver(new FakeEntityResolver());
+    if (!validating) {
+      // if not validating, don't attempt to download DTDs from the internet
+      dBuilder.setEntityResolver(new NoOpEntityResolver());
+    }
     InputSource inputSource = new InputSource(reader);
     return dBuilder.parse(inputSource);
   }
@@ -111,6 +115,12 @@ public final class XMLUtil {
       }
     }
     return null;
+  }
+
+  private static class NoOpEntityResolver implements EntityResolver {
+    public InputSource resolveEntity(String publicId, String systemId) {
+      return new InputSource(new StringReader("")); 
+    }
   }
 
 
