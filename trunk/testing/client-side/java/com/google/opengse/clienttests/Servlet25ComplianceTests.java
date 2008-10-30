@@ -15987,8 +15987,6 @@ public void testJspXmlpositiveContentType()
     get.connectToServerAndAssert();
   }
 
-
-
   /**
    * Test if we can load a static file via include (an absolute path that is
    * relative to the current context).
@@ -16004,4 +16002,62 @@ public void testJspXmlpositiveContentType()
     get.connectToServerAndAssert();
   }
 
+  /**
+   * Test a wildcard servlet mapping will return request paths correctly.
+   * E.g.
+   * mapping: /foo/* FooServlet
+   * URL: /foo/bar
+   * ServletPath: /foo
+   * Pathinfo: /bar
+   */
+  @Test
+  public void testRequestPathsUnderWildcardServletMapping()
+      throws Exception {
+    HttpRequestAsserter get = createGetAssertion();
+    get.setUri("/contextpath/servletpath/pathinfo");
+    get.setExpectedContentType("text/plain");
+    get.setExpectedResponseCode(200);
+    get.setExpectedResponseLine("servletPath=/servletpath");
+    get.setExpectedResponseLine("pathInfo=/pathinfo");
+    get.connectToServerAndAssert();
+  }
+
+  /**
+   * Test an exact servlet mapping will return path info as null.
+   */
+  @Test
+  public void testRequestPathInfoExactServletMapping()
+      throws Exception {
+    HttpRequestAsserter get = createGetAssertion();
+    get = createGetAssertion();
+    get.setUri("/contextpath/servletpath/exactmatch");
+    get.setExpectedContentType("text/plain");
+    get.setExpectedResponseCode(200);
+    get.setExpectedResponseLine("pathInfo=null");
+    get.connectToServerAndAssert();
+  }
+
+  /**
+   * Test a pure wildcard servlet mapping will return request paths correctly.
+   * E.g.
+   * mapping: /* FooServlet
+   * URL: /foo/bar
+   * ServletPath: ""
+   * Pathinfo: /foo/bar
+   *
+   * Note this also verifies that any user supplied /* mapping rule will take
+   * precedence over the default /*mapping rule (which mapps to the static file
+   * servlet).
+   */
+  @Test
+  public void testRequestPathsUnderPureWildcardServletMapping()
+      throws Exception {
+    HttpRequestAsserter get = createGetAssertion();
+    get.setUri("/contextpath/servletpath/pathinfo");
+    get.setExpectedContentType("text/plain");
+    get.setExpectedResponseCode(200);
+    get.setExpectedResponseLine("servletPath=");      // =""
+    get.setExpectedResponseLine("pathInfo=/servletpath/pathinfo");
+    get.connectToServerAndAssert();
+  }
 }
