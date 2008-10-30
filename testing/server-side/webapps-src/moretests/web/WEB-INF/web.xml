@@ -458,7 +458,25 @@
   </servlet-mapping>
 
 
+  <!-- request paths under wildcard servlet mapping -->
+  <servlet>
+    <servlet-name>RequestPathsTest</servlet-name>
+    <servlet-class>com.google.opengse.testlet.ServletRequest.RequestPathsTestlet</servlet-class>
+  </servlet>
 
+  <servlet-mapping>
+    <servlet-name>RequestPathsTest</servlet-name>
+    <url-pattern>/servletpath/*</url-pattern>
+  </servlet-mapping>
 
+  <servlet-mapping>
+    <servlet-name>RequestPathsTest</servlet-name>
+    <url-pattern>/servletpath/exactmatch</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>RequestPathsTest</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
 
 </web-app>
