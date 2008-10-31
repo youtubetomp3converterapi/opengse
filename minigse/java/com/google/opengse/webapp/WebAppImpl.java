@@ -26,6 +26,7 @@ import com.google.opengse.configuration.WebAppServlet;
 import com.google.opengse.configuration.WebAppServletMapping;
 import com.google.opengse.configuration.webxml.WebAppConfigurationCombiner;
 import com.google.opengse.filters.RegularExpressionRequestHandlerDispatcher;
+import com.google.opengse.filters.RegularExpressionRequestHandler;
 import com.google.opengse.handlers.NotFoundHandler;
 import com.google.opengse.webapp.listeners.HttpSessionAttributeListenerList;
 import com.google.opengse.webapp.listeners.HttpSessionListenerList;
@@ -556,7 +557,8 @@ final class WebAppImpl implements WebApp {
     // request so we can intercept calls to setAttribute/removeAttribute
     request = wrapRequestForServletRequestAttributeListeners(request);
     // }
-    regexHandler.getRequestHandler().doFilter(request, response);
+    RegularExpressionRequestHandler handler = regexHandler.getRequestHandler();
+    handler.doFilter(request, response);
   }
 
   private ServletRequest wrapRequestForServletRequestAttributeListeners(
