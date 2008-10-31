@@ -17,7 +17,7 @@ import java.io.IOException;
  *
  * @author Wenbo Zhu
  */
-public class WildcardServleDispatchFilter implements Filter {
+public class WildcardServletDispatchFilter implements Filter {
 
   private static final String SERVLETPATH2_PATHINFO = "/servletpath2/pathinfo";
 

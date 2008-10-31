@@ -16048,9 +16048,13 @@ public void testJspXmlpositiveContentType()
    * Note this also verifies that any user supplied /* mapping rule will take
    * precedence over the default /*mapping rule (which maps to the static file
    * servlet).
+   *
+   * TODO: the /* mapping required for this test interferes with the default
+   * static file servlet. Need figure out a way how to test them together,
+   * i.e. under the same context path.
    */
   @Test
-  public void testRequestPathsUnderPureWildcardServletMapping()
+  public void testRequestPathsUnderWildcardOnlyServletMapping()
       throws Exception {
     HttpRequestAsserter get = createGetAssertion();
     get.setUri("/contextpath/servletpath2/pathinfo");

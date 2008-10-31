@@ -291,14 +291,13 @@
   </servlet-mapping>
 
   <!-- end error dispatch -->
-
   <filter>
-    <filter-name>WildcardServleDispatchFilter</filter-name>
-    <filter-class>com.google.opengse.testlet.Filter.WildcardServleDispatchFilter</filter-class>
+    <filter-name>WildcardServletDispatchFilter</filter-name>
+    <filter-class>com.google.opengse.testlet.Filter.WildcardServletDispatchFilter</filter-class>
   </filter>
 
   <filter-mapping>
-    <filter-name>WildcardServleDispatchFilter</filter-name>
+    <filter-name>WildcardServletDispatchFilter</filter-name>
     <servlet-name>*</servlet-name>   
     <dispatcher>FORWARD</dispatcher>
     <dispatcher>INCLUDE</dispatcher>
@@ -479,6 +478,5 @@
     <servlet-name>RequestPathsTest</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
--->
-  
+-->  
 </web-app>
