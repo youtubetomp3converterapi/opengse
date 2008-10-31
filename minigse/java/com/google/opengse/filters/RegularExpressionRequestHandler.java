@@ -152,7 +152,8 @@ public class RegularExpressionRequestHandler implements FilterChain {
     if (regex.endsWith(MATCH_EVERYTHING_STRING)) {
       int end = regex.length() - MATCH_EVERYTHING_STRING.length() - 1;
       if (end <= 0) {
-        return request;
+        // for global wildcard match, servletPath="" and pathInfo=path
+        return new PathInfoRequest(request, "", path);
       }
       String prefix = regex.substring(0, end);
       String pathInfo = path.substring(prefix.length());

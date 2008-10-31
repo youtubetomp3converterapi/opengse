@@ -16053,11 +16053,11 @@ public void testJspXmlpositiveContentType()
   public void testRequestPathsUnderPureWildcardServletMapping()
       throws Exception {
     HttpRequestAsserter get = createGetAssertion();
-    get.setUri("/contextpath/servletpath/pathinfo");
+    get.setUri("/contextpath/servletpath2/pathinfo");
     get.setExpectedContentType("text/plain");
     get.setExpectedResponseCode(200);
     get.setExpectedResponseLine("servletPath=");      // =""
-    get.setExpectedResponseLine("pathInfo=/servletpath/pathinfo");
+    get.setExpectedResponseLine("pathInfo=/servletpath2/pathinfo");
     get.connectToServerAndAssert();
   }
 }
