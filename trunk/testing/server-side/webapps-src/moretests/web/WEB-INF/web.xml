@@ -474,9 +474,11 @@
     <url-pattern>/servletpath/exactmatch</url-pattern>
   </servlet-mapping>
 
+<!--
   <servlet-mapping>
     <servlet-name>RequestPathsTest</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
-
+-->
+  
 </web-app>

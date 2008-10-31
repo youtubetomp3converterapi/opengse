@@ -16046,7 +16046,7 @@ public void testJspXmlpositiveContentType()
    * Pathinfo: /foo/bar
    *
    * Note this also verifies that any user supplied /* mapping rule will take
-   * precedence over the default /*mapping rule (which mapps to the static file
+   * precedence over the default /*mapping rule (which maps to the static file
    * servlet).
    */
   @Test

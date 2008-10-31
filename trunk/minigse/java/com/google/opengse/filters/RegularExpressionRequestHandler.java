@@ -159,17 +159,23 @@ public class RegularExpressionRequestHandler implements FilterChain {
       if (pathInfo.equals("/")) {
         return request;
       }
-      return new PathInfoRequest(request, pathInfo);
+      return new PathInfoRequest(request, prefix, pathInfo);
     }
     return request;
   }
 
   static class PathInfoRequest extends HttpServletRequestWrapper {
+    private final String servletPath;
     private final String pathInfo;
 
-    PathInfoRequest(HttpServletRequest request, String pathInfo) {
+    PathInfoRequest(HttpServletRequest request, String servletPath, String pathInfo) {
       super(request);
+      this.servletPath = servletPath;
       this.pathInfo = pathInfo;
+    }
+
+    PathInfoRequest(HttpServletRequest request, String pathInfo) {
+      this(request, null, pathInfo);
     }
 
     @Override
@@ -183,6 +189,11 @@ public class RegularExpressionRequestHandler implements FilterChain {
         return null;
       }
       return context.getRealPath(pathInfo);
+    }
+
+    @Override
+    public String getServletPath() {
+      return (servletPath == null) ? super.getServletPath() : servletPath;
     }
 
     @Override
