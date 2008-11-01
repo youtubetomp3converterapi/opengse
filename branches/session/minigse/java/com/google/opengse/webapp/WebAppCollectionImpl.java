@@ -18,7 +18,6 @@ import com.google.opengse.configuration.WebAppConfigurationException;
 import com.google.opengse.util.PropertiesUtil;
 import com.google.opengse.session.SessionCache;
 import com.google.opengse.session.SessionCacheFactory;
-import com.google.opengse.session.SessionProvider;
 import com.google.opengse.jndi.JNDIMain;
 
 import java.io.File;
@@ -54,7 +53,6 @@ final class WebAppCollectionImpl implements WebAppCollection {
   private SessionCache session_cache_;
   private static final String CONTEXTKEY_SESSIONCACHE
       = SessionCache.class.getName();
-  private SessionProvider sessionProvider;
   private final boolean sessionsEnabled;
 
   private WebAppCollectionImpl(Properties props)
@@ -66,11 +64,6 @@ final class WebAppCollectionImpl implements WebAppCollection {
     checkMandatoryPropertiesExist();
     sessionsEnabled = !PropertiesUtil.getBoolean(
         props, "disable-sessions", false);
-    try {
-      sessionProvider = JNDIMain.lookup(SessionProvider.class);
-    } catch (NamingException e) {
-      throw new WebAppConfigurationException(e);
-    }
   }
 
   private void checkMandatoryPropertiesExist()

@@ -28,7 +28,7 @@
           <containerElement type="library" level="module">
             <attribute name="method" value="0" />
             <attribute name="URI" value="&lt;N/A&gt;" />
-            <url>jar://$APPLICATION_HOME_DIR$/lib/javaee.jar!/</url>
+            <url>jar://$MODULE_DIR$/minigse/lib/servlet-api-2.5.jar!/</url>
           </containerElement>
         </packaging>
       </configuration>
@@ -44,10 +44,12 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/javaee.jar!/" />
+          <root url="jar://$MODULE_DIR$/minigse/lib/servlet-api-2.5.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/minigse/lib/servlet-api-2.5-src.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntryProperties />

@@ -8,6 +8,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 
 /**
@@ -15,11 +17,25 @@ import java.io.IOException;
  *
  * @author Wenbo Zhu
  */
-public class WildcardServleDispatchFilter implements Filter {
+public class WildcardServletDispatchFilter implements Filter {
+
+  private static final String SERVLETPATH2_PATHINFO = "/servletpath2/pathinfo";
 
   public void doFilter( ServletRequest request, ServletResponse response,
                         FilterChain chain ) throws IOException, ServletException {
     request.setAttribute("wildcardDispatchFilter", "Hello from wildcardDispatchFilter");
+    if (request instanceof HttpServletRequest) {
+      HttpServletRequest httpRequest = (HttpServletRequest) request;
+      String servletPath = httpRequest.getServletPath();
+      String pathInfo = httpRequest.getPathInfo();
+      String path = servletPath + pathInfo;
+      if (path.indexOf(SERVLETPATH2_PATHINFO) != -1 || path.startsWith(SERVLETPATH2_PATHINFO)) {
+        response.setContentType("text/plain");
+        response.getWriter().println("servletPath=" + servletPath);
+        response.getWriter().println("pathInfo=" + pathInfo);
+        return; // don't pass things along the chain
+      }
+    }
     chain.doFilter(request, response);
   }
 
