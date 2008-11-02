@@ -16,6 +16,7 @@ package com.google.opengse.clienttests;
 
 import org.junit.Assert;
 
+import javax.servlet.http.Cookie;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,7 +49,7 @@ public class HttpRequestAsserter {
   private Set<String> unexpectedResponseLines;
   private Integer expectedResponseCode;
   Map<String, Set<String>> uheaders;
-
+  private List<Cookie> cookies;
   private HttpURLConnection conn;
   private static final String CHARSET_EQUALS = "charset=";
   private Properties props;
@@ -68,6 +69,7 @@ public class HttpRequestAsserter {
     unexpectedResponseHeaders = null;
     expectedResponseLines = null;
     unexpectedResponseLines = null;
+    cookies = new ArrayList<Cookie>();
     hostKey = getUnusedKey("host");
     portKey = getUnusedKey("port");
     bodyKey = getUnusedKey("body");
@@ -93,6 +95,10 @@ public class HttpRequestAsserter {
     if (this.host == null) {
       throw new IllegalArgumentException("Could not resolve '" + h + "' to a hostname");
     }
+  }
+
+  public void addRequestCookie(Cookie cookie) {
+    cookies.add(cookie);
   }
 
   /**
@@ -267,6 +273,9 @@ public class HttpRequestAsserter {
         String value = requestHeaders.get(key);
         conn.setRequestProperty(key, value);
       }
+    }
+    for (Cookie cookie : cookies) {
+      conn.addRequestProperty("Cookie", CookieUtil.toString(cookie));
     }
     conn.connect();
     if (weHaveHeaderExpectations()) {
