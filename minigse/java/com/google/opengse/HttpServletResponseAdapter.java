@@ -14,6 +14,8 @@
 
 package com.google.opengse;
 
+import com.google.opengse.httputil.CookieUtil;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
@@ -37,55 +39,8 @@ public class HttpServletResponseAdapter
 
   @Override
   public void addCookie(Cookie cookie) {
-    StringBuffer buf = new StringBuffer();
-    buf.append(cookie.getName());
-    buf.append("=");
-    buf.append(cookie.getValue());
-
-    if (cookie.getComment() != null) {
-      buf.append("; Comment=");
-      buf.append(cookie.getComment());
-    }
-    if (cookie.getDomain() != null) {
-      buf.append("; Domain=");
-      buf.append(cookie.getDomain());
-    }
-    if (cookie.getMaxAge() != -1) {
-      if (cookie.getVersion() == 0) {
-        // Only print a cookie warning once to avoid log spamming.
-//        if (HAVE_SHOWN_COOKIE_VERSION_WARNING.compareAndSet(false, true)) {
-//          LOGGER.warning(cookie.getName() + " cookie has obsolete version 0; "
-//              + "only cookies with version >= 1 should be used; "
-//              + "this warning will only be issued once");
-//        }
-        // netscape (version 0) cookies use expires instead of max-age
-        // subtract a day if max age is 0 to avoid clock skew issues
-        int maxAge = cookie.getMaxAge();
-        long expires = System.currentTimeMillis()
-            + (maxAge == 0 ? -86400 : maxAge) * 1000L;
-        buf.append("; Expires=");
-        buf.append(HeaderUtil.toDateHeader(expires));
-
-        // some very early versions of netscape navigator do not obey
-        // the expires attribute unless the path attribute is
-        // explicitly set.
-        if (cookie.getPath() == null) {
-          cookie.setPath("/");
-        }
-      } else {
-        buf.append("; Max-Age=");
-        buf.append(cookie.getMaxAge());
-      }
-    }
-    if (cookie.getPath() != null) {
-      buf.append("; Path=");
-      buf.append(cookie.getPath());
-    }
-    if (cookie.getSecure()) {
-      buf.append("; Secure");
-    }
-
-    delegate.addHeader("Set-Cookie", buf.toString());
+    String cookieAsString = CookieUtil.toString(cookie);
+    delegate.addHeader("Set-Cookie", cookieAsString);
   }
 
   @Override
