@@ -49,7 +49,7 @@ public class HttpRequestAsserter {
   private Set<String> unexpectedResponseLines;
   private Integer expectedResponseCode;
   Map<String, Set<String>> uheaders;
-  private List<Cookie> cookies;
+  private List<Cookie> requestCookies;
   private HttpURLConnection conn;
   private static final String CHARSET_EQUALS = "charset=";
   private Properties props;
@@ -69,7 +69,7 @@ public class HttpRequestAsserter {
     unexpectedResponseHeaders = null;
     expectedResponseLines = null;
     unexpectedResponseLines = null;
-    cookies = new ArrayList<Cookie>();
+    requestCookies = new ArrayList<Cookie>();
     hostKey = getUnusedKey("host");
     portKey = getUnusedKey("port");
     bodyKey = getUnusedKey("body");
@@ -98,7 +98,7 @@ public class HttpRequestAsserter {
   }
 
   public void addRequestCookie(Cookie cookie) {
-    cookies.add(cookie);
+    requestCookies.add(cookie);
   }
 
   /**
@@ -274,7 +274,7 @@ public class HttpRequestAsserter {
         conn.setRequestProperty(key, value);
       }
     }
-    for (Cookie cookie : cookies) {
+    for (Cookie cookie : requestCookies) {
       conn.addRequestProperty("Cookie", CookieUtil.toString(cookie));
     }
     conn.connect();
