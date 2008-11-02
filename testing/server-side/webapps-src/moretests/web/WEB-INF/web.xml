@@ -42,6 +42,10 @@
     <servlet-class>com.google.opengse.testlet.HttpSession.SessionCookieTestlet</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>SessionInfoTestlet</servlet-name>
+    <servlet-class>com.google.opengse.testlet.HttpSession.SessionInfoTestlet</servlet-class>
+  </servlet>
 
   <servlet>
     <servlet-name>URITestlet</servlet-name>
@@ -115,10 +119,14 @@
   </servlet>
 
   <servlet-mapping>
+    <servlet-name>SessionInfoTestlet</servlet-name>
+    <url-pattern>/sessioninfo</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
     <servlet-name>SessionCookieTestlet</servlet-name>
     <url-pattern>/gimmecookie</url-pattern>
   </servlet-mapping>
-
 
   <servlet-mapping>
     <servlet-name>Forward</servlet-name>

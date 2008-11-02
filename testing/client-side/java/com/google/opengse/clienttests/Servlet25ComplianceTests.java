@@ -15314,6 +15314,16 @@ public void testJspXmlpositiveContentType()
     String cookie = cookies.iterator().next();
     int pathIndex = cookie.indexOf("Path=");
     assertTrue("Invalid cookie", pathIndex != -1);
+
+    // now we send that cookie back to the server
+    get = createGetAssertion();
+    get.setUri("/contextpath/sessioninfo");
+//    get.expectHeader("SET-COOKIE");
+    get.setExpectedResponseCode(200);
+    get.setExpectedContentType("text/plain");
+    get.setExpectedResponseViaResource(
+        "com/google/opengse/golden/noSessionRequested.txt");
+    get.connectToServerAndAssert();
   }
 
 

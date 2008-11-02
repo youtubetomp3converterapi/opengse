@@ -1,0 +1,8 @@
+requestedId=null
+isRequestedIdFromCookie=false
+isRequestedIdFromUrl=false
+isRequestedIdValid=false
+after session creation: requestedId=null
+after session creation: isRequestedIdFromCookie=false
+after session creation: isRequestedIdFromUrl=false
+after session creation: isRequestedIdValid=false
