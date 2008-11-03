@@ -104,7 +104,8 @@ public final class Cookies {
   private static class NameAction implements Callback<Result> {
     public void handle(char[] buf, int start, int end, Result result) {
       try {
-        Cookie cookie = new Cookie(create(buf, start, end), "");
+        String cookieName = create(buf, start, end);
+        Cookie cookie = new Cookie(cookieName, "");
         cookie.setVersion(result.version_);
         result.cookies_.add(cookie);
         result.isPreviousCookieDropped = false;

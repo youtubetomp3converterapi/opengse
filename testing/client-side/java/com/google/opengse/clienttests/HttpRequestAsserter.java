@@ -15,6 +15,8 @@
 package com.google.opengse.clienttests;
 
 import com.google.opengse.clienttests.cookies.CookieUtil;
+import com.google.opengse.clienttests.cookies.IteratorEnumeration;
+import com.google.opengse.clienttests.cookies.Cookies;
 
 import org.junit.Assert;
 
@@ -52,6 +54,7 @@ public class HttpRequestAsserter {
   private Integer expectedResponseCode;
   Map<String, Set<String>> uheaders;
   private List<Cookie> requestCookies;
+  private List<Cookie> responseCookies;
   private HttpURLConnection conn;
   private static final String CHARSET_EQUALS = "charset=";
   private Properties props;
@@ -179,11 +182,26 @@ public class HttpRequestAsserter {
     return uheaders;
   }
 
-  private void checkHeaderExpectations(HttpURLConnection urlConnection) {
-    Map<String, List<String>> headers = urlConnection.getHeaderFields();
-    Assert.assertNotNull("No headers", headers);
-    uheaders = convertHeadersToUppercase(headers);
 
+  private void getNormalizedHeaders(HttpURLConnection urlConnection) {
+    Map<String, List<String>> headers = urlConnection.getHeaderFields();
+    uheaders = convertHeadersToUppercase(headers);
+  }
+
+  private void grabResponseCookies() {
+    Set<String> cookieStrings = uheaders.get("SET-COOKIE");
+    if (cookieStrings == null || cookieStrings.isEmpty()) {
+      responseCookies = new ArrayList<Cookie>();
+    } else {
+      responseCookies = Cookies.parse(new IteratorEnumeration<String>(cookieStrings.iterator()));
+    }
+  }
+
+  public List<Cookie> getResponseCookies() {
+    return responseCookies;
+  }
+
+  private void checkHeaderExpectations(HttpURLConnection urlConnection) {
     Set<String> actualHeaders = new TreeSet<String>(uheaders.keySet());
     /*
      * Check that we see all of the headers we expect to see
@@ -280,6 +298,8 @@ public class HttpRequestAsserter {
       conn.addRequestProperty("Cookie", CookieUtil.toString(cookie));
     }
     conn.connect();
+    getNormalizedHeaders(conn);
+    grabResponseCookies();
     if (weHaveHeaderExpectations()) {
       checkHeaderExpectations(conn);
     }
