@@ -14,6 +14,8 @@
 
 package com.google.opengse.clienttests;
 
+import com.google.opengse.clienttests.cookies.CookieUtil;
+
 import org.junit.Assert;
 
 import javax.servlet.http.Cookie;
