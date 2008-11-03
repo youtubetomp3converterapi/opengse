@@ -6,8 +6,13 @@
   <component name="Build editor project-level loader">
     <settings>
       <class-settings class="com.google.devtools.intellig.configcheck.ClearOutputChecker" />
-      <class-settings class="com.google.devtools.intellig.configcheck.JavacHeapChecker" />
-      <class-settings class="com.google.devtools.intellig.configcheck.ProjectJdkChecker" />
+      <class-settings class="com.google.devtools.intellig.configcheck.JavacHeapChecker">
+        <setting name="getHeapSize" value="800" />
+      </class-settings>
+      <class-settings class="com.google.devtools.intellig.configcheck.ProjectJdkChecker">
+        <setting name="getModuleJdks" value="rO0ABXNyABFqYXZhLnV0aWwuSGFzaFNldLpEhZWWuLc0AwAAeHB3DAAAABA/QAAAAAAAAHg=" />
+        <setting name="getProjectJdk" value="/usr/java/jdk1.5.0_09" />
+      </class-settings>
       <class-settings class="com.google.devtools.intellig.configcheck.ProjectPathChecker" />
       <class-settings class="com.google.devtools.intellig.configcheck.PythonSdkChecker" />
     </settings>
