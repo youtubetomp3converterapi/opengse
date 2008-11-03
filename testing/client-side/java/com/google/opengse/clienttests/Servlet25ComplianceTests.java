@@ -23,11 +23,15 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.Set;
+import java.util.List;
 import java.io.FileNotFoundException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+
+import javax.servlet.http.Cookie;
 
 /**
  * This class is the client-side of the compliance tests.
@@ -15309,11 +15313,11 @@ public void testJspXmlpositiveContentType()
     get.expectHeader("SET-COOKIE");
     get.setExpectedResponseCode(200);
     get.connectToServerAndAssert();
-    Set<String> cookies = get.getNormalizedHeaders().get("SET-COOKIE");
+    List<Cookie> cookies = get.getResponseCookies();
     assertEquals("More than one cookie found", 1, cookies.size());
-    String cookie = cookies.iterator().next();
-    int pathIndex = cookie.indexOf("Path=");
-    assertTrue("Invalid cookie", pathIndex != -1);
+    Cookie cookie = cookies.iterator().next();
+
+    assertNotNull("Invalid cookie", cookie.getPath());
 
     // now we send that cookie back to the server
     get = createGetAssertion();
