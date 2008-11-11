@@ -15308,8 +15308,7 @@ public void testJspXmlpositiveContentType()
     HttpRequestAsserter get = createGetAssertion();
     get.setUri("/contextpath/gimmecookie");
 //    get.setRequestHeader("X-my-special-header", "ExtraSpecial, VerySpecial");
-    get.setExpectedResponseLine(
-        "PASSED");
+    get.setExpectedResponseLine("PASSED");
     get.expectHeader("SET-COOKIE");
     get.setExpectedResponseCode(200);
     get.connectToServerAndAssert();
