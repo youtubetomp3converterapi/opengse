@@ -15325,6 +15325,8 @@ public void testJspXmlpositiveContentType()
 //    get.expectHeader("SET-COOKIE");
     get.setExpectedResponseCode(200);
     get.setExpectedContentType("text/plain");
+    cookie.setValue(cookie.getValue() + "foo");
+    get.addRequestCookie(cookie);
     get.setExpectedResponseViaResource(
         "com/google/opengse/golden/noSessionRequested.txt");
     get.connectToServerAndAssert();
