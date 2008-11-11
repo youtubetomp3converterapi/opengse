@@ -20,13 +20,18 @@ import com.google.opengse.ServletEngine;
 import com.google.opengse.HttpRequestHandler;
 import com.google.opengse.HttpRequest;
 import com.google.opengse.HttpResponse;
-import com.google.opengse.core.ServletEngineImpl;
+import com.google.opengse.ServletEngineFactory;
+import com.google.opengse.jndi.JNDIMain;
 
 import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * A server that does basic Http profiling.
@@ -44,11 +49,13 @@ public final class HttpProfilingServer {
   public static void main(String[] args) throws Exception {
     ServletEngineConfiguration config =
         ServletEngineConfigurationImpl.create(8080, 5);
-    ServletEngine engine = ServletEngineImpl.create(new ByteSpewer(), config);
+    ServletEngineFactory engineFactory
+        = JNDIMain.lookup(ServletEngineFactory.class);
+    ServletEngine engine = engineFactory.createServletEngine(new ByteSpewer(), config);
     engine.run();
   }
 
-  private static class ByteSpewer implements HttpRequestHandler {
+  private static class ByteSpewer implements HttpRequestHandler, FilterChain {
     private byte[] buf;
 
     private void fillBuf() {
@@ -72,8 +79,50 @@ public final class HttpProfilingServer {
       return (vals == null) ? null : vals[0];
     }
 
+    private static String getParameter(HttpServletRequest request, String name) {
+      String[] vals = (String[]) request.getParameterMap().get(name);
+      return (vals == null) ? null : vals[0];
+    }
+
     private void processRequest(HttpRequest request, HttpResponse response)
         throws IOException, ServletException {
+      String schunks = getParameter(request, "chunks");
+      if (schunks == null) {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+            "No chunks param specified");
+        return;
+      }
+      int chunks = Integer.parseInt(schunks);
+      if (chunks < 1) {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+            "Invalid chunks param specified");
+        return;
+      }
+      String schunksize = getParameter(request,"chunksize");
+      if (schunksize == null) {
+        schunksize = "512";
+      }
+      int chunksize = Integer.parseInt(schunksize);
+      if (chunksize < 1) {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+            "Invalid chunksize param specified");
+        return;
+      }
+      if (buf == null || buf.length < chunksize) {
+        buf = new byte[chunksize];
+        fillBuf();
+      }
+      response.setContentType("application/binary");
+      ServletOutputStream ostr = response.getOutputStream();
+      for (int i = 0; i < chunks; ++i) {
+        ostr.write(buf, 0, chunksize);
+      }
+    }
+
+    public void doFilter(ServletRequest _request, ServletResponse _response)
+        throws IOException, ServletException {
+      HttpServletResponse response = (HttpServletResponse) _response;
+      HttpServletRequest request = (HttpServletRequest) _request;
       String schunks = getParameter(request, "chunks");
       if (schunks == null) {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST,
