@@ -4,6 +4,7 @@
   <!-- Define some directories -->
   <property name="opengse.dir" location="${basedir}/.."/>
   <property name="out.dir" value="${opengse.dir}/out"/>
+  <property name="nio.dir" value="${opengse.dir}/transports/nio"/>
   <property name="classes.dir" value="${out.dir}/minigse/classes"/>
   <property name="java.dir" value="${basedir}/java"/>
   <property name="lib.dir" value="${basedir}/lib" />
@@ -23,6 +24,7 @@
 
 
   <!-- Define some jars we will need -->
+  <property name="transport-nio.jar" value="${nio.dir}/transport-nio.jar" />
   <property name="servlet.jar" value="${lib.dir}/servlet-api-2.5.jar" />
   <property name="jsp-api.jar" value="${lib.dir}/jsp-api-2.4.jar" />
   <property name="jstl.jar" value="${lib.dir}/jstl-1.1.jar" />
@@ -59,40 +61,11 @@
   </patternset>
   
 
-  <target name="build" depends="create-classes-dir, update-version">
+  <target name="build-thin" depends="compile-classes">
 
     <echo>
-      opengse.dir = ${opengse.dir}
-      java.dir = ${java.dir}
-      opengse.version = ${opengse.version}
-      jar.file = ${jar.file}
-      thin-jar.file = ${thin-jar.file}
-      global-lib.dir = ${global-lib.dir}
+      
     </echo>
-
-    <touch file="${version.properties}" mkdirs="true" verbose="true" />
-
-    <propertyfile file="${version.properties}" comment="Contains version information">
-      <entry key="version" value="${opengse.version}"/>
-    </propertyfile>
-
-    <javac srcdir="${java.dir}" destdir="${classes.dir}" debug="true">
-      <!-- Notice how we only depend on javax.servlet.* classes to compile -->
-      <classpath>
-        <pathelement location="${servlet.jar}"/>
-      </classpath>
-    </javac>
-    <copy todir="${classes.dir}">
-      <fileset dir="${java.dir}">
-        <patternset refid="compiler.resources" />
-        <type type="file" />
-      </fileset>
-    </copy>
-
-    <!-- Create the source zip file -->
-    <delete file="${src-zip.file}"/>
-    <zip file="${src-zip.file}" basedir="${java.dir}"/>
-
     <delete file="${thin-jar.file}"/>
     <jar destfile="${thin-jar.file}" duplicate="preserve">
       <manifest>
@@ -104,6 +77,30 @@
       <fileset dir="${classes.dir}" />
     </jar>
 
+  </target>
+
+  <target name="build-transports" depends="build-thin">
+    <ant dir="${nio.dir}"/>
+  </target>
+
+
+  <target name="build" depends="build-transports">
+
+    <echo>
+      opengse.dir = ${opengse.dir}
+      java.dir = ${java.dir}
+      opengse.version = ${opengse.version}
+      jar.file = ${jar.file}
+      thin-jar.file = ${thin-jar.file}
+      global-lib.dir = ${global-lib.dir}
+      nio-transport.dir = ${nio-transport.dir}
+    </echo>
+
+    <!-- Create the source zip file -->
+    <delete file="${src-zip.file}"/>
+    <zip file="${src-zip.file}" basedir="${java.dir}"/>
+
+    <!-- create the jsp-support jar file -->
     <delete file="${jsp-support.jar}"/>
     <jar destfile="${jsp-support.jar}">
       <!-- We list each jar explicitly so we can keep the classes in the output
@@ -140,12 +137,38 @@
        -->
       <zipfileset src="${servlet.jar}" prefix=""/>
       <zipfileset src="${jsp-support.jar}" prefix=""/>
-      <fileset dir="${classes.dir}" />
+      <zipfileset src="${thin-jar.file}" prefix=""/>
+      <zipfileset src="${transport-nio.jar}" prefix=""/>
     </jar>
-    
+
 
   </target>
 
+
+
+
+  <target name="compile-classes" depends="create-classes-dir, update-version">
+
+    <!-- create a version file in the classes directory -->
+    <touch file="${version.properties}" mkdirs="true" verbose="true" />
+    <propertyfile file="${version.properties}" comment="Contains version information">
+      <entry key="version" value="${opengse.version}"/>
+    </propertyfile>
+
+    <javac srcdir="${java.dir}" destdir="${classes.dir}" debug="true">
+      <!-- Notice how we only depend on javax.servlet.* classes to compile -->
+      <classpath>
+        <pathelement location="${servlet.jar}"/>
+      </classpath>
+    </javac>
+    <copy todir="${classes.dir}">
+      <fileset dir="${java.dir}">
+        <patternset refid="compiler.resources" />
+        <type type="file" />
+      </fileset>
+    </copy>
+
+  </target>
 
   <target name="create-classes-dir">
     <delete dir="${classes.dir}"/>
