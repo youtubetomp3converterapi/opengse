@@ -271,6 +271,7 @@
       <module fileurl="file://$PROJECT_DIR$/client-side-tests.iml" filepath="$PROJECT_DIR$/client-side-tests.iml" group="OpenGSE-project/testing/client-side" />
       <module fileurl="file://$PROJECT_DIR$/jsp-tests.iml" filepath="$PROJECT_DIR$/jsp-tests.iml" group="OpenGSE-project/testing/server-side" />
       <module fileurl="file://$PROJECT_DIR$/moretests.iml" filepath="$PROJECT_DIR$/moretests.iml" group="OpenGSE-project/testing/server-side" />
+      <module fileurl="file://$PROJECT_DIR$/transports/nio/nio.iml" filepath="$PROJECT_DIR$/transports/nio/nio.iml" group="OpenGSE-project" />
       <module fileurl="file://$PROJECT_DIR$/performance.iml" filepath="$PROJECT_DIR$/performance.iml" group="OpenGSE-project/testing/server-side" />
       <module fileurl="file://$PROJECT_DIR$/servlet-compat.iml" filepath="$PROJECT_DIR$/servlet-compat.iml" group="OpenGSE-project/testing/server-side" />
       <module fileurl="file://$PROJECT_DIR$/servlet-tests.iml" filepath="$PROJECT_DIR$/servlet-tests.iml" group="OpenGSE-project/testing/server-side" />

@@ -14,11 +14,11 @@
 
 package com.google.opengse;
 
-import com.google.opengse.core.ServletEngineImpl;
 import com.google.opengse.io.StreamUtils;
 import com.google.opengse.webapp.WebAppCollection;
 import com.google.opengse.webapp.WebAppConfigurationBuilder;
 import com.google.opengse.webapp.WebAppCollectionFactory;
+import com.google.opengse.jndi.JNDIMain;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -75,7 +75,11 @@ public class BasicServletFilterTest {
     webapps.startAll();
     ServletEngineConfiguration config
         = ServletEngineConfigurationImpl.create(-1, 5);
-    engine = ServletEngineImpl.create(webapps, config);
+    ServletEngineFactory engineFactory
+        = JNDIMain.lookup(ServletEngineFactory.class);
+
+    engine = engineFactory.createServletEngine(webapps, config);
+    
     Thread engineThread = new Thread(engine, "engine");
     engineThread.setDaemon(true);
     engineThread.start();

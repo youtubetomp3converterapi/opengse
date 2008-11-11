@@ -16,7 +16,7 @@ package com.google.opengse;
 
 import com.google.opengse.io.StreamUtils;
 import com.google.opengse.testing.FilterChains;
-import com.google.opengse.core.ServletEngineImpl;
+import com.google.opengse.jndi.JNDIMain;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -48,8 +48,10 @@ public class ServletEngineTest {
   public static void setUp() throws Exception {
     ServletEngineConfiguration config =
         ServletEngineConfigurationImpl.create(PORT, 5);
-    engine = ServletEngineImpl.create(
-        FilterChains.withPlainMessage(EXPECTED_MESSAGE), config);
+    ServletEngineFactory engineFactory
+        = JNDIMain.lookup(ServletEngineFactory.class);
+
+    engine = engineFactory.createServletEngine(FilterChains.withPlainMessage(EXPECTED_MESSAGE), config);
     engineThread = new Thread(engine, "engine");
     engineThread.setDaemon(true);
     engineThread.start();
