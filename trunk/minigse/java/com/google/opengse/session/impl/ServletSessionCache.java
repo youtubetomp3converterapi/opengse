@@ -446,7 +446,7 @@ public class ServletSessionCache implements
     notifySessionCreated(ss);
     activeSessionSet_.add(ss.getId());
     accounting_.update(ss.getId(), SESSION_ACTIVE);
-    LOGGER.info("created new session " + sessionId);
+    LOGGER.log(Level.FINER, "created new session " + sessionId);
     return ss;
   }
 
