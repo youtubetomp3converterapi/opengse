@@ -5,8 +5,8 @@
   <property name="opengse.dir" location="${basedir}/../.."/>
   <property name="opengse-thin.jar" value="${opengse.dir}/minigse/opengse-thin.jar"/>
   <property name="out.dir" value="${opengse.dir}/out"/>
-  <property name="classes.dir" value="${out.dir}/nio-transport/classes"/>
-  <property name="java.dir" value="${basedir}/java"/>
+  <property name="transport-classes.dir" value="${out.dir}/nio-transport/classes"/>
+  <property name="transport.java.dir" value="${basedir}/java"/>
   <property name="lib.dir" value="${basedir}/lib" />
   <property name="global-lib.dir" value="${opengse.dir}/lib"/>
 
@@ -14,7 +14,7 @@
    classpath="${global-lib.dir}/ant-nodeps.jar"/>
 
   <!-- define our output jars -->
-  <property name="jar.file" value="${basedir}/transport-nio.jar"/>
+  <property name="transport-jar.file" value="${basedir}/transport-nio.jar"/>
   <property name="src-zip.file" value="${basedir}/transport-nio-src.zip"/>
 
   <!-- Define some jars we will need -->
@@ -57,18 +57,21 @@
   <target name="build" depends="create-classes-dir">
 
     <echo>
+      Building NIO transport...
+
+      transport.java.dir = ${transport.java.dir}
       global-lib.dir = ${global-lib.dir}
-      classes.dir = ${classes.dir}
+      transport-classes.dir = ${transport-classes.dir}
     </echo>
 
-    <javac srcdir="${java.dir}" destdir="${classes.dir}" debug="true">
+    <javac srcdir="${transport.java.dir}" destdir="${transport-classes.dir}" debug="true">
       <!-- Notice how we only depend on javax.servlet.* classes to compile -->
       <classpath>
         <pathelement location="${opengse-thin.jar}"/>
       </classpath>
     </javac>
-    <copy todir="${classes.dir}">
-      <fileset dir="${java.dir}">
+    <copy todir="${transport-classes.dir}">
+      <fileset dir="${transport.java.dir}">
         <patternset refid="compiler.resources" />
         <type type="file" />
       </fileset>
@@ -76,20 +79,22 @@
 
     <!-- Create the source zip file -->
     <delete file="${src-zip.file}"/>
-    <zip file="${src-zip.file}" basedir="${java.dir}"/>
+    <zip file="${src-zip.file}" basedir="${transport.java.dir}"/>
 
 
-    <delete file="${jar.file}"/>
-    <jar destfile="${jar.file}" duplicate="preserve">
-      <fileset dir="${classes.dir}" />
+    <echo message="building transport at ${transport-jar.file}"/>
+    <delete file="${transport-jar.file}"/>
+    <jar destfile="${transport-jar.file}" duplicate="preserve">
+      <fileset dir="${transport-classes.dir}" />
     </jar>
+    <echo message="built ${transport-jar.file}"/>
 
   </target>
 
 
   <target name="create-classes-dir">
-    <delete dir="${classes.dir}"/>
-    <mkdir  dir="${classes.dir}"/>
+    <delete dir="${transport-classes.dir}"/>
+    <mkdir  dir="${transport-classes.dir}"/>
   </target>
 
 

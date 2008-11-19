@@ -122,6 +122,16 @@
 
 
     <delete file="${jar.file}"/>
+    <available file="${servlet.jar}" property="servlet.jar.exists"/>
+    <available file="${jsp-support.jar}" property="jsp-support.jar.exists"/>
+    <available file="${thin-jar.file}" property="thin-jar.file.exists"/>
+    <available file="${transport-nio.jar}" property="transport-nio.jar.exists"/>
+
+    <fail unless="servlet.jar.exists" message="Can't find ${servlet.jar}"/>
+    <fail unless="jsp-support.jar.exists" message="Can't find ${jsp-support.jar}"/>
+    <fail unless="thin-jar.file.exists" message="Can't find ${thin-jar.file}"/>
+    <fail unless="transport-nio.jar.exists" message="Can't find ${transport-nio.jar}"/>
+
     <jar destfile="${jar.file}" duplicate="preserve">
       <manifest>
         <attribute name="Main-Class" value="com.google.opengse.webapp.war.Main" />
