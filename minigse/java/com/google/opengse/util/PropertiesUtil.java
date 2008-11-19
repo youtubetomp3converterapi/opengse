@@ -139,6 +139,10 @@ public final class PropertiesUtil {
             String key = arg.substring(0, eq);
             String value = arg.substring(eq + 1);
             props.setProperty(key, value);
+          } else {
+            String key = arg;
+            String value = "true";
+            props.setProperty(key, value);
           }
         }
       }

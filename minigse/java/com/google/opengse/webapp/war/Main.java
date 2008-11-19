@@ -18,14 +18,15 @@ import com.google.opengse.ServletEngine;
 import com.google.opengse.ServletEngineFactory;
 import com.google.opengse.ServletEngineConfigurationImpl;
 import com.google.opengse.configuration.WebAppConfigurationException;
+import com.google.opengse.configuration.webxml.WebXmlDump;
 import com.google.opengse.jndi.JNDIMain;
 import com.google.opengse.util.PropertiesUtil;
 import com.google.opengse.webapp.WebAppCollection;
 import com.google.opengse.webapp.WebAppCollectionFactory;
 import com.google.opengse.webapp.GlobalConfigurationFactory;
+import com.google.opengse.webapp.WebAppConfigurationBuilder;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -52,6 +53,11 @@ public class Main {
       showVersion();
       return;
     }
+
+    if (props.getProperty("create") != null) {
+      SkeletonMaker.createWebApp(props);
+      return;
+    }
     // Let us run this more than once (e.g. from unit tests)
     if (!jndiInitialized) {
       // add our configuration to JNDI
@@ -69,6 +75,8 @@ public class Main {
     webapps.startAll();
     engine.run();
   }
+
+
 
   private static void showVersion() throws IOException {
     Properties props = GlobalConfigurationFactory.getVersionInformation(Thread.currentThread().getContextClassLoader());
@@ -90,10 +98,11 @@ public class Main {
     File webapp = PropertiesUtil.getFile(props, "webapp");
 
     if (webappsDir == null && webapp == null) {
-      LOGGER.severe("No webapp or webapps property found.");
-      LOGGER.severe("Please use --webapp=/path/to/file.war " +
-          "or --webapp=/path/to/webapp " +
-          "or --webapps=/path/to/wars or --props=/path/to/file.properties ");
+      System.err.println("No webapp or webapps property found.");
+      System.err.println("Please use --webapp=/path/to/file.war ");
+      System.err.println("or --webapp=/path/to/webapp ");
+      System.err.println("or --webapps=/path/to/wars or --props=/path/to/file.properties");
+      System.err.println("or --create to create a skeleton web application");
       return null;
     }
 

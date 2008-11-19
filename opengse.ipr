@@ -267,11 +267,11 @@
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Opengse.iml" filepath="$PROJECT_DIR$/Opengse.iml" group="OpenGSE-project" />
+      <module fileurl="file://$PROJECT_DIR$/Opengse.iml" filepath="$PROJECT_DIR$/Opengse.iml" group="OpenGSE-project/Reference-Engine" />
       <module fileurl="file://$PROJECT_DIR$/client-side-tests.iml" filepath="$PROJECT_DIR$/client-side-tests.iml" group="OpenGSE-project/testing/client-side" />
       <module fileurl="file://$PROJECT_DIR$/jsp-tests.iml" filepath="$PROJECT_DIR$/jsp-tests.iml" group="OpenGSE-project/testing/server-side" />
       <module fileurl="file://$PROJECT_DIR$/moretests.iml" filepath="$PROJECT_DIR$/moretests.iml" group="OpenGSE-project/testing/server-side" />
-      <module fileurl="file://$PROJECT_DIR$/transports/nio/nio.iml" filepath="$PROJECT_DIR$/transports/nio/nio.iml" group="OpenGSE-project" />
+      <module fileurl="file://$PROJECT_DIR$/transports/nio/nio.iml" filepath="$PROJECT_DIR$/transports/nio/nio.iml" group="OpenGSE-project/Reference-Engine/Transports" />
       <module fileurl="file://$PROJECT_DIR$/performance.iml" filepath="$PROJECT_DIR$/performance.iml" group="OpenGSE-project/testing/server-side" />
       <module fileurl="file://$PROJECT_DIR$/servlet-compat.iml" filepath="$PROJECT_DIR$/servlet-compat.iml" group="OpenGSE-project/testing/server-side" />
       <module fileurl="file://$PROJECT_DIR$/servlet-tests.iml" filepath="$PROJECT_DIR$/servlet-tests.iml" group="OpenGSE-project/testing/server-side" />
@@ -281,30 +281,6 @@
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="Deploy Testing WARs" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" value="com.google.opengse.webapp.war.Main" />
-      <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="--webapps=testing/server-side/webapps" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="Opengse" />
-      <envs />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="46800" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Debug" />
-      <ConfigurationWrapper RunnerId="Run" />
-      <method>
-        <option name="Make" value="true" />
-      </method>
-    </configuration>
     <configuration default="false" name="Servlet25ComplianceTests" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
       <pattern value="com.google.opengse.clienttests.*" />
       <module name="client-side-tests" />
@@ -324,7 +300,41 @@
         <value defaultName="wholeProject" />
       </option>
       <envs />
+      <RunnerSettings RunnerId="JProfiler">
+        <option name="WINDOW" value="false" />
+        <option name="JVMPI" value="false" />
+        <option name="INTERPRETED" value="false" />
+      </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
+    <configuration default="false" name="Deploy Testing WARs" type="Application" factoryName="Application" enabled="false" merge="false">
+      <option name="MAIN_CLASS_NAME" value="com.google.opengse.webapp.war.Main" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="--webapps=testing/server-side/webapps" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="Opengse" />
+      <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="46800" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="JProfiler">
+        <option name="WINDOW" value="false" />
+        <option name="JVMPI" value="false" />
+        <option name="INTERPRETED" value="false" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
       <method>
         <option name="Make" value="true" />
@@ -344,9 +354,6 @@
     <option name="GENERATE_NO_WARNINGS" value="false" />
     <option name="GENERATE_IIOP_STUBS" value="false" />
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
-  </component>
-  <component name="SvnBranchConfigurationManager">
-    <option name="myVersion" value="123" />
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
