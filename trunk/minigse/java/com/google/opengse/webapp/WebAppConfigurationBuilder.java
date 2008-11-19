@@ -137,6 +137,13 @@ public class WebAppConfigurationBuilder {
     return addServlet(servletName, servletClass, pattern, initParams);
   }
 
+  public WebAppConfigurationBuilder unsafe_addServlet(
+      String servletName, String whatClaimsToBeAServletClass, String pattern,
+      String key1, String value1) {
+    Properties initParams = new Properties();
+    initParams.put(key1, value1);
+    return unsafe_addServlet(servletName, whatClaimsToBeAServletClass, pattern, initParams);
+  }
 
   public WebAppConfigurationBuilder addServlet(
       Class<? extends Servlet> servletClass, String pattern,
@@ -183,11 +190,36 @@ public class WebAppConfigurationBuilder {
     config.addServlet(servlet);
     MutableWebAppServletMapping servletMapping
         = MutableWebAppServletMapping.create();
-    servletMapping.setServletName(servletClass.getName());
+    servletMapping.setServletName(servletName);
     servletMapping.setUrlPattern(pattern);
     config.addServletMapping(servletMapping);
     return this;
   }
+
+  public WebAppConfigurationBuilder unsafe_addServlet(
+      String servletName, String whatClaimsToBeAServletClass,
+      String pattern, Properties initParams) {
+    MutableWebAppServlet servlet = MutableWebAppServlet.create();
+    servlet.setServletName(servletName);
+    servlet.setServletClass(whatClaimsToBeAServletClass);
+    MutableWebAppInitParam initParam;
+    for (Object okey : initParams.keySet()) {
+      String key = okey.toString();
+      String value = initParams.getProperty(key);
+      initParam = MutableWebAppInitParam.create();
+      initParam.setParamName(key);
+      initParam.setParamValue(value);
+      servlet.addInitParam(initParam);
+    }
+    config.addServlet(servlet);
+    MutableWebAppServletMapping servletMapping
+        = MutableWebAppServletMapping.create();
+    servletMapping.setServletName(servletName);
+    servletMapping.setUrlPattern(pattern);
+    config.addServletMapping(servletMapping);
+    return this;
+  }
+
 
   public WebAppConfigurationBuilder addServletContextListener(
       Class<? extends ServletContextListener> listenerClass) {
