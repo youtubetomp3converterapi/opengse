@@ -73,7 +73,7 @@
         <attribute name="Created-By" value="ANT" />
         <attribute name="Manifest-Version" value="1.0" />
       </manifest>
-      <zipfileset src="${servlet.jar}" prefix=""/>
+      <!-- zipfileset src="${servlet.jar}" prefix=""/ -->
       <fileset dir="${classes.dir}" />
     </jar>
 
