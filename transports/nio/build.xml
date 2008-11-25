@@ -68,6 +68,7 @@
       <!-- Notice how we only depend on javax.servlet.* classes to compile -->
       <classpath>
         <pathelement location="${opengse-thin.jar}"/>
+        <pathelement location="${servlet.jar}"/>
       </classpath>
     </javac>
     <copy todir="${transport-classes.dir}">
