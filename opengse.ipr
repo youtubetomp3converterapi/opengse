@@ -394,7 +394,7 @@
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/minigse/lib/servlet-api-2.5-src.jar!/" />
+        <root url="jar://$PROJECT_DIR$/minigse/lib/servlet-api-2.5-src.zip!/" />
       </SOURCES>
     </library>
     <library name="JSP API">
