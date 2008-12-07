@@ -20,6 +20,7 @@ import com.google.opengse.ServletEngine;
 import com.google.opengse.ServletEngineConfiguration;
 import com.google.opengse.ServletEngineConfigurationImpl;
 import com.google.opengse.util.DispatchQueue;
+import com.google.opengse.util.DispatchQueueImpl;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
