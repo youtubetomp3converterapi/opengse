@@ -86,11 +86,20 @@ final class GseInitialContext extends UnsupportedContext {
 
   private Object lookupJndiClass(String prefix, String classname) throws NamingException {
     try {
-      Class<?> clazz = Class.forName(classname);
+      ClassLoader cl = getCurrentClassLoader();
+      Class<?> clazz = cl.loadClass(classname);
       return resolve(clazz, prefix);
     } catch (ClassNotFoundException e) {
       throw new NamingException("Cannot find class '" + classname + "'");
     }
+  }
+
+  private static ClassLoader getCurrentClassLoader() {
+    ClassLoader cl = Thread.currentThread().getContextClassLoader();
+    if (cl == null) {
+      cl = GseInitialContext.class.getClassLoader();
+    }
+    return cl;    
   }
 
   private <T> T resolve(Class<T> iface, String prefix) throws NamingException {
@@ -121,7 +130,8 @@ final class GseInitialContext extends UnsupportedContext {
       String ifaceName, String factoryClassname)
       throws NamingException {
     try {
-      Class<?> factoryClass = Class.forName(factoryClassname);
+      ClassLoader cl = getCurrentClassLoader();
+      Class<?> factoryClass = cl.loadClass(factoryClassname);
       Object factory = factoryClass.newInstance();
       if (!(factory instanceof Factory)) {
         throw new NamingException(factoryClassname + " is not a Factory for " + ifaceName);
