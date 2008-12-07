@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="blocking-transport" default="build">
+
+  <!-- Define some directories -->
+  <property name="opengse.dir" location="${basedir}/../.."/>
+  <property name="opengse-thin.jar" value="${opengse.dir}/minigse/opengse-thin.jar"/>
+  <property name="out.dir" value="${opengse.dir}/out"/>
+  <property name="transport-classes.dir" value="${out.dir}/blocking-transport/classes"/>
+  <property name="transport.java.dir" value="${basedir}/java"/>
+  <property name="lib.dir" value="${basedir}/lib" />
+  <property name="global-lib.dir" value="${opengse.dir}/lib"/>
+
+  <taskdef name="propertyfile" classname="org.apache.tools.ant.taskdefs.optional.PropertyFile"
+   classpath="${global-lib.dir}/ant-nodeps.jar"/>
+
+  <!-- define our output jars -->
+  <property name="transport-jar.file" value="${basedir}/transport-blocking.jar"/>
+  <property name="src-zip.file" value="${basedir}/transport-blocking-src.zip"/>
+
+  <!-- Define some jars we will need -->
+  <property name="servlet.jar" value="${lib.dir}/servlet-api-2.5.jar" />
+  <property name="jsp-api.jar" value="${lib.dir}/jsp-api-2.4.jar" />
+  <property name="jstl.jar" value="${lib.dir}/jstl-1.1.jar" />
+
+  <property name="commons-logging.jar" value="${lib.dir}/commons-logging-1.1.jar" />
+  <property name="jasper-compiler.jar" value="${lib.dir}/jasper-compiler-5.0.28.jar" />
+  <property name="jasper-runtime.jar" value="${lib.dir}/jasper-runtime-5.0.28.jar" />
+  <property name="commons-el.jar" value="${lib.dir}/commons-el-1.0.jar" />
+  <property name="ant.jar" value="${lib.dir}/ant.jar" />
+  <property name="ant-launcher.jar" value="${lib.dir}/ant-launcher.jar" />
+
+  <!-- testing-related libraries -->
+  <property name="ant-junit.jar" value="${global-lib.dir}/ant-junit.jar"/>
+  <property name="junit.jar" value="${global-lib.dir}/junit-4.4.jar"/>
+
+  <!-- testing-related classpath -->
+  <path id="test.libs">
+    <pathelement path="${ant-junit.jar}"/>
+    <pathelement path="${junit.jar}"/>
+  </path>
+
+  <patternset id="compiler.resources">
+    <include name="**/?*.properties" />
+    <include name="**/?*.txt" />
+    <include name="**/?*.xml" />
+    <include name="**/?*.gif" />
+    <include name="**/?*.png" />
+    <include name="**/?*.jpeg" />
+    <include name="**/?*.jpg" />
+    <include name="**/?*.html" />
+    <include name="**/?*.dtd" />
+    <include name="**/?*.tld" />
+    <include name="**/?*.ser" />
+  </patternset>
+  
+
+  <target name="build" depends="create-classes-dir">
+
+    <echo>
+      Building BLOCKING transport...
+
+      transport.java.dir = ${transport.java.dir}
+      global-lib.dir = ${global-lib.dir}
+      transport-classes.dir = ${transport-classes.dir}
+    </echo>
+
+    <javac srcdir="${transport.java.dir}" destdir="${transport-classes.dir}" debug="true">
+      <!-- Notice how we only depend on javax.servlet.* classes to compile -->
+      <classpath>
+        <pathelement location="${opengse-thin.jar}"/>
+        <pathelement location="${servlet.jar}"/>
+      </classpath>
+    </javac>
+    <copy todir="${transport-classes.dir}">
+      <fileset dir="${transport.java.dir}">
+        <patternset refid="compiler.resources" />
+        <type type="file" />
+      </fileset>
+    </copy>
+
+    <!-- Create the source zip file -->
+    <delete file="${src-zip.file}"/>
+    <zip file="${src-zip.file}" basedir="${transport.java.dir}"/>
+
+
+    <echo message="building transport at ${transport-jar.file}"/>
+    <delete file="${transport-jar.file}"/>
+    <jar destfile="${transport-jar.file}" duplicate="preserve">
+      <fileset dir="${transport-classes.dir}" />
+    </jar>
+    <echo message="built ${transport-jar.file}"/>
+
+  </target>
+
+
+  <target name="create-classes-dir">
+    <delete dir="${transport-classes.dir}"/>
+    <mkdir  dir="${transport-classes.dir}"/>
+  </target>
+
+
+</project>
