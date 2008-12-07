@@ -14,6 +14,8 @@
 
 package com.google.opengse.core;
 
+import com.google.opengse.util.DispatchQueue;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;

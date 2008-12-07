@@ -18,6 +18,7 @@ package com.google.opengse.core;
 import com.google.opengse.ServletEngineConfiguration;
 import com.google.opengse.HttpRequest;
 import com.google.opengse.HttpRequestHandler;
+import com.google.opengse.util.DispatchQueue;
 
 import java.io.File;
 import java.io.IOException;

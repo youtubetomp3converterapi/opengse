@@ -19,6 +19,7 @@ import com.google.opengse.HttpRequestHandlerAdapter;
 import com.google.opengse.ServletEngine;
 import com.google.opengse.ServletEngineConfiguration;
 import com.google.opengse.ServletEngineConfigurationImpl;
+import com.google.opengse.util.DispatchQueue;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
