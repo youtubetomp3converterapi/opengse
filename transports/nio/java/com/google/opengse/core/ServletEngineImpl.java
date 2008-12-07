@@ -90,7 +90,7 @@ public class ServletEngineImpl implements ServletEngine {
   ServletEngineImpl(FilterChain dispatcher, ServletEngineConfiguration config)
       throws IOException, InterruptedException {
     NetSelector selector = new NetSelector();
-    DispatchQueue queue = new DispatchQueue2(config.getMaxThreads());
+    DispatchQueue queue = new DispatchQueueImpl(config.getMaxThreads());
     HttpRequestHandler handler = new HttpRequestHandlerAdapter(dispatcher);
     server_ = new HttpServer(selector, queue, handler, config);
     server_.getSelector().listen(config.getPort(), server_, false);
@@ -100,7 +100,7 @@ public class ServletEngineImpl implements ServletEngine {
       HttpRequestHandler handler, ServletEngineConfiguration config)
       throws IOException, InterruptedException {
     NetSelector selector = new NetSelector();
-    DispatchQueue queue = new DispatchQueue2(config.getMaxThreads());
+    DispatchQueue queue = new DispatchQueueImpl(config.getMaxThreads());
     server_ = new HttpServer(selector, queue, handler, config);
     server_.getSelector().listen(config.getPort(), server_, false);
   }
