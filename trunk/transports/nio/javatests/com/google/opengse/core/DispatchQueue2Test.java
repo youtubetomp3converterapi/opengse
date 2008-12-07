@@ -17,7 +17,7 @@ package com.google.opengse.core;
 import com.google.opengse.UnwrittenTestCase;
 
 /**
- * Unit test for {@link DispatchQueue2}.
+ * Unit test for {@link DispatchQueueImpl}.
  */
 public class DispatchQueue2Test extends UnwrittenTestCase {
 }
