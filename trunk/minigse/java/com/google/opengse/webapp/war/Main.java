@@ -18,15 +18,12 @@ import com.google.opengse.ServletEngine;
 import com.google.opengse.ServletEngineFactory;
 import com.google.opengse.ServletEngineConfigurationImpl;
 import com.google.opengse.configuration.WebAppConfigurationException;
-import com.google.opengse.configuration.webxml.WebXmlDump;
 import com.google.opengse.jndi.JNDIMain;
 import com.google.opengse.util.PropertiesUtil;
 import com.google.opengse.webapp.WebAppCollection;
 import com.google.opengse.webapp.WebAppCollectionFactory;
 import com.google.opengse.webapp.GlobalConfigurationFactory;
-import com.google.opengse.webapp.WebAppConfigurationBuilder;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -34,6 +31,8 @@ import java.util.StringTokenizer;
 import java.util.logging.Logger;
 import java.net.URLClassLoader;
 import java.net.URL;
+import java.io.IOException;
+import java.io.File;
 
 /**
  * Main entry point for war deployment.
@@ -105,13 +104,14 @@ public class Main {
   private static void showVersion() throws IOException {
     Properties props = GlobalConfigurationFactory.getVersionInformation(Thread.currentThread().getContextClassLoader());
     if (props == null) {
-      LOGGER.info("No version information available.");
+      System.err.println("No version information available.");
+      return;
     }
     String version = props.getProperty("version");
     if (version == null) {
-      LOGGER.severe("No version information found!");
+      System.err.println("No version information found!");
     } else {
-      LOGGER.info("version " + version);
+      System.out.println("version " + version);
     }
   }
 
@@ -131,7 +131,7 @@ public class Main {
     }
 
     if (webapp != null && webappsDir != null) {
-      LOGGER.severe("Found both webapp=" + webapp
+      System.err.println("Found both webapp=" + webapp
           + " and webapps=" + webappsDir + " properties set");
       return null;
     }
@@ -162,7 +162,7 @@ public class Main {
     File[] warsToDeploy;
     warsToDeploy = getWarsInDirectory(webapps);
     if (warsToDeploy == null || warsToDeploy.length == 0) {
-      LOGGER.severe("No war files found in " + webapps);
+      System.err.println("No war files found in " + webapps);
       return null;
     }
     return WarDeployer.deploy(props, warsToDeploy);
