@@ -288,7 +288,7 @@
     <configuration default="false" name="Deploy Testing WARs" type="Application" factoryName="Application" enabled="false" merge="false" sample_coverage="true" runner="emma">
       <option name="MAIN_CLASS_NAME" value="com.google.opengse.webapp.war.Main" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="--webapps=testing/server-side/webapps --transport=transports/nio/transport-nio.jar" />
+      <option name="PROGRAM_PARAMETERS" value="--webapps=testing/server-side/webapps --classpath=transports/nio/transport-nio.jar" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />

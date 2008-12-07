@@ -30,7 +30,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.logging.Logger;
+import java.net.URLClassLoader;
+import java.net.URL;
 
 /**
  * Main entry point for war deployment.
@@ -68,6 +71,15 @@ public class Main {
     if (webapps == null) {
       return;
     }
+    String classpath = PropertiesUtil.getAliasedProperty(props, "classpath", null);
+    if (classpath != null) {
+      ClassLoader cl = Thread.currentThread().getContextClassLoader();
+      if (cl != null && cl instanceof URLClassLoader) {
+        URLClassLoader urlcl = (URLClassLoader) cl;
+        urlcl = new URLClassLoader(classpathToUrls(classpath), urlcl);
+        Thread.currentThread().setContextClassLoader(urlcl);
+      }
+    }
     ServletEngineFactory engineFactory
         = JNDIMain.lookup(ServletEngineFactory.class);
     ServletEngine engine = engineFactory.createServletEngine(
@@ -77,6 +89,18 @@ public class Main {
   }
 
 
+  private static URL[] classpathToUrls(String classpath) throws IOException {
+    classpath = classpath.replace('/', File.separatorChar);
+    StringTokenizer st = new StringTokenizer(classpath, File.pathSeparator);
+    URL[] urls = new URL[st.countTokens()];
+    int i = 0;
+    while (st.hasMoreTokens()) {
+      File f = new File(st.nextToken());
+      f = f.getCanonicalFile();
+      urls[i++] = f.toURL(); 
+    }
+    return urls;
+  }
 
   private static void showVersion() throws IOException {
     Properties props = GlobalConfigurationFactory.getVersionInformation(Thread.currentThread().getContextClassLoader());
