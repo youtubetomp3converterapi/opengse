@@ -12,18 +12,6 @@
     <orderEntry type="module" module-name="Opengse" />
     <orderEntry type="library" name="Servlet API" level="project" />
     <orderEntry type="library" name="JUnit" level="project" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/minigse/lib/servlet-api-2.5.jar!/" />
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/javaee.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/minigse/lib/servlet-api-2.5-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
   </component>
 </module>
 
