@@ -4,6 +4,7 @@
   <!-- Define some directories -->
   <property name="opengse.dir" location="${basedir}/../.."/>
   <property name="opengse-thin.jar" value="${opengse.dir}/minigse/opengse-thin.jar"/>
+  <property name="opengse-lib.dir" value="${opengse.dir}/minigse/lib"/>
   <property name="out.dir" value="${opengse.dir}/out"/>
   <property name="transport-classes.dir" value="${out.dir}/nio-transport/classes"/>
   <property name="transport.java.dir" value="${basedir}/java"/>
@@ -18,9 +19,9 @@
   <property name="src-zip.file" value="${basedir}/transport-nio-src.zip"/>
 
   <!-- Define some jars we will need -->
-  <property name="servlet.jar" value="${lib.dir}/servlet-api-2.5.jar" />
-  <property name="jsp-api.jar" value="${lib.dir}/jsp-api-2.4.jar" />
-  <property name="jstl.jar" value="${lib.dir}/jstl-1.1.jar" />
+  <property name="servlet.jar" value="${opengse-lib.dir}/servlet-api-2.5.jar" />
+  <property name="jsp-api.jar" value="${opengse-lib.dir}/jsp-api-2.4.jar" />
+  <property name="jstl.jar" value="${opengse-lib.dir}/jstl-1.1.jar" />
 
   <property name="commons-logging.jar" value="${lib.dir}/commons-logging-1.1.jar" />
   <property name="jasper-compiler.jar" value="${lib.dir}/jasper-compiler-5.0.28.jar" />
@@ -62,6 +63,8 @@
       transport.java.dir = ${transport.java.dir}
       global-lib.dir = ${global-lib.dir}
       transport-classes.dir = ${transport-classes.dir}
+      servlet.jar = ${servlet.jar}
+      opengse-thin.jar = ${opengse-thin.jar}
     </echo>
 
     <javac srcdir="${transport.java.dir}" destdir="${transport-classes.dir}" debug="true">
