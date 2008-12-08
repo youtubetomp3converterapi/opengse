@@ -32,6 +32,17 @@ public class GlobalConfigurationFactory {
   private GlobalConfigurationFactory() {
   }
 
+  private static String globalConfiguration = GSE_INF_WEB_XML;
+
+  /**
+   * Override the default global configuration web.xml with an application
+   * provided one.
+   *
+   * @param webXml A new web.xml that serves as the global configuration.
+   */
+  public static void setGlobalConfiguration(String webXml) {
+    globalConfiguration = webXml;
+  }
 
   /**
    * Get the version information "baked in" to this jar, or null if running out
@@ -75,12 +86,12 @@ public class GlobalConfigurationFactory {
   public static WebAppConfiguration getGlobalConfiguration(
       ClassLoader classLoader)
       throws IOException, WebAppConfigurationException {
-    Enumeration<URL> webxmls = classLoader.getResources(GSE_INF_WEB_XML);
+    Enumeration<URL> webxmls = classLoader.getResources(globalConfiguration);
     URL webxmlUrl = null;
     while (webxmls.hasMoreElements()) {
       if (webxmlUrl != null) {
         throw new WebAppConfigurationException(
-            "More than one " + GSE_INF_WEB_XML + " found in the classpath");
+            "More than one " + globalConfiguration + " found in the classpath");
       }
       webxmlUrl = webxmls.nextElement();
     }
@@ -92,7 +103,7 @@ public class GlobalConfigurationFactory {
         throw new RuntimeException("Cannot load " + me + " something is seriously wrong with the classloader(s): " + getClassloaderChain(classLoader));
       }
       throw new WebAppConfigurationException(
-          "Could not find global configuration resource '" + GSE_INF_WEB_XML
+          "Could not find global configuration resource '" + globalConfiguration
               + "'");
     }
     Reader reader = new InputStreamReader(webxmlUrl.openStream());
