@@ -33,6 +33,7 @@ import java.net.URLClassLoader;
 import java.net.URL;
 import java.io.IOException;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 /**
  * Main entry point for war deployment.
@@ -88,6 +89,13 @@ public class Main {
   }
 
 
+  /**
+   * Converts a classpath to an array of URLs
+   * 
+   * @param classpath
+   * @return
+   * @throws IOException
+   */
   private static URL[] classpathToUrls(String classpath) throws IOException {
     classpath = classpath.replace('/', File.separatorChar);
     StringTokenizer st = new StringTokenizer(classpath, File.pathSeparator);
@@ -96,6 +104,9 @@ public class Main {
     while (st.hasMoreTokens()) {
       File f = new File(st.nextToken());
       f = f.getCanonicalFile();
+      if (!f.exists()) {
+        throw new FileNotFoundException(f.toString());
+      }
       urls[i++] = f.toURL(); 
     }
     return urls;
