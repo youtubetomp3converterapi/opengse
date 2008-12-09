@@ -25,6 +25,16 @@ import com.google.opengse.configuration.WebAppServletMapping;
 import com.google.opengse.filters.RegularExpressionRequestHandler;
 import com.google.opengse.filters.RegularExpressionRequestHandlerDispatcher;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Logger;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -35,15 +45,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * Manages servlets and filters.
@@ -476,7 +477,7 @@ public final class ServletManager {
     }
 
     boolean isGlobalPattern() {
-      return (key.equals("/") || key.equals("/*"));
+      return (key.equals("/*"));
     }
 
     public String toRegex() {
