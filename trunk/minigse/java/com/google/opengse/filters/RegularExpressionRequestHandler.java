@@ -228,7 +228,7 @@ public class RegularExpressionRequestHandler implements FilterChain {
     }
 
     private int size() {
-      return (MATCH_EVERYTHING_PATTERN.equals(pattern.toString()))
+      return (MATCH_EVERYTHING_STRING.equals(pattern.toString()))
           ? -1 : pattern.toString().length();
     }
 
