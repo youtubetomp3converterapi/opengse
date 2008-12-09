@@ -14,19 +14,45 @@
 
 package com.google.opengse.configuration.webxml;
 
-import com.google.opengse.configuration.*;
-import com.google.opengse.configuration.impl.*;
-import org.xml.sax.SAXException;
+import com.google.opengse.configuration.WebAppConfiguration;
+import com.google.opengse.configuration.WebAppContextParam;
+import com.google.opengse.configuration.WebAppErrorPage;
+import com.google.opengse.configuration.WebAppFilter;
+import com.google.opengse.configuration.WebAppFilterMapping;
+import com.google.opengse.configuration.WebAppInitParam;
+import com.google.opengse.configuration.WebAppListener;
+import com.google.opengse.configuration.WebAppMimeMapping;
+import com.google.opengse.configuration.WebAppServlet;
+import com.google.opengse.configuration.WebAppServletMapping;
+import com.google.opengse.configuration.WebAppSessionConfig;
+import com.google.opengse.configuration.WebAppTagLib;
+import com.google.opengse.configuration.WebAppWelcomeFileList;
+import com.google.opengse.configuration.impl.MutableWebAppConfiguration;
+import com.google.opengse.configuration.impl.MutableWebAppContextParam;
+import com.google.opengse.configuration.impl.MutableWebAppErrorPage;
+import com.google.opengse.configuration.impl.MutableWebAppFilter;
+import com.google.opengse.configuration.impl.MutableWebAppInitParam;
+import com.google.opengse.configuration.impl.MutableWebAppListener;
+import com.google.opengse.configuration.impl.MutableWebAppMimeMapping;
+import com.google.opengse.configuration.impl.MutableWebAppServlet;
+import com.google.opengse.configuration.impl.MutableWebAppServletMapping;
+import com.google.opengse.configuration.impl.MutableWebAppSessionConfig;
+import com.google.opengse.configuration.impl.MutableWebAppTagLib;
+import com.google.opengse.configuration.impl.MutableWebAppWelcomeFileList;
+import com.google.opengse.configuration.impl.MutableWebappFilterMapping;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * An implementation of WebXmlFileParser that uses no third-party xml parsing.
@@ -120,6 +146,9 @@ public class WebXmlParserImpl2 implements WebXmlParser {
     public void parse(Object context, Node node) throws SAXException {
       Object arg = creator.create(node);
       try {
+        if (arg instanceof String) {
+          arg = ((String) arg).trim().intern();
+        }
         method.invoke(context, arg);
       } catch (IllegalAccessException e) {
         throw new SAXException(e);
