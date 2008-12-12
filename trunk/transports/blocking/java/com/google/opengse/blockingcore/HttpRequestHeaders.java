@@ -16,6 +16,7 @@ package com.google.opengse.blockingcore;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -35,8 +36,9 @@ final class HttpRequestHeaders {
   private HttpRequestType requestType;
   private Map<String, List<Header>> headerMap;
 
-  HttpRequestHeaders(BufferedReader reader) throws IOException {
+  HttpRequestHeaders(String allHeaders) throws IOException {
     requestType = null;
+    BufferedReader reader = new BufferedReader(new StringReader(allHeaders));
     String line;
     headerMap = new HashMap<String, List<Header>>();
     while ((line = reader.readLine()) != null) {
