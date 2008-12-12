@@ -1786,8 +1786,7 @@ public class Servlet25ComplianceTests extends ServerTestCaseWhichConnectsToARemo
   }
 
   @Test
-  public void testReadLine()
-      throws Exception {
+  public void  testReadLine() throws Exception {
     HttpAssertion httpAssert = createAssertion();
     httpAssert.setAssertion(
         "Reads the input stream, one line at a time., specified in the Java Servlet Pages Specification v2.3, Sec 14");

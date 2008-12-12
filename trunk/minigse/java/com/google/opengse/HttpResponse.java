@@ -29,6 +29,27 @@ public interface HttpResponse {
 
   boolean containsHeader(String name);
 
+  /**
+   * Sends an error response to the client using the specified
+   * status.  The server defaults to creating the
+   * response to look like an HTML-formatted server error page
+   * containing the specified message, setting the content type
+   * to "text/html", leaving cookies and other headers unmodified.
+   *
+   * If an error-page declaration has been made for the web application
+   * corresponding to the status code passed in, it will be served back in
+   * preference to the suggested msg parameter.
+   *
+   * <p>If the response has already been committed, this method throws
+   * an IllegalStateException.
+   * After using this method, the response should be considered
+   * to be committed and should not be written to.
+   *
+   * @param	sc	the error status code
+   * @param	msg	the descriptive message
+   * @exception	IOException	If an input or output exception occurs
+   * @exception	IllegalStateException	If the response was committed
+   */
   void sendError(int sc, String msg) throws IOException;
 
   void sendError(int sc) throws IOException;
@@ -45,8 +66,33 @@ public interface HttpResponse {
 
   void addIntHeader(String name, int value);
 
+  /**
+   * Sets the status code for this response.  This method is used to
+   * set the return status code when there is no error (for example,
+   * for the status codes SC_OK or SC_MOVED_TEMPORARILY).  If there
+   * is an error, and the caller wishes to invoke an error-page defined
+   * in the web application, the <code>sendError</code> method should be used
+   * instead.
+   * <p> The container clears the buffer and sets the Location header, preserving
+   * cookies and other headers.
+   *
+   * @param	sc	the status code
+   *
+   * @see #sendError
+   */
   void setStatus(int sc);
 
+  /**
+   * @deprecated As of version 2.1, due to ambiguous meaning of the
+   * message parameter. To set a status code
+   * use <code>setStatus(int)</code>, to send an error with a description
+   * use <code>sendError(int, String)</code>.
+   *
+   * Sets the status code and message for this response.
+   *
+   * @param	sc	the status code
+   * @param	sm	the status message
+   */
   void setStatus(int sc, String sm);
 
   String getCharacterEncoding();

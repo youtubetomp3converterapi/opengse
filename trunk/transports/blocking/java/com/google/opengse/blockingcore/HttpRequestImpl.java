@@ -79,10 +79,6 @@ final class HttpRequestImpl implements HttpRequest {
     return inputStream;
   }
 
-  /*
-   * TODO(jennings, killianey):  Consider tradeoffs of 
-   * Map<String, String[]> vs. Multimap<String, String>.
-   */
   public Map<String, String[]> getParameterMap() {
     return new HashMap<String, String[]>();
   }

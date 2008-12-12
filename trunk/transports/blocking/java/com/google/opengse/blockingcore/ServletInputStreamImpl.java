@@ -36,6 +36,11 @@ class ServletInputStreamImpl extends ServletInputStream {
   }
 
   @Override
+  public int readLine(byte[] b, int off, int len) throws IOException {
+    return super.readLine(b, off, len);
+  }
+
+  @Override
   public int read(byte b[], int off, int len) throws IOException {
     return realStream.read(b, off, len);    
   }

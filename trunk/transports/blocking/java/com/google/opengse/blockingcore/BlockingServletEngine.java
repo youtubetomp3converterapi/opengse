@@ -49,34 +49,32 @@ final class BlockingServletEngine implements ServletEngine {
     }
   }
 
-  public void awaitInitialization(final long timeout) {
-    /*
-     * TODO:  Is there nothing to do because this should already be initialized
-     * after construction? If that's correct, maybe document as such?
-     */
+  public void awaitInitialization(long timeout) {
   }
 
-  public int getPort() {
+  public synchronized int getPort() {
     return serverSocket.getLocalPort();
   }
 
-  public boolean quit(long timeout) throws IOException {
+  public synchronized boolean quit(long timeout) throws IOException {
     if (serverSocket != null) {
       serverSocket.close();
       serverSocket = null;
+      this.notifyAll();
       return true;
     }
     return false;
   }
 
   public boolean isAccepting() {
-    return false;
+    return (serverSocket != null);
   }
 
-  public void run() {
-    /*
-     * TODO:  Is there nothing to do because this should already be running
-     * after construction? If that's correct, maybe document as such?
-     */
+  public synchronized void run() {
+    try {
+      this.wait();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
