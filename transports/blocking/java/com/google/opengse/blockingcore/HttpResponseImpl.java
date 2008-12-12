@@ -15,11 +15,13 @@
 package com.google.opengse.blockingcore;
 
 import com.google.opengse.HttpResponse;
+import com.google.opengse.HeaderUtil;
 
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Locale;
+import java.util.List;
 
 /**
  * @author jennings
@@ -39,15 +41,35 @@ final class HttpResponseImpl implements HttpResponse {
   }
 
   public void sendError(int sc, String msg) throws IOException {
+    // if the response is already committed, except
+    if (isCommitted()) {
+      throw new IllegalStateException("response committed; cannot send error");
+    }
+    outputStream.setStatus(sc);
+    outputStream.resetBuffer();
+    setContentType("text/html");
+    outputStream.println(getErrorHtml(sc, msg));
+    outputStream.commit();
+  }
+
+  private String getErrorHtml(int statusCode, String msg) {
+    return "Error:" + msg;
   }
 
   public void sendError(int sc) throws IOException {
+    sendError(sc, getErrorMessageForStatusCode(sc));
   }
 
-  public void setDateHeader(String name, long date) {
+  private String getErrorMessageForStatusCode(int sc) {
+    return "error";
   }
 
-  public void addDateHeader(String name, long date) {
+  public void setDateHeader(String name, long value) {
+    setHeader(name, HeaderUtil.toDateHeader(value));
+  }
+
+  public void addDateHeader(String name, long value) {
+    addHeader(name, HeaderUtil.toDateHeader(value));
   }
 
   public void setHeader(String name, String value) {
@@ -59,23 +81,28 @@ final class HttpResponseImpl implements HttpResponse {
   }
 
   public void setIntHeader(String name, int value) {
+    setHeader(name, Integer.toString(value));
   }
 
   public void addIntHeader(String name, int value) {
+    addHeader(name, Integer.toString(value));
   }
 
   public void setStatus(int sc) {
+    outputStream.setStatus(sc);
   }
 
   public void setStatus(int sc, String sm) {
+    outputStream.setStatus(sc, sm);
   }
 
   public String getCharacterEncoding() {
-    return null;
+    return "UTF8";
   }
 
   public String getContentType() {
-    return null;
+    List<String> values = outputStream.getHeaderValues("Content-Type");
+    return (values != null && !values.isEmpty()) ? values.iterator().next() : null;
   }
 
   public ServletOutputStream getOutputStream() throws IOException {
@@ -87,12 +114,15 @@ final class HttpResponseImpl implements HttpResponse {
   }
 
   public void setCharacterEncoding(String charset) {
+    setHeader("Content-Type", charset);    
   }
 
   public void setContentLength(int len) {
+    setIntHeader("Content-Length", len);    
   }
 
   public void setContentType(String type) {
+    setHeader("Content-Type", type);
   }
 
   public void setBufferSize(int size) {

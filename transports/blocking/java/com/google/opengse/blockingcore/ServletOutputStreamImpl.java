@@ -29,19 +29,35 @@ class ServletOutputStreamImpl extends ServletOutputStream {
   private ByteArrayOutputStream bufferStream;
   private OutputStream currentStream;
   private int precommitSize;
-  private Map<String, List<String>> respHeaders;
+  private Map<String, String> ucase_headername_to_headername;
+  private Map<String, List<String>> ucase_headers;
 
   private PrintWriter out;
   private PrintWriter printWriter;
-  private String statusLine;
+  private int statusCode = 200;
+  private String statusMessage = "OK";
 
   ServletOutputStreamImpl(OutputStream realStream, int precommitSize) {
     this.realStream = realStream;
     this.precommitSize = precommitSize;
-    this.respHeaders = new HashMap<String, List<String>>();
+    ucase_headername_to_headername = new HashMap<String, String>();
+    ucase_headers = new HashMap<String, List<String>>();
     bufferStream = new ByteArrayOutputStream();
     currentStream = bufferStream;
-    statusLine = "HTTP/1.1 200 OK";
+  }
+
+  void setStatus(int statusCode, String statusMessage) {
+    this.statusCode = statusCode;
+    this.statusMessage = statusMessage;
+  }
+
+  void setStatus(int statusCode) {
+    this.statusCode = statusCode;
+    this.statusMessage = getMessageForStatusCode(statusCode);
+  }
+
+  String getMessageForStatusCode(int sc) {
+    return "OK";
   }
 
   boolean isCommitted() {
@@ -100,7 +116,8 @@ class ServletOutputStreamImpl extends ServletOutputStream {
       throw new IllegalStateException("Cannot reset, already committed");
     }
     bufferStream.reset();
-    respHeaders.clear();
+    ucase_headers.clear();
+    ucase_headername_to_headername.clear();
   }
 
 
@@ -144,8 +161,10 @@ class ServletOutputStreamImpl extends ServletOutputStream {
   }
 
   private void writeHeaders() {
-    for (String key : respHeaders.keySet()) {
-      List<String> values = respHeaders.get(key);
+    for (String ukey : ucase_headers.keySet()) {
+      List<String> values = ucase_headers.get(ukey);
+      // get the original rendering of the header "content-type" versus "Content-Type" etc.
+      String key = ucase_headername_to_headername.get(ukey);
       // we know that values cannot be empty
       Iterator<String> iter = values.iterator();
       out.print(key + ": " + iter.next());
@@ -159,30 +178,44 @@ class ServletOutputStreamImpl extends ServletOutputStream {
   }
 
   private void writeStatusLine() {
-    out.print(statusLine + "\r\n");
+    // "HTTP/1.1 200 OK" for example
+    out.println("HTTP/1.1 " + statusCode + " " + statusMessage + "\r\n");
   }
 
+  /**
+   * Do a case-insensitive lookup of a given header name
+   * @param key
+   * @return
+   */
   synchronized List<String> getHeaderValues(String key) {
-    List<String> values = respHeaders.get(key);
+    String ukey = key.toUpperCase();
+    List<String> values = ucase_headers.get(ukey);
     if (values == null) {
       values = new ArrayList<String>();
-      respHeaders.put(key, values);
+      ucase_headername_to_headername.put(ukey, key);
+      ucase_headers.put(ukey, values);
     }
     return values;
   }
 
   synchronized boolean containsHeader(String name) {
-    return respHeaders.containsKey(name);
+    return ucase_headers.containsKey(name.toUpperCase());
   }
 
   synchronized void setHeader(String key, String value) {
     if (value == null) {
-      respHeaders.remove(key);
+      removeHeader(key);
       return;
     }
     List<String> values = getHeaderValues(key);
     values.clear();
     values.add(value);
+  }
+
+  void removeHeader(String key) {
+    String ukey = key.toUpperCase();
+    ucase_headername_to_headername.remove(ukey);
+    ucase_headers.remove(ukey);
   }
 
   synchronized void addHeader(String key, String value) {
@@ -202,14 +235,6 @@ class ServletOutputStreamImpl extends ServletOutputStream {
       commit();
     }
     currentStream.write(buf, offset, length);
-  }
-
-  String getStatusLine() {
-    return statusLine;
-  }
-
-  synchronized void setStatusLine(String statusLine) {
-    this.statusLine = statusLine;
   }
 
   PrintWriter getWriter() throws IOException {

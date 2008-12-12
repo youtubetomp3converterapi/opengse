@@ -616,6 +616,7 @@ final class HttpResponseImpl
     resetBuffer();
   }
 
+  
   public void setStatus(int sc) {
     setStatus(sc, null);
   }
