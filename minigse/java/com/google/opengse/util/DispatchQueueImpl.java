@@ -45,7 +45,7 @@ public final class DispatchQueueImpl implements DispatchQueue {
     }
   }
 
-  public void put(Runnable conn) {
+  public void addRunnable(Runnable conn) {
     queue.add(conn);
   }
 

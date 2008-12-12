@@ -36,8 +36,7 @@ final class BlockingServletEngine implements ServletEngine {
   private final ServletEngineConfiguration config;
   private ServerSocket serverSocket;
 
-  BlockingServletEngine(
-      final FilterChain dispatcher, final ServletEngineConfiguration config)
+  BlockingServletEngine(FilterChain dispatcher, ServletEngineConfiguration config)
       throws InterruptedException, IOException {
     serverSocket = new ServerSocket(config.getPort());
     this.config = config;
@@ -46,7 +45,7 @@ final class BlockingServletEngine implements ServletEngine {
     handler = new HttpRequestHandlerAdapter(dispatcher);
     socketHandler = new HttpSocketHandler(handler);
     for (int i = 0; i < nthreads; ++i) {
-      queue.put(new AcceptSocketAndHandleRequest(socketHandler, serverSocket));
+      queue.addRunnable(new AcceptSocketAndHandleRequest(socketHandler, serverSocket));
     }
   }
 
