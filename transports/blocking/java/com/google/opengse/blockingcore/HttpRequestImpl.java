@@ -28,31 +28,25 @@ import java.io.BufferedReader;
  */
 final class HttpRequestImpl implements HttpRequest {
   private final ServletInputStreamImpl inputStream;
-  private HttpRequestHeaders headers;
 
   HttpRequestImpl(ServletInputStreamImpl inputStream) throws IOException {
     this.inputStream = inputStream;
-    parseHeaders();
-  }
-
-  private void parseHeaders() throws IOException {
-    headers = new HttpRequestHeaders(inputStream.getReader());
   }
 
   public String getHeader(String name) {
-    return headers.getHeader(name);
+    return inputStream.getHeader(name);
   }
 
   public Enumeration<String> getHeaders(String name) {
-    return headers.getHeaders(name);
+    return inputStream.getHeaders(name);
   }
 
   public Enumeration<String> getHeaderNames() {
-    return headers.getHeaderNames();
+    return inputStream.getHeaderNames();
   }
 
   public String getMethod() {
-    return headers.getRequestType().getType();
+    return inputStream.getRequestType().getType();
   }
 
   public String getPathTranslated() {
@@ -64,7 +58,7 @@ final class HttpRequestImpl implements HttpRequest {
   }
 
   public String getRequestURI() {
-    return headers.getRequestType().getRequestData();
+    return inputStream.getRequestType().getRequestData();
   }
 
   public StringBuffer getRequestURL() {
