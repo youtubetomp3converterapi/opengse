@@ -37,7 +37,7 @@ import java.util.logging.Logger;
  */
 public class DispatchQueueImpl2 implements DispatchQueue {
   private static final Logger LOGGER =
-    Logger.getLogger("com.google.opengse.DispatchQueue");
+    Logger.getLogger(DispatchQueueImpl2.class.getName());
 
   /** The maximum number of worker threads */
   private volatile int maxThreads_;
@@ -115,7 +115,7 @@ public class DispatchQueueImpl2 implements DispatchQueue {
    *
    * @param conn is the connection to enqueue
    */
-  public synchronized void put(Runnable conn) {
+  public synchronized void addRunnable(Runnable conn) {
     // The call to addLast must be synchronized since get() is called from the
     // many worked threads
     conns_.addLast(conn);
@@ -168,7 +168,7 @@ public class DispatchQueueImpl2 implements DispatchQueue {
   public boolean quit(long timeout) {
     // add nulls into the queue
     for (int i = 0; i < maxThreads_; i++) {
-      put(null);
+      addRunnable(null);
     }
 
     // attempt to join the worker threads, up to maximum timeout

@@ -2,6 +2,14 @@
 <project relativePaths="false" version="4">
   <component name="AntConfiguration">
     <defaultAnt bundledAnt="true" />
+    <buildFile url="file://$PROJECT_DIR$/transports/blocking/build.xml">
+      <additionalClassPath />
+      <antReference projectDefault="true" />
+      <customJdkName value="" />
+      <maximumHeapSize value="128" />
+      <maximumStackSize value="32" />
+      <properties />
+    </buildFile>
   </component>
   <component name="Build editor project-level loader">
     <settings>
@@ -289,7 +297,7 @@
     <configuration default="false" name="Deploy Testing Wars Via Blocking transport" type="Application" factoryName="Application" enabled="false" merge="false" sample_coverage="true" runner="emma">
       <option name="MAIN_CLASS_NAME" value="com.google.opengse.webapp.war.Main" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="--webapps=testing/server-side/webapps --classpath=transports/blocking/transport-blocking.jar" />
+      <option name="PROGRAM_PARAMETERS" value="--webapps=testing/server-side/webapps --classpath=transports/blocking/transport-blocking.jar --com.google.opengse.ServletEngineFactory.factory=com.google.opengse.blockingcore.BlockingServletEngineFactoryFactory" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
@@ -298,7 +306,13 @@
       <option name="PASS_PARENT_ENVS" value="true" />
       <module name="Opengse" />
       <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="60307" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
       <method>
         <option name="Make" value="true" />

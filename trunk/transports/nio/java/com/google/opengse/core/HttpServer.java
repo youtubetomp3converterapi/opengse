@@ -149,7 +149,7 @@ final class HttpServer  implements AcceptCallback, QuitCallback {
   }
 
   void enqueue(Runnable r) {
-    queue_.put(r);
+    queue_.addRunnable(r);
   }
 
   HttpRequestImpl createRequestSubsetImpl(HttpConnection conn) {

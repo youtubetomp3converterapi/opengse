@@ -31,8 +31,7 @@ public class AcceptSocketAndHandleRequest implements Runnable {
   private final SocketHandler handler;
   private final ServerSocket serverSocket;
 
-  public AcceptSocketAndHandleRequest(
-      final SocketHandler handler, final ServerSocket serverSocket) {
+  public AcceptSocketAndHandleRequest(SocketHandler handler, ServerSocket serverSocket) {
     this.handler = handler;
     this.serverSocket = serverSocket;
   }
@@ -60,7 +59,7 @@ public class AcceptSocketAndHandleRequest implements Runnable {
     }
   }
 
-  private void handleSocket(final Socket socket) throws IOException {
+  private void handleSocket(Socket socket) throws IOException {
     InputStream istr = null;
     try {
       istr = socket.getInputStream();
@@ -72,8 +71,7 @@ public class AcceptSocketAndHandleRequest implements Runnable {
     }
   }
 
-  private void handleSocket(
-      final Socket socket, final InputStream istr) throws IOException {
+  private void handleSocket(Socket socket, InputStream istr) throws IOException {
     OutputStream ostr = null;
     try {
       ostr = socket.getOutputStream();
@@ -85,8 +83,7 @@ public class AcceptSocketAndHandleRequest implements Runnable {
     }
   }
 
-  private void handleSocket(
-      final Socket socket, final InputStream istr, final OutputStream ostr)
+  private void handleSocket(Socket socket, InputStream istr, OutputStream ostr)
       throws IOException {
     handler.handleSocket(socket, istr, ostr);
   }

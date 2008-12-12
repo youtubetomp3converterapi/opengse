@@ -201,7 +201,7 @@ public class FileCollectionCollection implements FileCollection {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritDoc} 
    */
   public String getCollectionName() {
     return classpath;

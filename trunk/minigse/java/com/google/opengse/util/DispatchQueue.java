@@ -21,7 +21,8 @@ public interface DispatchQueue {
    *
    * @param conn is the connection to enqueue
    */
-  void put(Runnable conn);
+  void addRunnable(Runnable conn);
+  
   /**
    * Blocks until the connection queue is empty or until the specified timeout
    * occurs.
