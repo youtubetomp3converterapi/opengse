@@ -75,7 +75,9 @@ class ServletOutputStreamImpl extends ServletOutputStream {
     writeUncommittedBuffer();
     bufferStream = null;
     currentStream = realStream;
-    printWriter.flush();
+    if (printWriter != null) {
+      printWriter.flush();
+    }
   }
 
 /**
@@ -179,7 +181,7 @@ class ServletOutputStreamImpl extends ServletOutputStream {
 
   private void writeStatusLine() {
     // "HTTP/1.1 200 OK" for example
-    out.println("HTTP/1.1 " + statusCode + " " + statusMessage + "\r\n");
+    out.print("HTTP/1.1 " + statusCode + " " + statusMessage + "\r\n");
   }
 
   /**
