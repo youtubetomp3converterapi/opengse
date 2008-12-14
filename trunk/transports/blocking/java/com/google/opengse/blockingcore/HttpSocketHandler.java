@@ -40,12 +40,13 @@ public class HttpSocketHandler implements SocketHandler {
     ServletInputStreamImpl inputStream = new ServletInputStreamImpl(conn.getInputStream());
     HttpRequestImpl req = new HttpRequestImpl(inputStream);
     ServletOutputStreamImpl outputStream = new ServletOutputStreamImpl(conn.getOutputStream(), 2048);
+    HttpResponse resp = null;
     try {
-      HttpResponse resp = new HttpResponseImpl(req, outputStream);
+      resp = new HttpResponseImpl(req, outputStream);
       handler.handleRequest(req, resp);
     } finally {
       // ensure that any buffered bytes get committed. No byte left behind!
-      outputStream.commit();
+      resp.flushBuffer();
     }
   }
 }

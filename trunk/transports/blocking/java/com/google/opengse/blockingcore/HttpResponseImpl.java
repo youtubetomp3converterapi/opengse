@@ -134,6 +134,7 @@ final class HttpResponseImpl implements HttpResponse {
   }
 
   public void flushBuffer() throws IOException {
+    outputStream.flushPrintWriterIfItWasCreated();
     outputStream.commit();
   }
 
