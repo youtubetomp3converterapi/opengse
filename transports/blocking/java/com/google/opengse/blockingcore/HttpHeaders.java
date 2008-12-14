@@ -15,6 +15,7 @@ package com.google.opengse.blockingcore;
 import java.util.*;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
+import java.io.IOException;
 
 /**
  * Represents HTTP headers for either a request or a response.
@@ -38,6 +39,10 @@ final class HttpHeaders {
     ucase_headername_to_headername.clear();
   }
 
+  Collection<String> getHeaderNames() {
+    return ucase_headername_to_headername.values();
+  }
+
   void writeHeaders(PrintWriter out) {
     for (String ukey : ucase_headers.keySet()) {
       List<String> values = ucase_headers.get(ukey);
@@ -55,15 +60,34 @@ final class HttpHeaders {
     out.print("\r\n");
   }
 
-  void readHeaders(BufferedReader reader) {
-    
+  void readHeaders(BufferedReader reader) throws IOException {
+    String line;
+    int colon;
+    while ((line = reader.readLine()) != null) {
+      if (line.length() == 0) {
+        break;
+      }
+      colon = line.indexOf(':');
+      if (colon == -1) {
+        throw new IOException("Unrecognized header line: '" + line + "'");
+      }
+      String key = line.substring(0, colon);
+      String comma_delimetered_values = line.substring(colon + 1);
+      List<String> values = getHeaderValues(key);
+      parseCommaDelimeteredValues(values, comma_delimetered_values);
+    }
   }
 
+  private void parseCommaDelimeteredValues(List<String> values, String comma_delimetered_values) {
+    //TODO(jennings) deal properly with this
+    comma_delimetered_values = comma_delimetered_values.trim();
+    values.add(comma_delimetered_values);
+  }
 
   /**
    * Do a case-insensitive lookup of a given header name
    * @param key
-   * @return
+   * @return a non-null list of strings (could be empty)
    */
   List<String> getHeaderValues(String key) {
     String ukey = key.toUpperCase();
