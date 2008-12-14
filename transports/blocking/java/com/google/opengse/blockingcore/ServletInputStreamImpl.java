@@ -39,6 +39,9 @@ class ServletInputStreamImpl extends ServletInputStream {
   private static final int MAX_HEADERS_SIZE = 100000;
   private HttpRequestType requestType;
   private HttpHeaders headers;
+  private int contentLength;
+  private int bytesRead;
+  private static final String CONTENT_LENGTH_HEADER = "Content-Length";
 
   ServletInputStreamImpl(InputStream realStream) throws IOException {
     this.realStream = new BufferedInputStream(realStream);
@@ -79,22 +82,34 @@ class ServletInputStreamImpl extends ServletInputStream {
     BufferedReader reader = new BufferedReader(new StringReader(allHeaders));
     requestType = new HttpRequestType(reader.readLine());
     headers.readHeaders(reader);
+    if (headers.containsHeader(CONTENT_LENGTH_HEADER)) {
+      String contentLengthAsString = headers.getHeaderValues(CONTENT_LENGTH_HEADER).iterator().next();
+      contentLength = Integer.parseInt(contentLengthAsString);
+    } else {
+      contentLength = -1; // unknown content length
+    }
+    bytesRead = 0;
   }
 
   public int read() throws IOException {
-    return realStream.read();
+    if (contentLength != -1 && bytesRead == contentLength) {
+      return -1;
+    }
+    int thebyte = realStream.read();
+    if (thebyte != -1) {
+      ++bytesRead;
+    }
+    return thebyte;
   }
 
-  @Override
-  public int readLine(byte[] b, int off, int len) throws IOException {
-    return super.readLine(b, off, len);
-  }
 
+/*
+  We comment this out so all reads are funnelled through the read() method above
   @Override
   public int read(byte b[], int off, int len) throws IOException {
     return realStream.read(b, off, len);    
   }
-
+*/
   Enumeration<String> getHeaders(String name) {
     return new StringEnumerator(headers.getHeaderValues(name));
   }
