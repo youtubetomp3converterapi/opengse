@@ -43,6 +43,10 @@ class ServletOutputStreamImpl extends ServletOutputStream {
     currentStream = uncommittedOutputStream;
   }
 
+  HttpHeaders getHeaders() {
+    return headers;
+  }
+
   void setStatus(int statusCode, String statusMessage) {
     this.statusCode = statusCode;
     this.statusMessage = statusMessage;
@@ -176,30 +180,6 @@ class ServletOutputStreamImpl extends ServletOutputStream {
     out.print("HTTP/1.1 " + statusCode + " " + statusMessage + "\r\n");
   }
 
-  /**
-   * Do a case-insensitive lookup of a given header name
-   * @param key
-   * @return
-   */
-  synchronized List<String> getHeaderValues(String key) {
-    return headers.getHeaderValues(key);
-  }
-
-  synchronized boolean containsHeader(String name) {
-    return headers.containsHeader(name);
-  }
-
-  synchronized void setHeader(String key, String value) {
-    headers.setHeader(key, value);
-  }
-
-  void removeHeader(String key) {
-    headers.removeHeader(key);
-  }
-
-  synchronized void addHeader(String key, String value) {
-    headers.addHeader(key, value);
-  }
 
   synchronized public void write(int b) throws IOException {
     if (needToCommit(1)) {
