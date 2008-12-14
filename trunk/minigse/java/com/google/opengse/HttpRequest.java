@@ -48,7 +48,6 @@ public interface HttpRequest {
   void setCharacterEncoding(String env)
       throws UnsupportedEncodingException;
 
-  ServletInputStream getInputStream() throws IOException;
 
   Map<String, String[]> getParameterMap();
 
@@ -60,6 +59,45 @@ public interface HttpRequest {
 
   String getScheme();
 
+  /**
+   * Retrieves the body of the request as binary data using
+   * a {@link ServletInputStream}.  Either this method or
+   * {@link #getReader} may be called to read the body, not both.
+   *
+   * @return			a {@link ServletInputStream} object containing
+   * 				the body of the request
+   *
+   * @exception IllegalStateException  if the {@link #getReader} method
+   * 					 has already been called for this request
+   *
+   * @exception IOException    	if an input or output exception occurred
+   *
+   */
+  ServletInputStream getInputStream() throws IOException;
+  
+  /**
+   * Retrieves the body of the request as character data using
+   * a <code>BufferedReader</code>.  The reader translates the character
+   * data according to the character encoding used on the body.
+   * Either this method or {@link #getInputStream} may be called to read the
+   * body, not both.
+   *
+   *
+   * @return					a <code>BufferedReader</code>
+   *						containing the body of the request
+   *
+   * @exception UnsupportedEncodingException 	if the character set encoding
+   * 						used is not supported and the
+   *						text cannot be decoded
+   *
+   * @exception IllegalStateException   	if {@link #getInputStream} method
+   * 						has been called on this request
+   *
+   * @exception IOException  			if an input or output exception occurred
+   *
+   * @see 					#getInputStream
+   *
+   */
   BufferedReader getReader() throws IOException;
 
   /**

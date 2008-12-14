@@ -22,15 +22,21 @@ import java.util.*;
 import java.io.UnsupportedEncodingException;
 import java.io.IOException;
 import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 /**
  * @author jennings
  *         Date: Jul 22, 2008
  */
 final class HttpRequestImpl implements HttpRequest {
   private final ServletInputStreamImpl inputStream;
+  private boolean getInputStream_called;
+  private BufferedReader inputStreamReader;
 
   HttpRequestImpl(ServletInputStreamImpl inputStream) throws IOException {
     this.inputStream = inputStream;
+    getInputStream_called = false;
+    inputStreamReader = null;
   }
 
   public String getHeader(String name) {
@@ -70,9 +76,23 @@ final class HttpRequestImpl implements HttpRequest {
   }
 
   public ServletInputStream getInputStream() throws IOException {
+    if (inputStreamReader != null) {
+      throw new IllegalStateException("getReader() was already called");
+    }
+    getInputStream_called = true;
     return inputStream;
   }
 
+  public BufferedReader getReader() throws IOException {
+    if (getInputStream_called) {
+      throw new IllegalStateException("getInputStream() was already called");
+    }
+    if (inputStreamReader == null) {
+      inputStreamReader = new BufferedReader(new InputStreamReader(inputStream));
+    }
+    return inputStreamReader;
+  }
+  
   public Map<String, String[]> getParameterMap() {
     return new HashMap<String, String[]>();
   }
@@ -93,9 +113,6 @@ final class HttpRequestImpl implements HttpRequest {
     return null;
   }
 
-  public BufferedReader getReader() throws IOException {
-    return null;
-  }
 
   public ConnectionInformation getConnectionInformation() {
     return null;
