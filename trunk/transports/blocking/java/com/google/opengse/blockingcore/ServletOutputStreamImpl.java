@@ -29,8 +29,7 @@ class ServletOutputStreamImpl extends ServletOutputStream {
   private ByteArrayOutputStream bufferStream;
   private OutputStream currentStream;
   private int precommitSize;
-  private Map<String, String> ucase_headername_to_headername;
-  private Map<String, List<String>> ucase_headers;
+  private HttpHeaders headers;
 
   private PrintWriter out;
   private PrintWriter printWriter;
@@ -40,8 +39,7 @@ class ServletOutputStreamImpl extends ServletOutputStream {
   ServletOutputStreamImpl(OutputStream realStream, int precommitSize) {
     this.realStream = realStream;
     this.precommitSize = precommitSize;
-    ucase_headername_to_headername = new HashMap<String, String>();
-    ucase_headers = new HashMap<String, List<String>>();
+    headers = new HttpHeaders();
     bufferStream = new ByteArrayOutputStream();
     currentStream = bufferStream;
   }
@@ -118,8 +116,7 @@ class ServletOutputStreamImpl extends ServletOutputStream {
       throw new IllegalStateException("Cannot reset, already committed");
     }
     bufferStream.reset();
-    ucase_headers.clear();
-    ucase_headername_to_headername.clear();
+    headers.clear();
   }
 
 
@@ -163,20 +160,7 @@ class ServletOutputStreamImpl extends ServletOutputStream {
   }
 
   private void writeHeaders() {
-    for (String ukey : ucase_headers.keySet()) {
-      List<String> values = ucase_headers.get(ukey);
-      // get the original rendering of the header "content-type" versus "Content-Type" etc.
-      String key = ucase_headername_to_headername.get(ukey);
-      // we know that values cannot be empty
-      Iterator<String> iter = values.iterator();
-      out.print(key + ": " + iter.next());
-      while (iter.hasNext()) {
-        out.print(", " + iter.next());
-      }
-      out.print("\r\n");
-    }
-    // now we signal the end of headers by printing a blank line
-    out.print("\r\n");
+    headers.writeHeaders(out);
   }
 
   private void writeStatusLine() {
@@ -190,39 +174,23 @@ class ServletOutputStreamImpl extends ServletOutputStream {
    * @return
    */
   synchronized List<String> getHeaderValues(String key) {
-    String ukey = key.toUpperCase();
-    List<String> values = ucase_headers.get(ukey);
-    if (values == null) {
-      values = new ArrayList<String>();
-      ucase_headername_to_headername.put(ukey, key);
-      ucase_headers.put(ukey, values);
-    }
-    return values;
+    return headers.getHeaderValues(key);
   }
 
   synchronized boolean containsHeader(String name) {
-    return ucase_headers.containsKey(name.toUpperCase());
+    return headers.containsHeader(name);
   }
 
   synchronized void setHeader(String key, String value) {
-    if (value == null) {
-      removeHeader(key);
-      return;
-    }
-    List<String> values = getHeaderValues(key);
-    values.clear();
-    values.add(value);
+    headers.setHeader(key, value);
   }
 
   void removeHeader(String key) {
-    String ukey = key.toUpperCase();
-    ucase_headername_to_headername.remove(ukey);
-    ucase_headers.remove(ukey);
+    headers.removeHeader(key);
   }
 
   synchronized void addHeader(String key, String value) {
-    List<String> values = getHeaderValues(key);
-    values.add(value);
+    headers.addHeader(key, value);
   }
 
   synchronized public void write(int b) throws IOException {
