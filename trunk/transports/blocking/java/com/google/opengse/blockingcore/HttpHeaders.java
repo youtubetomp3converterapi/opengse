@@ -46,6 +46,9 @@ final class HttpHeaders {
   void writeHeaders(PrintWriter out) {
     for (String ukey : ucase_headers.keySet()) {
       List<String> values = ucase_headers.get(ukey);
+      if (values.isEmpty()) {
+        continue;
+      }
       // get the original rendering of the header "content-type" versus "Content-Type" etc.
       String key = ucase_headername_to_headername.get(ukey);
       // we know that values cannot be empty
