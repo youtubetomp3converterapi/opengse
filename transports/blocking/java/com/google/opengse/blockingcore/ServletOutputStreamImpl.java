@@ -26,12 +26,11 @@ import java.util.*;
  */
 class ServletOutputStreamImpl extends ServletOutputStream {
   private OutputStream realStream;
-  private ByteArrayOutputStream bufferStream;
+  private ByteArrayOutputStream uncommittedOutputStream;
   private OutputStream currentStream;
   private int precommitSize;
   private HttpHeaders headers;
 
-  private PrintWriter out;
   private PrintWriter printWriter;
   private int statusCode = 200;
   private String statusMessage = "OK";
@@ -40,8 +39,8 @@ class ServletOutputStreamImpl extends ServletOutputStream {
     this.realStream = realStream;
     this.precommitSize = precommitSize;
     headers = new HttpHeaders();
-    bufferStream = new ByteArrayOutputStream();
-    currentStream = bufferStream;
+    uncommittedOutputStream = new ByteArrayOutputStream();
+    currentStream = uncommittedOutputStream;
   }
 
   void setStatus(int statusCode, String statusMessage) {
@@ -59,26 +58,35 @@ class ServletOutputStreamImpl extends ServletOutputStream {
   }
 
   boolean isCommitted() {
-    return (bufferStream == null); // null buffer implies committed
+    return (uncommittedOutputStream == null); // null buffer implies committed
   }
 
   synchronized void commit() throws IOException {
     if (isCommitted()) {
       return;
     }
-    out = new PrintWriter(realStream);
-    writeStatusLine();
-    writeHeaders();
+    PrintWriter out = new PrintWriter(realStream);
+    writeStatusLine(out);
+    writeHeaders(out);
     out.flush();
     writeUncommittedBuffer();
-    bufferStream = null;
+    uncommittedOutputStream = null;
     currentStream = realStream;
+  }
+
+  void flushPrintWriterIfItWasCreated() {
     if (printWriter != null) {
       printWriter.flush();
     }
   }
 
-/**
+  @Override
+  public void flush() throws IOException {
+    commit();
+    super.flush();
+  }
+
+  /**
    * Clears the content of the underlying buffer in the response without
    * clearing headers or status code. If the
    * response has been committed, this method throws an
@@ -95,7 +103,7 @@ class ServletOutputStreamImpl extends ServletOutputStream {
     if (isCommitted()) {
       throw new IllegalStateException("Cannot reset buffer, already committed");
     }
-    bufferStream.reset();
+    uncommittedOutputStream.reset();
   }
 
   /**
@@ -115,7 +123,7 @@ class ServletOutputStreamImpl extends ServletOutputStream {
     if (isCommitted()) {
       throw new IllegalStateException("Cannot reset, already committed");
     }
-    bufferStream.reset();
+    uncommittedOutputStream.reset();
     headers.clear();
   }
 
@@ -152,18 +160,18 @@ class ServletOutputStreamImpl extends ServletOutputStream {
     if (isCommitted()) {
       return false;
     }
-    return ((bufferStream.size() + bytesToWrite) > precommitSize);    
+    return ((uncommittedOutputStream.size() + bytesToWrite) > precommitSize);
   }
 
   private void writeUncommittedBuffer() throws IOException {
-    realStream.write(bufferStream.toByteArray());
+    realStream.write(uncommittedOutputStream.toByteArray());
   }
 
-  private void writeHeaders() {
+  private void writeHeaders(PrintWriter out) {
     headers.writeHeaders(out);
   }
 
-  private void writeStatusLine() {
+  private void writeStatusLine(PrintWriter out) {
     // "HTTP/1.1 200 OK" for example
     out.print("HTTP/1.1 " + statusCode + " " + statusMessage + "\r\n");
   }
