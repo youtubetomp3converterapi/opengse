@@ -14,15 +14,19 @@
 
 package com.google.opengse.blockingcore;
 
-import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.util.Enumeration;
 
 import javax.servlet.ServletInputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.StringReader;
+import java.io.BufferedReader;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Iterator;
+import java.util.Collection;
+import java.util.NoSuchElementException;
 
 /**
  * @author jennings
@@ -33,10 +37,12 @@ class ServletInputStreamImpl extends ServletInputStream {
   private static final int LF = '\n';
   private InputStream realStream;
   private static final int MAX_HEADERS_SIZE = 100000;
-  private HttpRequestHeaders headers;
+  private HttpRequestType requestType;
+  private HttpHeaders headers;
 
   ServletInputStreamImpl(InputStream realStream) throws IOException {
     this.realStream = new BufferedInputStream(realStream);
+    headers = new HttpHeaders();
     readHeaders();
   }
 
@@ -70,7 +76,9 @@ class ServletInputStreamImpl extends ServletInputStream {
       }
     }
     String allHeaders = baos.toString();
-    headers = new HttpRequestHeaders(allHeaders);
+    BufferedReader reader = new BufferedReader(new StringReader(allHeaders));
+    requestType = new HttpRequestType(reader.readLine());
+    headers.readHeaders(reader);
   }
 
   public int read() throws IOException {
@@ -88,18 +96,40 @@ class ServletInputStreamImpl extends ServletInputStream {
   }
 
   Enumeration<String> getHeaders(String name) {
-    return headers.getHeaders(name);
+    return new StringEnumerator(headers.getHeaderValues(name));
   }
 
   String getHeader(String name) {
-    return headers.getHeader(name);
+    List<String> values = headers.getHeaderValues(name);
+    if (values.isEmpty()) {
+      return null;
+    }
+    return values.iterator().next();
   }
 
   Enumeration<String> getHeaderNames() {
-    return headers.getHeaderNames();
+    return new StringEnumerator(headers.getHeaderNames());
   }
 
   HttpRequestType getRequestType() {
-    return headers.getRequestType();
+    return requestType;
   }
+
+  private static class StringEnumerator implements Enumeration<String> {
+    private Iterator<String> iterator_;
+
+    public StringEnumerator(Collection<String> headers) {
+      this.iterator_ = headers.iterator();
+    }
+
+    public boolean hasMoreElements() {
+      return iterator_.hasNext();
+    }
+
+    public String nextElement()
+      throws NoSuchElementException {
+      return iterator_.next();
+    }
+  }
+  
 }
