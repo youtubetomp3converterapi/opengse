@@ -30,14 +30,16 @@ import java.util.List;
 final class HttpResponseImpl implements HttpResponse {
   private HttpRequestImpl request;
   private ServletOutputStreamImpl outputStream;
+  private HttpHeaders headers;
 
   HttpResponseImpl(HttpRequestImpl request, ServletOutputStreamImpl outputStream) {
     this.request = request;
     this.outputStream = outputStream;
+    headers = outputStream.getHeaders();
   }
 
   public boolean containsHeader(String name) {
-    return outputStream.containsHeader(name);
+    return headers.containsHeader(name);
   }
 
   public void sendError(int sc, String msg) throws IOException {
@@ -73,11 +75,11 @@ final class HttpResponseImpl implements HttpResponse {
   }
 
   public void setHeader(String name, String value) {
-    outputStream.setHeader(name, value);
+    headers.setHeader(name, value);
   }
 
   public void addHeader(String name, String value) {
-    outputStream.addHeader(name, value);
+    headers.addHeader(name, value);
   }
 
   public void setIntHeader(String name, int value) {
@@ -101,7 +103,7 @@ final class HttpResponseImpl implements HttpResponse {
   }
 
   public String getContentType() {
-    List<String> values = outputStream.getHeaderValues("Content-Type");
+    List<String> values = headers.getHeaderValues("Content-Type");
     return (values != null && !values.isEmpty()) ? values.iterator().next() : null;
   }
 

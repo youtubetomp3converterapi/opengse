@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
+import java.util.Iterator;
+import java.util.Collection;
 
 /**
  * Utility for parsing the Accept-Language http header. Parser derived
@@ -53,6 +55,19 @@ public class Locales implements Comparable<Locales> {
     ArrayList<Locales> locales = new ArrayList<Locales>();
     while (e.hasMoreElements()) {
       PARSER.parse(e.nextElement(), locales);
+    }
+    Collections.sort(locales);
+    return convert(locales);
+  }
+
+  public static ArrayList<Locale> parse(Collection<String> localesAsStrings) {
+    if (localesAsStrings.isEmpty()) {
+      return new ArrayList<Locale>();
+    }
+
+    ArrayList<Locales> locales = new ArrayList<Locales>();
+    for (String localeAsString : localesAsStrings) {
+      PARSER.parse(localeAsString, locales);
     }
     Collections.sort(locales);
     return convert(locales);

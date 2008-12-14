@@ -16,6 +16,8 @@ package com.google.opengse.blockingcore;
 
 import com.google.opengse.HttpRequest;
 import com.google.opengse.ConnectionInformation;
+import com.google.opengse.httputil.Locales;
+import com.google.opengse.util.IteratorEnumeration;
 
 import javax.servlet.ServletInputStream;
 import java.util.*;
@@ -32,23 +34,34 @@ final class HttpRequestImpl implements HttpRequest {
   private final ServletInputStreamImpl inputStream;
   private boolean getInputStream_called;
   private BufferedReader inputStreamReader;
+  private HttpHeaders headers;
+  private static final Locale DEFAULT_LOCALE = Locale.getDefault();
+  private static final String ACCEPT_LANGUAGE_HEADER = "Accept-Language";
 
   HttpRequestImpl(ServletInputStreamImpl inputStream) throws IOException {
     this.inputStream = inputStream;
     getInputStream_called = false;
     inputStreamReader = null;
+    headers = inputStream.getHeaders();
   }
 
   public String getHeader(String name) {
-    return inputStream.getHeader(name);
+    if (headers.containsHeader(name)) {
+      List<String> values = headers.getHeaderValues(name);
+      if (values.isEmpty()) {
+        return null;
+      }
+      return values.iterator().next();
+    }
+    return null;
   }
 
   public Enumeration<String> getHeaders(String name) {
-    return inputStream.getHeaders(name);
+    return new IteratorEnumeration<String>(headers.getHeaderValues(name).iterator());
   }
 
   public Enumeration<String> getHeaderNames() {
-    return inputStream.getHeaderNames();
+    return new IteratorEnumeration<String>(headers.getHeaderNames().iterator());
   }
 
   public String getMethod() {
@@ -98,11 +111,24 @@ final class HttpRequestImpl implements HttpRequest {
   }
 
   public Locale getLocale() {
-    return null;
+    if (!headers.containsHeader(ACCEPT_LANGUAGE_HEADER)) {
+      return DEFAULT_LOCALE;
+    }
+    return getLocales().nextElement();
   }
 
   public Enumeration<Locale> getLocales() {
-    return null;
+    List<Locale> locales = getLocalesFromHeaders();
+    return new IteratorEnumeration<Locale>(locales.iterator());
+  }
+
+  private List<Locale> getLocalesFromHeaders() {
+    List<String> localeStrings = headers.getHeaderValues(ACCEPT_LANGUAGE_HEADER);
+    List<Locale> locales = Locales.parse(localeStrings);
+    if (locales.isEmpty()) {
+      locales.add(DEFAULT_LOCALE);
+    }
+    return locales;    
   }
 
   public String getProtocol() {
