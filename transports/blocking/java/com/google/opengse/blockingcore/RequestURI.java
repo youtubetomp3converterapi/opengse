@@ -12,6 +12,12 @@
 
 package com.google.opengse.blockingcore;
 
+import java.util.StringTokenizer;
+import java.util.Map;
+import java.util.HashMap;
+import java.net.URLDecoder;
+import java.io.UnsupportedEncodingException;
+
 /**
  * Represents a request URI
  *
@@ -20,11 +26,60 @@ package com.google.opengse.blockingcore;
 public class RequestURI {
   private String data;
   private String rawQuery;
+  private Map<String, String[]> paramMap;
 
   public RequestURI(String data) {
     this.data = data;
+    paramMap = new HashMap<String, String[]>();
     int question = data.indexOf('?');
-    rawQuery = data.substring(question + 1);
+    if (question != -1) {
+      rawQuery = data.substring(question + 1);
+      this.data = data.substring(0, question);
+      parseRawQuery();
+    }
+  }
+
+  public Map<String, String[]> getParameterMap() {
+    return paramMap;
+  }
+
+  private void parseRawQuery() {
+    StringTokenizer st = new StringTokenizer(rawQuery, "&");
+    while (st.hasMoreTokens()) {
+      parseKeyValue(st.nextToken());
+    }
+  }
+
+  private void parseKeyValue(String keyvalue) {
+    int eq = keyvalue.indexOf('=');
+    if (eq == -1) {
+      return;
+    }
+    String key = decode(keyvalue.substring(0, eq));
+    String value = decode(keyvalue.substring(eq + 1));
+    addKeyValue(key, value);
+  }
+
+  private void addKeyValue(String key, String value) {
+    String[] values = paramMap.get(key);
+    if (values == null) {
+      values = new String[1];
+      values[0] = value;
+      paramMap.put(key, values);
+    } else {
+      String[] newvalues = new String[values.length + 1];
+      System.arraycopy(values, 0, newvalues, 0, values.length);
+      newvalues[values.length] = value;
+      paramMap.put(key, newvalues);
+    }
+  }
+
+  private static String decode(String s) {
+    try {
+      return URLDecoder.decode(s, "UTF8");
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public String getRawQuery() {
