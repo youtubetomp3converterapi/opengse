@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 
 /**
  * @author jennings
@@ -40,6 +42,7 @@ final class HttpRequestImpl implements HttpRequest {
   private static final String ACCEPT_LANGUAGE_HEADER = "Accept-Language";
   private RequestMetaData requestMetaData;
   private RequestURI requestURI;
+  private Charset characterEncoding;
 
   HttpRequestImpl(RequestMetaData requestMetaData, ServletInputStreamImpl inputStream) throws IOException {
     this.requestMetaData = requestMetaData;
@@ -90,8 +93,12 @@ final class HttpRequestImpl implements HttpRequest {
     return null;
   }
 
-  public void setCharacterEncoding(String env)
-      throws UnsupportedEncodingException {
+  public void setCharacterEncoding(String env) throws UnsupportedEncodingException {
+    try {
+      characterEncoding = Charset.forName(env);
+    } catch(UnsupportedCharsetException ucse) {
+      throw new UnsupportedEncodingException(env);
+    }
   }
 
   public ServletInputStream getInputStream() throws IOException {
