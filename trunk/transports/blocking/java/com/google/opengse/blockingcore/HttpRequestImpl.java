@@ -82,7 +82,7 @@ final class HttpRequestImpl implements HttpRequest {
   }
 
   public String getQueryString() {
-    return null;
+    return requestURI.getRawQuery();
   }
 
   public String getRequestURI() {
