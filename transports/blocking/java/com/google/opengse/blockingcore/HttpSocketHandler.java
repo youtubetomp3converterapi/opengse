@@ -38,6 +38,9 @@ public class HttpSocketHandler implements SocketHandler {
     RequestMetaData requestMetaData = RequestMetaDataFactory.extractMetaData(socket, istr);
     ServletInputStreamImpl inputStream = new ServletInputStreamImpl(requestMetaData, istr);
     HttpRequestImpl req = new HttpRequestImpl(requestMetaData, inputStream);
+    if (req.getMethod().equalsIgnoreCase("HEAD")) {
+      ostr = new NoBodyOutputStream(ostr);
+    }
     ServletOutputStreamImpl outputStream = new ServletOutputStreamImpl(ostr, 2048);
     HttpResponse resp = null;
     try {
