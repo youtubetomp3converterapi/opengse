@@ -113,7 +113,7 @@ final class HttpRequestImpl implements HttpRequest {
   }
   
   public Map<String, String[]> getParameterMap() {
-    return new HashMap<String, String[]>();
+    return requestURI.getParameterMap();
   }
 
   public Locale getLocale() {
