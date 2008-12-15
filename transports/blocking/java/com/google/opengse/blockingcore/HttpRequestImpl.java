@@ -138,11 +138,13 @@ final class HttpRequestImpl implements HttpRequest {
   }
 
   public String getProtocol() {
-    return null;
+//    return "HTTP/" + requestContext.getMajorVersion() + "."
+//        + requestContext.getMinorVersion();
+    return "HTTP/1.0";
   }
 
   public String getScheme() {
-    return null;
+    return "http";
   }
 
 
