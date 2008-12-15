@@ -6921,6 +6921,7 @@ public class Servlet25ComplianceTests extends ServerTestCaseWhichConnectsToARemo
     httpAssert.setTestName("GetMethod_HEADTest");
     httpAssert.setTestStrategy(
         "A test for HttpServletRequest.getMethod() HEAD method.");
+    httpAssert.setDebug("1");
     if (httpAssert.hasFailed()) {
       httpFail();
     }
