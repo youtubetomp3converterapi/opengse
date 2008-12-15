@@ -12,16 +12,25 @@
 
 package com.google.opengse.blockingcore;
 
+import com.google.opengse.ConnectionInformation;
+
+import java.net.InetSocketAddress;
+
 /**
  * Represents metadata for a request
  *
  * @author Mike Jennings
  */
-public class RequestMetaData {
+public class RequestMetaData implements ConnectionInformation {
+  private InetSocketAddress localSocketAddress;
+  private InetSocketAddress remoteSocketAddress;
   private HttpRequestType type;
   private HttpHeaders headers;
 
-  public RequestMetaData(HttpRequestType type, HttpHeaders headers) {
+  public RequestMetaData(InetSocketAddress localSocketAddress, InetSocketAddress remoteSocketAddress,
+                         HttpRequestType type, HttpHeaders headers) {
+    this.localSocketAddress = localSocketAddress;
+    this.remoteSocketAddress = remoteSocketAddress;
     this.type = type;
     this.headers = headers;
   }
@@ -32,5 +41,42 @@ public class RequestMetaData {
 
   public HttpHeaders getHeaders() {
     return headers;
+  }
+
+  // connectioninformation interface methods
+  public String getServerName() {
+    return "servername"; 
+  }
+
+  public int getServerPort() {
+    return localSocketAddress.getPort();
+  }
+
+  public String getRemoteAddr() {
+    return remoteSocketAddress.getAddress().getHostAddress();  
+  }
+
+  public String getRemoteHost() {
+    return remoteSocketAddress.getHostName();
+  }
+
+  public boolean isSecure() {
+    return false;
+  }
+
+  public int getRemotePort() {
+    return remoteSocketAddress.getPort();
+  }
+
+  public String getLocalName() {
+    return localSocketAddress.getHostName();
+  }
+
+  public String getLocalAddr() {
+    return localSocketAddress.getAddress().toString();
+  }
+
+  public int getLocalPort() {
+    return localSocketAddress.getPort();
   }
 }

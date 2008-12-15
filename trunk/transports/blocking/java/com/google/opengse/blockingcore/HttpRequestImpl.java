@@ -149,6 +149,6 @@ final class HttpRequestImpl implements HttpRequest {
 
 
   public ConnectionInformation getConnectionInformation() {
-    return null;
+    return requestMetaData;
   }
 }
