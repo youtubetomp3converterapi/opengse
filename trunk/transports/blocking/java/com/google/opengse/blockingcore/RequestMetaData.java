@@ -45,7 +45,7 @@ public class RequestMetaData implements ConnectionInformation {
 
   // connectioninformation interface methods
   public String getServerName() {
-    return "servername"; 
+    return localSocketAddress.getAddress().getHostName();
   }
 
   public int getServerPort() {
