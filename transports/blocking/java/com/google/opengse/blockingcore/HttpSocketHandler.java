@@ -36,10 +36,9 @@ public class HttpSocketHandler implements SocketHandler {
 
   public void handleSocket(Socket socket, InputStream istr, OutputStream ostr)
       throws IOException {
-    Connection conn = new Connection(socket, istr, ostr);
-    ServletInputStreamImpl inputStream = new ServletInputStreamImpl(conn.getInputStream());
+    ServletInputStreamImpl inputStream = new ServletInputStreamImpl(istr);
     HttpRequestImpl req = new HttpRequestImpl(inputStream);
-    ServletOutputStreamImpl outputStream = new ServletOutputStreamImpl(conn.getOutputStream(), 2048);
+    ServletOutputStreamImpl outputStream = new ServletOutputStreamImpl(ostr, 2048);
     HttpResponse resp = null;
     try {
       resp = new HttpResponseImpl(req, outputStream);
