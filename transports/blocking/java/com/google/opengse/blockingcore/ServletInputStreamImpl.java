@@ -28,59 +28,16 @@ import java.io.BufferedReader;
  *         Date: Jul 27, 2008
  */
 class ServletInputStreamImpl extends ServletInputStream {
-  private static final int CR = '\r';
-  private static final int LF = '\n';
   private InputStream realStream;
-  private static final int MAX_HEADERS_SIZE = 100000;
-  private HttpRequestType requestType;
-  private HttpHeaders headers;
+  private RequestMetaData requestMetaData;
   private int contentLength;
   private int bytesRead;
   private static final String CONTENT_LENGTH_HEADER = "Content-Length";
 
-  ServletInputStreamImpl(InputStream realStream) throws IOException {
+  ServletInputStreamImpl(RequestMetaData requestMetaData, InputStream realStream) throws IOException {
+    this.requestMetaData = requestMetaData;
     this.realStream = new BufferedInputStream(realStream);
-    headers = new HttpHeaders();
-    readHeaders();
-  }
-
-  HttpHeaders getHeaders() {
-    return headers;
-  }
-
-  private void readHeaders() throws IOException {
-    int thebyte;
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    int pattern = -1;
-
-    while (baos.size() < MAX_HEADERS_SIZE) {
-      thebyte = realStream.read();
-      if (thebyte == -1) {
-        break;
-      }
-      baos.write(thebyte);
-      if (thebyte == CR) {
-        if (pattern == -1 || pattern == 1) {
-          ++pattern;
-        } else {
-          pattern = -1;
-        }
-      } else if (thebyte == LF) {
-        if (pattern == 0 || pattern == 2) {
-          ++pattern;
-          if (pattern == 3) {
-            // this indicates that we have encountered 2 pairs of cr/lf bytes
-            break;
-          }
-        }
-      } else {
-        pattern = -1;
-      }
-    }
-    String allHeaders = baos.toString();
-    BufferedReader reader = new BufferedReader(new StringReader(allHeaders));
-    requestType = new HttpRequestType(reader.readLine());
-    headers.readHeaders(reader);
+    HttpHeaders headers = requestMetaData.getHeaders();
     if (headers.containsHeader(CONTENT_LENGTH_HEADER)) {
       String contentLengthAsString = headers.getHeaderValues(CONTENT_LENGTH_HEADER).iterator().next();
       contentLength = Integer.parseInt(contentLengthAsString);
@@ -109,9 +66,5 @@ class ServletInputStreamImpl extends ServletInputStream {
     return realStream.read(b, off, len);    
   }
 */
-
-  HttpRequestType getRequestType() {
-    return requestType;
-  }
   
 }
