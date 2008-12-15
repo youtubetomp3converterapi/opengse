@@ -17,6 +17,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.IOException;
+import java.net.Socket;
+import java.net.InetSocketAddress;
 
 /**
  * A factory for RequestMetaData objects
@@ -31,7 +33,7 @@ public class RequestMetaDataFactory {
   private RequestMetaDataFactory() {
   }
 
-  public static RequestMetaData extractMetaData(InputStream istr) throws IOException {
+  public static RequestMetaData extractMetaData(Socket socket, InputStream istr) throws IOException {
     int thebyte;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     int pattern = -1;
@@ -65,6 +67,7 @@ public class RequestMetaDataFactory {
     HttpRequestType requestType = new HttpRequestType(reader.readLine());
     HttpHeaders headers = new HttpHeaders();
     headers.readHeaders(reader);
-    return new RequestMetaData(requestType, headers);
+    return new RequestMetaData((InetSocketAddress)socket.getLocalSocketAddress(),
+        (InetSocketAddress)socket.getRemoteSocketAddress(), requestType, headers);
   }
 }

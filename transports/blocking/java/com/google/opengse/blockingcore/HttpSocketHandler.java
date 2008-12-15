@@ -35,7 +35,7 @@ public class HttpSocketHandler implements SocketHandler {
   }
 
   public void handleSocket(Socket socket, InputStream istr, OutputStream ostr) throws IOException {
-    RequestMetaData requestMetaData = RequestMetaDataFactory.extractMetaData(istr);
+    RequestMetaData requestMetaData = RequestMetaDataFactory.extractMetaData(socket, istr);
     ServletInputStreamImpl inputStream = new ServletInputStreamImpl(requestMetaData, istr);
     HttpRequestImpl req = new HttpRequestImpl(requestMetaData, inputStream);
     ServletOutputStreamImpl outputStream = new ServletOutputStreamImpl(ostr, 2048);
