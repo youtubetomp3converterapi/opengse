@@ -726,7 +726,7 @@ public class HttpAssertion {
             List<String> vals = headers.getValues(headerName);
             String[] val = vals.toArray(new String[vals.size()]);
             for (int i = 0; i < val.length; i++) {
-              sysout.println("\tHEADER -> " + headerName + ": " + val[i]);
+              sysout.println("\tHEADER -> '" + headerName + "': '" + val[i] + "'");
               if (resultOut != null) {
                 actualBuffer.append("<actualHeader>")
                     .append(headerName).append(": ")

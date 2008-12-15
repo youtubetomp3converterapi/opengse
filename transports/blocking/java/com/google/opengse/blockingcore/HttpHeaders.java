@@ -55,7 +55,7 @@ final class HttpHeaders {
       Iterator<String> iter = values.iterator();
       out.print(key + ": " + iter.next());
       while (iter.hasNext()) {
-        out.print(", " + iter.next());
+        out.print("," + iter.next());
       }
       out.print("\r\n");
     }
