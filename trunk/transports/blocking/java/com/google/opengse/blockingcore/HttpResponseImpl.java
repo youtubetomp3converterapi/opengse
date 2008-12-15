@@ -30,12 +30,17 @@ import java.util.List;
 final class HttpResponseImpl implements HttpResponse {
   private HttpRequestImpl request;
   private ServletOutputStreamImpl outputStream;
+  private boolean outputStream_called;
+  private PrintWriter writer;
   private HttpHeaders headers;
+  private Locale locale;
 
   HttpResponseImpl(HttpRequestImpl request, ServletOutputStreamImpl outputStream) {
     this.request = request;
     this.outputStream = outputStream;
     headers = outputStream.getHeaders();
+    outputStream_called = false;
+    writer = null;
   }
 
   public boolean containsHeader(String name) {
@@ -99,7 +104,7 @@ final class HttpResponseImpl implements HttpResponse {
   }
 
   public String getCharacterEncoding() {
-    return "UTF8";
+    return "ISO-8859-1";
   }
 
   public String getContentType() {
@@ -108,11 +113,19 @@ final class HttpResponseImpl implements HttpResponse {
   }
 
   public ServletOutputStream getOutputStream() throws IOException {
+    if (writer != null) {
+      throw new IllegalStateException("getWriter() already called");
+    }
+    outputStream_called = true;
     return outputStream;
   }
 
   public PrintWriter getWriter() throws IOException {
-    return outputStream.getWriter();
+    if (outputStream_called) {
+      throw new IllegalStateException("getOutputStream() already called");
+    }
+    writer = outputStream.getWriter();
+    return writer;
   }
 
   public void setCharacterEncoding(String charset) {
@@ -152,10 +165,25 @@ final class HttpResponseImpl implements HttpResponse {
     outputStream.reset();
   }
 
-  public void setLocale(Locale loc) {
+  public void setLocale(Locale locale) {
+    if (locale == null) {
+      throw new IllegalArgumentException("setLocale.localenull");
+    }
+    this.locale = locale;
+
+    String language = locale.getLanguage();
+    if ((language != null) && (language.length() > 0)) {
+      StringBuffer value = new StringBuffer(language);
+      String country = locale.getCountry();
+      if ((country != null) && (country.length() > 0)) {
+        value.append('-');
+        value.append(country);
+      }
+      setHeader("Content-Language", value.toString());
+    }
   }
 
   public Locale getLocale() {
-    return null;
+    return locale;
   }
 }
