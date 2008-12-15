@@ -34,10 +34,10 @@ public class HttpSocketHandler implements SocketHandler {
     this.handler = handler;
   }
 
-  public void handleSocket(Socket socket, InputStream istr, OutputStream ostr)
-      throws IOException {
-    ServletInputStreamImpl inputStream = new ServletInputStreamImpl(istr);
-    HttpRequestImpl req = new HttpRequestImpl(inputStream);
+  public void handleSocket(Socket socket, InputStream istr, OutputStream ostr) throws IOException {
+    RequestMetaData requestMetaData = RequestMetaDataFactory.extractMetaData(istr);
+    ServletInputStreamImpl inputStream = new ServletInputStreamImpl(requestMetaData, istr);
+    HttpRequestImpl req = new HttpRequestImpl(requestMetaData, inputStream);
     ServletOutputStreamImpl outputStream = new ServletOutputStreamImpl(ostr, 2048);
     HttpResponse resp = null;
     try {

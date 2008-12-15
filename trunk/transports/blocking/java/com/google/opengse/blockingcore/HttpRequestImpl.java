@@ -37,12 +37,17 @@ final class HttpRequestImpl implements HttpRequest {
   private HttpHeaders headers;
   private static final Locale DEFAULT_LOCALE = Locale.getDefault();
   private static final String ACCEPT_LANGUAGE_HEADER = "Accept-Language";
+  private RequestMetaData requestMetaData;
 
-  HttpRequestImpl(ServletInputStreamImpl inputStream) throws IOException {
+  HttpRequestImpl(RequestMetaData requestMetaData, ServletInputStreamImpl inputStream) throws IOException {
+    this.requestMetaData = requestMetaData;
+    headers = requestMetaData.getHeaders();
     this.inputStream = inputStream;
     getInputStream_called = false;
     inputStreamReader = null;
-    headers = inputStream.getHeaders();
+
+//String requestURI = getRequestURI();
+//System.out.println("requestURI='" + requestURI + "'");
   }
 
   public String getHeader(String name) {
@@ -65,7 +70,7 @@ final class HttpRequestImpl implements HttpRequest {
   }
 
   public String getMethod() {
-    return inputStream.getRequestType().getType();
+    return requestMetaData.getType().getType();
   }
 
   public String getPathTranslated() {
@@ -77,7 +82,7 @@ final class HttpRequestImpl implements HttpRequest {
   }
 
   public String getRequestURI() {
-    return inputStream.getRequestType().getRequestData();
+    return requestMetaData.getType().getRequestData();
   }
 
   public StringBuffer getRequestURL() {
