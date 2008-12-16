@@ -1,0 +1,91 @@
+=== JSR-000154 (Maintenance Release 2) Servlet 2.5 ===
+
+The following JSR-154 security requirements will be supported by OpenGSE:
+
+1) HttpServletRequest
+    • getRemoteUser
+    • isUserInRole
+    • getUserPrincipal
+
+In a nutshell, as a standalone/embeddable servlet engine, OpenGSE does NOT
+provide user authentication. User credential information is expected to be
+passed from the hosting run-time environment, as part of the integration "hook".
+
+Security policy, as declarative security constraints in web.xml, will be
+available to web applications, as required by the servlet API.
+
+We also note that a servlet container is required to track authentication
+information at the container level (rather than at the web application level).
+
+2) descriptor
+
+The authentication characteristics of the request must satisfy any authentication
+and role requirements defined by the constraints. If this rule
+is not satisfied because access has been precluded (by an authorization
+constraint naming no roles), the request shall be rejected as forbidden
+and a 403 (SC_FORBIDDEN) status code shall be returned to the user. If access
+is restricted to permitted roles and the request has not been authenticated,
+the request shall be rejected as unauthorized and a 401
+(SC_UNAUTHORIZED) status code shall be returned to cause authentication. If
+access is restricted to permitted roles and the authentication identity of
+the request is not a member of any of these roles, the request shall be rejected
+as forbidden and a 403 (SC_FORBIDDEN) status code shall be returned
+to the user.
+
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>restricted methods</web-resource-name>
+        <url-pattern>/*</url-pattern>
+        <url-pattern>/acme/wholesale/*</url-pattern>
+        <url-pattern>/acme/retail/*</url-pattern>
+        <http-method>DELETE</http-method>
+        <http-method>PUT</http-method>
+    </web-resource-collection>
+    <auth-constraint/>
+</security-constraint>
+
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>wholesale</web-resource-name>
+        <url-pattern>/acme/wholesale/*</url-pattern>
+        <http-method>GET</http-method>
+        <http-method>PUT</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+    <role-name>SALESCLERK</role-name>
+    </auth-constraint>
+</security-constraint>
+
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>wholesale</web-resource-name>
+        <url-pattern>/acme/wholesale/*</url-pattern>
+        <http-method>GET</http-method>
+        <http-method>POST</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+    <role-name>CONTRACTOR</role-name>
+    </auth-constraint>
+    <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+</security-constraint>
+
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>retail</web-resource-name>
+        <url-pattern>/acme/retail/*</url-pattern>
+        <http-method>GET</http-method>
+        <http-method>POST</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+        <role-name>CONTRACTOR</role-name>
+        <role-name>HOMEOWNER</role-name>
+    </auth-constraint>
+</security-constraint>
+
+Containers may create HTTP Session objects to track login state. If a
+developer creates a session while a user is not authenticated, and the container
+then authenticates the user, the session visible to developer code after login must
+be the same session object that was created prior to login occurring so that there is
+no loss of session information.
