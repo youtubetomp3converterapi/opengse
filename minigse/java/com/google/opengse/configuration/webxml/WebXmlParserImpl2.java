@@ -29,6 +29,7 @@ import com.google.opengse.configuration.WebAppTagLib;
 import com.google.opengse.configuration.WebAppWelcomeFileList;
 import com.google.opengse.configuration.WebAppSecurityConstraint;
 import com.google.opengse.configuration.WebAppWebResourceCollection;
+import com.google.opengse.configuration.WebAppAuthConstraint;
 import com.google.opengse.configuration.impl.MutableWebAppConfiguration;
 import com.google.opengse.configuration.impl.MutableWebAppContextParam;
 import com.google.opengse.configuration.impl.MutableWebAppErrorPage;
@@ -44,6 +45,7 @@ import com.google.opengse.configuration.impl.MutableWebAppWelcomeFileList;
 import com.google.opengse.configuration.impl.MutableWebappFilterMapping;
 import com.google.opengse.configuration.impl.MutableWebAppWebResourceCollection;
 import com.google.opengse.configuration.impl.MutableWebAppSecurityConstraint;
+import com.google.opengse.configuration.impl.MutableWebAppAuthConstraint;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -310,6 +312,7 @@ public class WebXmlParserImpl2 implements WebXmlParser {
     private SecurityConstraintCreator() throws NoSuchMethodException {
       super(MutableWebAppSecurityConstraint.class);
       add("web-resource-collection", new WebResourceCollectionParser());
+      add("auth-constraint", new AuthConstraintParser());
     }
   }
 
@@ -338,6 +341,32 @@ public class WebXmlParserImpl2 implements WebXmlParser {
       setStringViaMethod("web-resource-name", "setWebResourceName");
       setStringViaMethod("url-pattern", "addUrlPattern");
       setStringViaMethod("http-method", "addHttpMethod");
+    }
+  }
+
+
+  private static class AuthConstraintParser implements NodeParser {
+    private final ObjectCreator creator;
+
+    AuthConstraintParser() throws NoSuchMethodException {
+      creator = new AuthConstraintCreator();
+    }
+
+    public void parse(Object context, Node webappSubnode) throws SAXException {
+      MutableWebAppSecurityConstraint constraint = (MutableWebAppSecurityConstraint) context;
+      WebAppAuthConstraint authConstraint
+          = (WebAppAuthConstraint) creator.create(webappSubnode);
+      if (authConstraint != null) {
+        constraint.setAuthConstraint(authConstraint);
+      }
+    }
+  }
+
+
+  private static class AuthConstraintCreator extends SimpleObjectCreator {
+    private AuthConstraintCreator() throws NoSuchMethodException {
+      super(MutableWebAppAuthConstraint.class);
+      setStringViaMethod("role-name", "addRoleName");
     }
   }
 
