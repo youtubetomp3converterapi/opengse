@@ -31,6 +31,7 @@ import com.google.opengse.configuration.WebAppSecurityConstraint;
 import com.google.opengse.configuration.WebAppWebResourceCollection;
 import com.google.opengse.configuration.WebAppAuthConstraint;
 import com.google.opengse.configuration.WebAppUserDataConstraint;
+import com.google.opengse.configuration.WebAppSecurityRole;
 import com.google.opengse.configuration.impl.MutableWebAppConfiguration;
 import com.google.opengse.configuration.impl.MutableWebAppContextParam;
 import com.google.opengse.configuration.impl.MutableWebAppErrorPage;
@@ -48,6 +49,7 @@ import com.google.opengse.configuration.impl.MutableWebAppWebResourceCollection;
 import com.google.opengse.configuration.impl.MutableWebAppSecurityConstraint;
 import com.google.opengse.configuration.impl.MutableWebAppAuthConstraint;
 import com.google.opengse.configuration.impl.MutableWebAppUserDataConstraint;
+import com.google.opengse.configuration.impl.MutableWebAppSecurityRole;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -123,6 +125,7 @@ public class WebXmlParserImpl2 implements WebXmlParser {
     webAppCreator.add("filter", new WebappFilter());
     webAppCreator.add("session-config", new SessionConfigParser());
     webAppCreator.add("security-constraint", new SecurityConstraintParser());
+    webAppCreator.add("security-role", new SecurityRoleParser());
   }
 
   private WebAppConfiguration parseWebApp(Node webappNode) throws SAXException {
@@ -316,6 +319,32 @@ public class WebXmlParserImpl2 implements WebXmlParser {
       add("web-resource-collection", new WebResourceCollectionParser());
       add("auth-constraint", new AuthConstraintParser());
       add("user-data-constraint", new UserDataConstraintParser());
+    }
+  }
+
+
+  private static class SecurityRoleParser implements NodeParser {
+    private final ObjectCreator creator;
+
+    SecurityRoleParser() throws NoSuchMethodException {
+      creator = new SecurityRoleCreator();
+    }
+
+    public void parse(Object context, Node webappSubnode) throws SAXException {
+      MutableWebAppConfiguration webapp = (MutableWebAppConfiguration) context;
+      WebAppSecurityRole securityRole
+          = (WebAppSecurityRole) creator.create(webappSubnode);
+      if (securityRole != null) {
+        webapp.addSecurityRole(securityRole);
+      }
+    }
+  }
+
+
+  private static class SecurityRoleCreator extends SimpleObjectCreator {
+    private SecurityRoleCreator() throws NoSuchMethodException {
+      super(MutableWebAppSecurityRole.class);
+      setStringViaMethod("role-name", "setRoleName");
     }
   }
 
