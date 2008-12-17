@@ -421,18 +421,27 @@ public class HttpRequestAsserter {
   }
 
   private static String[] toStringsAndClose(InputStream is) throws IOException {
-    List<String> lines = new ArrayList<String>();
-    BufferedReader br = null;
     try {
-      br = new BufferedReader(new InputStreamReader(is));
-      String line;
-      while ((line = br.readLine()) != null) {
-        lines.add(line);
-      }
+      return toStrings(is);
     } finally {
-      if (br != null) {
-        br.close();
-      }
+      is.close();
+    }    
+  }
+
+  private static String readLine(BufferedReader br) {
+    try {
+      return br.readLine();
+    } catch (IOException ignored) {
+      return null;
+    }
+  }
+
+  private static String[] toStrings(InputStream is) throws IOException {
+    List<String> lines = new ArrayList<String>();
+    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+    String line;
+    while ((line = readLine(br)) != null) {
+      lines.add(line);
     }
     return lines.toArray(new String[lines.size()]);
   }
