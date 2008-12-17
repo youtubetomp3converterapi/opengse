@@ -475,7 +475,7 @@ public class HttpRequestAsserter {
     while (st1.hasMoreTokens() && st2.hasMoreTokens()) {
         String tok1 = st1.nextToken();
         String tok2 = st2.nextToken();
-      Assert.assertEquals("Different non-whitespace line text", tok1, tok2);
+      Assert.assertEquals("Different non-whitespace line text", tok2, tok1);
     }
     Assert.assertFalse(
         "More lines in message body than golden file", st1.hasMoreTokens());

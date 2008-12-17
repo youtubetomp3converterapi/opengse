@@ -105,8 +105,13 @@ final class HttpRequestImpl implements HttpRequest {
     if (authority != null) {
       buf.append(authority);
     } else {
+      ConnectionInformation conn = getConnectionInformation();
       // if the URI has no authority info, construct from the local address
-      buf.append(getConnectionInformation().getLocalName());
+      buf.append(conn.getLocalName());
+      int port = conn.getLocalPort();
+      if (port != 80) {
+        buf.append(':').append(port);
+      }
     }
 
     return buf;
