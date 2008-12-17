@@ -16,6 +16,7 @@ package com.google.opengse.blockingcore;
 
 import com.google.opengse.HttpRequest;
 import com.google.opengse.ConnectionInformation;
+import com.google.opengse.RequestUtils;
 import com.google.opengse.httputil.Locales;
 import com.google.opengse.util.IteratorEnumeration;
 
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 
@@ -89,8 +91,32 @@ final class HttpRequestImpl implements HttpRequest {
     return requestURI.toString();
   }
 
+  StringBuffer getRequestURLPrefix() {
+    StringBuffer buf = new StringBuffer();
+
+    // add in the scheme
+    String scheme = getScheme();
+    buf.append(scheme);
+    buf.append("://");
+
+    // add in the authority (username, password, host, port)
+    URI requestUri = RequestUtils.getURI(this);
+    String authority = requestUri.getRawAuthority();
+    if (authority != null) {
+      buf.append(authority);
+    } else {
+      // if the URI has no authority info, construct from the local address
+      buf.append(getConnectionInformation().getLocalName());
+    }
+
+    return buf;
+  }
+  
   public StringBuffer getRequestURL() {
-    return null;
+    StringBuffer buf = getRequestURLPrefix();
+    // append the raw path
+    buf.append(requestURI.getRawPath());
+    return buf;
   }
 
   public void setCharacterEncoding(String env) throws UnsupportedEncodingException {

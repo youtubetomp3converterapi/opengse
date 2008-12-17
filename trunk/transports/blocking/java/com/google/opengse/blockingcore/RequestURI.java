@@ -86,6 +86,10 @@ public class RequestURI {
     return rawQuery;
   }
 
+  public String getRawPath() {
+    return data;
+  }
+
   @Override
   public String toString() {
     return data;

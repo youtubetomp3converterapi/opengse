@@ -43,6 +43,24 @@ public interface HttpRequest {
 
   String getRequestURI();
 
+  /**
+   *
+   * Reconstructs the URL the client used to make the request.
+   * The returned URL contains a protocol, server name, port
+   * number, and server path, but it does not include query
+   * string parameters.
+   *
+   * <p>Because this method returns a <code>StringBuffer</code>,
+   * not a string, you can modify the URL easily, for example,
+   * to append query parameters.
+   *
+   * <p>This method is useful for creating redirect messages
+   * and for reporting errors.
+   *
+   * @return		a <code>StringBuffer</code> object containing
+   *			the reconstructed URL
+   *
+   */
   StringBuffer getRequestURL();
 
   void setCharacterEncoding(String env)
