@@ -335,6 +335,9 @@ public class WebXmlParserImpl2 implements WebXmlParser {
   private static class WebResourceCollectionCreator extends SimpleObjectCreator {
     private WebResourceCollectionCreator() throws NoSuchMethodException {
       super(MutableWebAppWebResourceCollection.class);
+      setStringViaMethod("web-resource-name", "setWebResourceName");
+      setStringViaMethod("url-pattern", "addUrlPattern");
+      setStringViaMethod("http-method", "addHttpMethod");
     }
   }
 
