@@ -27,6 +27,8 @@ import com.google.opengse.configuration.WebAppServletMapping;
 import com.google.opengse.configuration.WebAppSessionConfig;
 import com.google.opengse.configuration.WebAppTagLib;
 import com.google.opengse.configuration.WebAppWelcomeFileList;
+import com.google.opengse.configuration.WebAppSecurityConstraint;
+import com.google.opengse.configuration.WebAppWebResourceCollection;
 import com.google.opengse.configuration.impl.MutableWebAppConfiguration;
 import com.google.opengse.configuration.impl.MutableWebAppContextParam;
 import com.google.opengse.configuration.impl.MutableWebAppErrorPage;
@@ -40,6 +42,8 @@ import com.google.opengse.configuration.impl.MutableWebAppSessionConfig;
 import com.google.opengse.configuration.impl.MutableWebAppTagLib;
 import com.google.opengse.configuration.impl.MutableWebAppWelcomeFileList;
 import com.google.opengse.configuration.impl.MutableWebappFilterMapping;
+import com.google.opengse.configuration.impl.MutableWebAppWebResourceCollection;
+import com.google.opengse.configuration.impl.MutableWebAppSecurityConstraint;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -103,7 +107,7 @@ public class WebXmlParserImpl2 implements WebXmlParser {
     webAppCreator.add("description",
         new SetStringViaMethod(
             MutableWebAppConfiguration.class, "setDescription"));
-    webAppCreator.add("context-param", new WebappContextParam());
+    webAppCreator.add("context-param", new ContextParamParser());
     webAppCreator.add("listener", new WebappListener());
     webAppCreator.add("servlet", new WebappServlet());
     webAppCreator.add("servlet-mapping", new WebappServletMapping());
@@ -114,6 +118,7 @@ public class WebXmlParserImpl2 implements WebXmlParser {
     webAppCreator.add("taglib", new TaglibParser());
     webAppCreator.add("filter", new WebappFilter());
     webAppCreator.add("session-config", new SessionConfigParser());
+    webAppCreator.add("security-constraint", new SecurityConstraintParser());
   }
 
   private WebAppConfiguration parseWebApp(Node webappNode) throws SAXException {
@@ -266,10 +271,10 @@ public class WebXmlParserImpl2 implements WebXmlParser {
   }
 
 
-  private static class WebappContextParam implements NodeParser {
+  private static class ContextParamParser implements NodeParser {
     private final ObjectCreator creator;
 
-    WebappContextParam() throws NoSuchMethodException {
+    ContextParamParser() throws NoSuchMethodException {
       creator = new WebAppContextParamCreator();
     }
 
@@ -280,6 +285,56 @@ public class WebXmlParserImpl2 implements WebXmlParser {
       if (contextParam != null) {
         webapp.addContextParam(contextParam);
       }
+    }
+  }
+
+  private static class SecurityConstraintParser implements NodeParser {
+    private final ObjectCreator creator;
+
+    SecurityConstraintParser() throws NoSuchMethodException {
+      creator = new SecurityConstraintCreator();
+    }
+
+    public void parse(Object context, Node webappSubnode) throws SAXException {
+      MutableWebAppConfiguration webapp = (MutableWebAppConfiguration) context;
+      WebAppSecurityConstraint securityConstraint
+          = (WebAppSecurityConstraint) creator.create(webappSubnode);
+      if (securityConstraint != null) {
+        webapp.addSecurityConstraint(securityConstraint);
+      }
+    }
+  }
+
+
+  private static class SecurityConstraintCreator extends SimpleObjectCreator {
+    private SecurityConstraintCreator() throws NoSuchMethodException {
+      super(MutableWebAppSecurityConstraint.class);
+      add("web-resource-collection", new WebResourceCollectionParser());
+    }
+  }
+
+
+  private static class WebResourceCollectionParser implements NodeParser {
+    private final ObjectCreator creator;
+
+    WebResourceCollectionParser() throws NoSuchMethodException {
+      creator = new WebResourceCollectionCreator();
+    }
+
+    public void parse(Object context, Node webappSubnode) throws SAXException {
+      MutableWebAppSecurityConstraint constraint = (MutableWebAppSecurityConstraint) context;
+      WebAppWebResourceCollection webResourceCollection
+          = (WebAppWebResourceCollection) creator.create(webappSubnode);
+      if (webResourceCollection != null) {
+        constraint.addWebResourceCollection(webResourceCollection);
+      }
+    }
+  }
+
+
+  private static class WebResourceCollectionCreator extends SimpleObjectCreator {
+    private WebResourceCollectionCreator() throws NoSuchMethodException {
+      super(MutableWebAppWebResourceCollection.class);
     }
   }
 
@@ -453,8 +508,8 @@ public class WebXmlParserImpl2 implements WebXmlParser {
         NodeParser nodeParser = subParsers.get(childNode.getNodeName());
         if (nodeParser == null) {
           throw new SAXException(
-              "Don't know how to process " + childNode.getNodeName()
-              + " using " + mutableClass.getName());
+              "Don't know how to process <" + childNode.getNodeName()
+              + "> using " + mutableClass.getName());
         }
         nodeParser.parse(thisObject, childNode);
       }
