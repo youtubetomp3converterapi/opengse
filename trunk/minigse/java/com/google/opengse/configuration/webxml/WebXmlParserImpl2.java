@@ -32,6 +32,7 @@ import com.google.opengse.configuration.WebAppWebResourceCollection;
 import com.google.opengse.configuration.WebAppAuthConstraint;
 import com.google.opengse.configuration.WebAppUserDataConstraint;
 import com.google.opengse.configuration.WebAppSecurityRole;
+import com.google.opengse.configuration.WebAppSecurityRoleRef;
 import com.google.opengse.configuration.impl.MutableWebAppConfiguration;
 import com.google.opengse.configuration.impl.MutableWebAppContextParam;
 import com.google.opengse.configuration.impl.MutableWebAppErrorPage;
@@ -50,6 +51,7 @@ import com.google.opengse.configuration.impl.MutableWebAppSecurityConstraint;
 import com.google.opengse.configuration.impl.MutableWebAppAuthConstraint;
 import com.google.opengse.configuration.impl.MutableWebAppUserDataConstraint;
 import com.google.opengse.configuration.impl.MutableWebAppSecurityRole;
+import com.google.opengse.configuration.impl.MutableWebappSecurityRoleRef;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -501,8 +503,39 @@ public class WebXmlParserImpl2 implements WebXmlParser {
       setStringViaMethod("jsp-file", "setJspFile");
       setStringViaMethod("description", "setDescription");
       add("init-param", new InitParamParser(MutableWebAppServlet.class));
+      add("security-role-ref", new SecurityRoleRefParser());
     }
   }
+
+
+
+  private static class SecurityRoleRefParser implements NodeParser {
+    private final ObjectCreator creator;
+
+    SecurityRoleRefParser() throws NoSuchMethodException {
+      creator = new SecurityRoleRefCreator();
+    }
+
+    public void parse(Object context, Node webappSubnode) throws SAXException {
+      MutableWebAppServlet servlet = (MutableWebAppServlet) context;
+      WebAppSecurityRoleRef securityRoleRef
+          = (WebAppSecurityRoleRef) creator.create(webappSubnode);
+      if (securityRoleRef != null) {
+        servlet.addSecurityRoleRef(securityRoleRef);
+      }
+    }
+  }
+
+
+  private static class SecurityRoleRefCreator extends SimpleObjectCreator {
+    private SecurityRoleRefCreator() throws NoSuchMethodException {
+      super(MutableWebappSecurityRoleRef.class);
+      setStringViaMethod("role-name", "setRoleName");
+      setStringViaMethod("role-link", "setRoleLink");
+    }
+  }
+
+
 
   private static class InitParamParser extends SimpleNodeParser {
     private InitParamParser(Class<?> mutableParentClass)
