@@ -30,6 +30,7 @@ import com.google.opengse.configuration.WebAppWelcomeFileList;
 import com.google.opengse.configuration.WebAppSecurityConstraint;
 import com.google.opengse.configuration.WebAppWebResourceCollection;
 import com.google.opengse.configuration.WebAppAuthConstraint;
+import com.google.opengse.configuration.WebAppUserDataConstraint;
 import com.google.opengse.configuration.impl.MutableWebAppConfiguration;
 import com.google.opengse.configuration.impl.MutableWebAppContextParam;
 import com.google.opengse.configuration.impl.MutableWebAppErrorPage;
@@ -46,6 +47,7 @@ import com.google.opengse.configuration.impl.MutableWebappFilterMapping;
 import com.google.opengse.configuration.impl.MutableWebAppWebResourceCollection;
 import com.google.opengse.configuration.impl.MutableWebAppSecurityConstraint;
 import com.google.opengse.configuration.impl.MutableWebAppAuthConstraint;
+import com.google.opengse.configuration.impl.MutableWebAppUserDataConstraint;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -313,6 +315,7 @@ public class WebXmlParserImpl2 implements WebXmlParser {
       super(MutableWebAppSecurityConstraint.class);
       add("web-resource-collection", new WebResourceCollectionParser());
       add("auth-constraint", new AuthConstraintParser());
+      add("user-data-constraint", new UserDataConstraintParser());
     }
   }
 
@@ -343,6 +346,34 @@ public class WebXmlParserImpl2 implements WebXmlParser {
       setStringViaMethod("http-method", "addHttpMethod");
     }
   }
+
+
+  private static class UserDataConstraintParser implements NodeParser {
+    private final ObjectCreator creator;
+
+    UserDataConstraintParser() throws NoSuchMethodException {
+      creator = new UserDataConstraintCreator();
+    }
+
+    public void parse(Object context, Node webappSubnode) throws SAXException {
+      MutableWebAppSecurityConstraint constraint = (MutableWebAppSecurityConstraint) context;
+      WebAppUserDataConstraint userConstraint
+          = (WebAppUserDataConstraint) creator.create(webappSubnode);
+      if (userConstraint != null) {
+        constraint.setUserDataConstraint(userConstraint);
+      }
+    }
+  }
+
+
+  private static class UserDataConstraintCreator extends SimpleObjectCreator {
+    private UserDataConstraintCreator() throws NoSuchMethodException {
+      super(MutableWebAppUserDataConstraint.class);
+      setStringViaMethod("transport-guarantee", "setTransportGuarantee");
+    }
+  }
+
+
 
 
   private static class AuthConstraintParser implements NodeParser {
