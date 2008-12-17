@@ -15340,6 +15340,7 @@ public void testJspXmlpositiveContentType()
   @Test
   public void testUriMatch()
       throws Exception {
+    // uses com.google.opengse.testlet.URITestlet on the server-side
     HttpRequestAsserter get = createGetAssertion();
     get.setUri("/contextpath/foo/bar.test");
     get.setExpectedResponseViaResource(
