@@ -33,6 +33,7 @@ public final class MutableWebAppSecurityConstraint
   private String displayName;
   private final List<WebAppWebResourceCollection> wrcollections;
   private WebAppAuthConstraint authConstraint;
+  private WebAppUserDataConstraint userDataConstraint;
 
   /*
    *  private constructor to force usage of create method. This
@@ -73,6 +74,10 @@ public final class MutableWebAppSecurityConstraint
   }
 
   public WebAppUserDataConstraint getUserDataConstraint() {
-    return null;
+    return userDataConstraint;
+  }
+
+  public void setUserDataConstraint(WebAppUserDataConstraint userDataConstraint) {
+    this.userDataConstraint = userDataConstraint;
   }
 }
