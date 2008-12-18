@@ -542,7 +542,7 @@
   </security-constraint>
 
   <security-role>
-      <role-name>internal_role_id</role-name>
+      <role-name>external_role</role-name>
   </security-role>
 
   <security-role>
@@ -553,8 +553,8 @@
       <servlet-name>ServletSecurityRoleTest</servlet-name>
       <servlet-class>com.google.opengse.testlet.Security.ServletSecurityRoleTestlet</servlet-class>
       <security-role-ref>
-          <role-name>role_id</role-name>
-          <role-link>internal_role_id</role-link>
+          <role-name>role_name</role-name>
+          <role-link>external_role</role-link>
       </security-role-ref>
       <security-role-ref>
           <role-name>another_role</role-name>
@@ -563,7 +563,7 @@
 
   <servlet-mapping>
       <servlet-name>ServletSecurityRoleTest</servlet-name>
-      <url-pattern>/securityrole/*</url-pattern>
+      <url-pattern>/ServletSecurityRoleTest</url-pattern>
   </servlet-mapping>
   <!-- end of security constraints -->
 
