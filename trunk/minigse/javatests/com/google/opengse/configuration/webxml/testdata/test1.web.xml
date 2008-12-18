@@ -192,6 +192,17 @@
     <servlet-name>StaticFileIncludeTest</servlet-name>
     <servlet-class>com.google.opengse.testlet.WebApp.StaticFileIncludeTestlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>ServletSecurityRoleTest</servlet-name>
+    <servlet-class>com.google.opengse.testlet.Security.ServletSecurityRoleTestlet</servlet-class>
+    <security-role-ref>
+      <role-name>role_name</role-name>
+      <role-link>external_role</role-link>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>another_role</role-name>
+    </security-role-ref>
+  </servlet>
   <filter-mapping>
     <filter-name>ServletRequestFilter</filter-name>
     <url-pattern>/DispatcherFilterTest</url-pattern>
@@ -346,6 +357,10 @@
     <servlet-name>StaticFileIncludeTest</servlet-name>
     <url-pattern>/StaticFileIncludeTest</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ServletSecurityRoleTest</servlet-name>
+    <url-pattern>/ServletSecurityRoleTest</url-pattern>
+  </servlet-mapping>
   <session-config>
     <session-timeout>54</session-timeout>
   </session-config>
@@ -373,4 +388,59 @@
     <taglib-uri>http://java.apache.org/tomcat/examples-taglib</taglib-uri>
     <taglib-location>/WEB-INF/tlds/example-taglib.tld</taglib-location>
   </taglib>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>restricted methods</web-resource-name>
+      <url-pattern>/acme/*</url-pattern>
+      <url-pattern>/acme/wholesale/*</url-pattern>
+      <url-pattern>/acme/retail/*</url-pattern>
+      <http-method>DELETE</http-method>
+      <http-method>PUT</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+    </auth-constraint>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>wholesale</web-resource-name>
+      <url-pattern>/acme/wholesale/*</url-pattern>
+      <http-method>GET</http-method>
+      <http-method>PUT</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>SALESCLERK</role-name>
+    </auth-constraint>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>wholesale</web-resource-name>
+      <url-pattern>/acme/wholesale/*</url-pattern>
+      <http-method>GET</http-method>
+      <http-method>POST</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>CONTRACTOR</role-name>
+    </auth-constraint>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>retail</web-resource-name>
+      <url-pattern>/acme/retail/*</url-pattern>
+      <http-method>GET</http-method>
+      <http-method>POST</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>CONTRACTOR</role-name>
+      <role-name>HOMEOWNER</role-name>
+    </auth-constraint>
+  </security-constraint>
+  <security-role>
+    <role-name>external_role</role-name>
+  </security-role>
+  <security-role>
+    <role-name>another_role</role-name>
+  </security-role>
 </web-app>
