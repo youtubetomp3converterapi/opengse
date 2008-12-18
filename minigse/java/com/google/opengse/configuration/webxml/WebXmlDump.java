@@ -74,7 +74,8 @@ public final class WebXmlDump {
    * @param webapp the configuration to dump
    * @param version what version to use (2.3, 2.5)
    */
-  public static void dump(
+  public static void
+  dump(
       WebAppConfiguration webapp, float version, PrintWriter out) {
     if (version != 2.3f && version != 2.5f) {
       throw new IllegalArgumentException("Unsupported version: " + version);
@@ -327,6 +328,21 @@ public final class WebXmlDump {
         }
         out.println("    </auth-constraint>");
       }
+
+      if (sc.getUserDataConstraint() != null) {
+        out.println("    <user-data-constraint>");
+        if (sc.getUserDataConstraint().getDescription() != null) {
+          out.println("      <description>"
+              + sc.getUserDataConstraint().getDescription() + "</description>");
+        }
+        if (sc.getUserDataConstraint().getTransportGuarantee() != null) {
+          out.println("      <transport-guarantee>"
+              + sc.getUserDataConstraint().getTransportGuarantee() + "</transport-guarantee>");
+        }
+        out.println("    </user-data-constraint>");
+      }
+
+
       out.println("  </security-constraint>");
     }
     if (webapp.getLoginConfig() != null) {
