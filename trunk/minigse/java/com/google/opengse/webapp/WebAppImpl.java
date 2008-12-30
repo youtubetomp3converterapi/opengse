@@ -25,8 +25,8 @@ import com.google.opengse.configuration.WebAppListener;
 import com.google.opengse.configuration.WebAppServlet;
 import com.google.opengse.configuration.WebAppServletMapping;
 import com.google.opengse.configuration.webxml.WebAppConfigurationCombiner;
-import com.google.opengse.filters.RegularExpressionRequestHandlerDispatcher;
 import com.google.opengse.filters.RegularExpressionRequestHandler;
+import com.google.opengse.filters.RegularExpressionRequestHandlerDispatcher;
 import com.google.opengse.handlers.NotFoundHandler;
 import com.google.opengse.webapp.listeners.HttpSessionAttributeListenerList;
 import com.google.opengse.webapp.listeners.HttpSessionListenerList;
@@ -34,6 +34,16 @@ import com.google.opengse.webapp.listeners.ServletContextAttributeListenerList;
 import com.google.opengse.webapp.listeners.ServletContextListenerList;
 import com.google.opengse.webapp.listeners.ServletRequestAttributeListenerList;
 import com.google.opengse.webapp.listeners.ServletRequestListenerList;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.Filter;
 import javax.servlet.RequestDispatcher;
@@ -52,15 +62,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionListener;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
 /**
  * An implementation of WebApp.
@@ -119,7 +120,11 @@ final class WebAppImpl implements WebApp {
     loadServletClasses();
     loadFilterClasses();
     loadErrorPages();
-    putTheClasspathSomewhereJasperCanFindIt(context, jasperFriendlyClassLoader);
+    try {
+      putTheClasspathSomewhereJasperCanFindIt(context, jasperFriendlyClassLoader);
+    } catch (RuntimeException ex) {
+      // TODO: we need make the jasper support optional and more robust
+    }
   }
 
   private static File findTheToolsJarThatJasperNeeds() {
