@@ -46,7 +46,9 @@ public class WebAppFactory {
 
   /**
    * Creates a WebApp given a contextBase (directory which has a WEB-INF
-   * directory) and a URI prefix (for example "/foo")
+   * directory) and a URI prefix (for example "/foo").
+   *
+   * Note lib or classes directory may or may not exist
    */
   public static WebApp createWebApp(File contextBase, String uriPrefix,
       ServletContainerContext containerContext)
@@ -56,11 +58,12 @@ public class WebAppFactory {
         .getConfiguration(contextBase);
     File webinfdir = new File(contextBase, "WEB-INF");
     File classesdir = new File(webinfdir, "classes");
-    checkDirectory(classesdir);
     File libdir = new File(webinfdir, "lib");
     List<URL> urlList = new ArrayList<URL>();
     try {
-      urlList.add(classesdir.toURL());
+      if (classesdir.exists()) {
+        urlList.add(classesdir.toURL());
+      }
       if (libdir.exists()) {
         File[] jars = libdir.listFiles();
         if (jars != null) {
