@@ -79,7 +79,7 @@ public class WebAppFactory {
     }
 
       URL[] urls = urlList.toArray(new URL[0]);
-      URLClassLoader urlcl = new URLClassLoader(urls);
+      URLClassLoader urlcl = new URLClassLoader(urls, WebAppFactory.class.getClassLoader());
       return WebAppImpl.create(uriPrefix, contextBase,
           urlcl, config, containerContext);
   }
