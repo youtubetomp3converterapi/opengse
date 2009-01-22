@@ -22,7 +22,6 @@ import java.util.LinkedList;
  * @author Mike Jennings
  */
 public class RunnableQueueImpl implements RunnableQueue {
-
   private final LinkedList<Runnable> list = new LinkedList<Runnable>();
   private final Object emptySignal = new Object();
   private boolean listIsEmpty = true;
