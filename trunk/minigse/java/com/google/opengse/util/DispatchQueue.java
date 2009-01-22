@@ -17,14 +17,14 @@ package com.google.opengse.util;
  */
 public interface DispatchQueue {
   /**
-   * Enqueues the provided connection.
+   * Add a Runnable to this DispatchQueue
    *
-   * @param conn is the connection to enqueue
+   * @param r the Runnable to enqueue
    */
-  void addRunnable(Runnable conn);
+  void addRunnable(Runnable r);
   
   /**
-   * Blocks until the connection queue is empty or until the specified timeout
+   * Blocks until the queue is empty or until the specified timeout
    * occurs.
    *
    * The queue is first filled up with <code>maxThreads_</code>
