@@ -1,11 +1,6 @@
 URL: http://code.google.com/p/opengse/
-  (This is currently a hidden project with members-only access; a Google
-   Account is required in order to become a member and access it.)
 Version: 1.0
 License: Apache 2.0
 License File: LICENSE
 Description: 
   Open-source Google Servlet Engine
-Local Modifications:
-  This package is currently a staging area for the open source release.
-
