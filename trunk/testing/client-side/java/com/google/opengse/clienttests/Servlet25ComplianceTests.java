@@ -14,22 +14,14 @@
 
 package com.google.opengse.clienttests;
 
-import com.google.opengse.clienttests.HttpAssertion;
-import com.google.opengse.clienttests.HttpRequestAsserter;
-
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.Set;
 import java.util.List;
 import java.io.FileNotFoundException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 import javax.servlet.http.Cookie;
 
@@ -15300,7 +15292,7 @@ public void testJspXmlpositiveContentType()
    * Test what request headers we have sent by invoking the servlet that
    * responds to "*.hdr"
    *
-   * @throws Exception
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testSessionCookie()
@@ -15335,7 +15327,7 @@ public void testJspXmlpositiveContentType()
   /**
    * Do a basic sanity-check on all of the URI-related methods
    *
-   * @throws Exception
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testUriMatch()
@@ -15351,7 +15343,7 @@ public void testJspXmlpositiveContentType()
   /**
    * Same as testUriMatch but with a query string added
    *
-   * @throws Exception
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testUriMatchWithQuery()
@@ -15367,7 +15359,7 @@ public void testJspXmlpositiveContentType()
    * Test what request headers we have sent by invoking the servlet that
    * responds to "*.hdr"
    *
-   * @throws Exception
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testHeaders()
@@ -15385,7 +15377,7 @@ public void testJspXmlpositiveContentType()
    * Tells the forwarding servlet to forward the request to
    * {@code /bar/foo.test?woo=hoo} then checks the result.
    *
-   * @throws Exception
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testForward2()
@@ -15420,6 +15412,7 @@ public void testJspXmlpositiveContentType()
 
   /**
    * Test ServletContext#getContextPath works.
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testGetContextPath2()
@@ -15434,6 +15427,7 @@ public void testJspXmlpositiveContentType()
 
   /**
    * Test ServletContext#getServletContextName works.
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testGetServletContextName()
@@ -15449,6 +15443,8 @@ public void testJspXmlpositiveContentType()
 
   /**
    * See XPoweredByHeaderTestlet for the expected header format.
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testXPoweredByHeader()
@@ -15462,6 +15458,7 @@ public void testJspXmlpositiveContentType()
 
   /**
    * Test the request listener is invoked with the request initialized event.
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testRequestInitializedEvent()
@@ -15476,6 +15473,8 @@ public void testJspXmlpositiveContentType()
 
   /**
    * Test the request listener is invoked with the request destroyed event.
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testRequestDestroyedEvent()
@@ -15490,6 +15489,7 @@ public void testJspXmlpositiveContentType()
   /**
    * Test the request attribute listener is invoked with the attribute added
    * event.
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testAttributeAddedEvent()
@@ -15506,6 +15506,9 @@ public void testJspXmlpositiveContentType()
   /**
    * Test the request attribute listener is invoked with the attribute removed
    * event.
+   *
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testAttributeRemovedEvent()
@@ -15522,6 +15525,8 @@ public void testJspXmlpositiveContentType()
   /**
    * Test the request attribute listener is invoked with the attribute replaced
    * event.
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testAttributeReplacedEvent()
@@ -15545,6 +15550,8 @@ public void testJspXmlpositiveContentType()
    * <url-pattern>/DispatcherFilterTest</url-pattern>
    * <dispatcher>REQUEST</dispatcher>
    * </filter-mapping>
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testRequestOnlyDispatcherFilter() throws Exception {
@@ -15582,6 +15589,8 @@ public void testJspXmlpositiveContentType()
    * <url-pattern>/IncludedDispatcherFilterTest</url-pattern>
    * <dispatcher>INCLUDE</dispatcher>
    * </filter-mapping>
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testIncludeOnlyDispatcherFilter() throws Exception {
@@ -15619,6 +15628,8 @@ public void testJspXmlpositiveContentType()
    * <url-pattern>/ForwardedDispatcherFilterTest</url-pattern>
    * <dispatcher>FORWARD</dispatcher>
    * </filter-mapping>
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testForwardOnlyDispatcherFilter()
@@ -15657,6 +15668,9 @@ public void testJspXmlpositiveContentType()
    * <url-pattern>/ErroredDispatcherFilterTest</url-pattern>
    * <dispatcher>ERROR</dispatcher>
    * </filter-mapping>
+   *
+   * @throws Exception if anything goes wrong
+   *
    */
   @Test
   public void testErrorDispatcherFilter() throws Exception {
@@ -15669,6 +15683,7 @@ public void testJspXmlpositiveContentType()
         "Hello from ServletErrorFilter response");
     get.connectToServerAndAssert();
 
+    get = createGetAssertion();
     get.setUri("/contextpath/ErroredDispatcherFilterTest");
     get.setExpectedResponseCode(200);
     get.setUnexpectedResponseLine("Hello from ServletErrorFilter request");
@@ -15694,6 +15709,8 @@ public void testJspXmlpositiveContentType()
 
   /**
    * 500 is generated for an uncaught sessoin exception.
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testUnhandledSessionException() throws Exception {
@@ -15707,6 +15724,8 @@ public void testJspXmlpositiveContentType()
 
   /**
    * Listeners should be invoked according to web.xml order.
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testServletContextListenerOrder() throws Exception {
@@ -15720,6 +15739,8 @@ public void testJspXmlpositiveContentType()
 
   /**
    * Servlet can access (any) files under WEB-INF via resource uri.
+   * 
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testWebInfResource()
@@ -15733,6 +15754,8 @@ public void testJspXmlpositiveContentType()
 
   /**
    * No direct access to files under WEB-INF is allowed.
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testWebInfFilesNotAccessible() throws Exception {
@@ -15752,6 +15775,8 @@ public void testJspXmlpositiveContentType()
    * (i.e. relative to the original request path).
    * <p/>
    * See ServletRequest.GetRequestDispatcherPathTestlet for more detail.
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testGetRequestDispatcherPath() throws Exception {
@@ -15769,6 +15794,8 @@ public void testJspXmlpositiveContentType()
   /**
    * This tests make sure that the welcome files can (always) be accessed
    * via direct URI path.
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testDirectWelcomeFileAccess() throws Exception {
@@ -15790,6 +15817,8 @@ public void testJspXmlpositiveContentType()
   /**
    * We have two welcome files under web/welcome/welcome, and according
    * to web.xml, we use the first one (weblcome1) if both are available.
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testOrderedWelcomeFileAccess() throws Exception {
@@ -15807,6 +15836,7 @@ public void testJspXmlpositiveContentType()
    * the one with trailing "/", i.e. if there is not servlet URL matching.
    *
    * Note servlet URL matching has to be exact, unless it's a wildcard matching.
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testPathWithoutTrailingSlashWelcomeFileAccess() throws Exception {
@@ -15821,6 +15851,7 @@ public void testJspXmlpositiveContentType()
   /**
    * There is only one welcome file under welcome/welcome, and we use the
    * full path matching to locate the target - i.e. welcome2.txt.
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testPathMatchingWelcomeFileAccess() throws Exception {
@@ -15843,6 +15874,8 @@ public void testJspXmlpositiveContentType()
    *   <dispatcher>INCLUDE</dispatcher>
    *   <dispatcher>REQUEST</dispatcher>
    * </filter-mapping>
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testWildcardServletIncludeFilter()
@@ -15867,6 +15900,8 @@ public void testJspXmlpositiveContentType()
    *   <dispatcher>INCLUDE</dispatcher>
    *   <dispatcher>REQUEST</dispatcher>
    * </filter-mapping>
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testWildcardServletForwardFilter() throws Exception {
@@ -15890,6 +15925,8 @@ public void testJspXmlpositiveContentType()
    *   <dispatcher>INCLUDE</dispatcher>
    *   <dispatcher>REQUEST</dispatcher>
    * </filter-mapping>
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testWildcardServletRequestFilter() throws Exception {
@@ -15914,6 +15951,8 @@ public void testJspXmlpositiveContentType()
    *   <dispatcher>INCLUDE</dispatcher>                       <==
    *   <dispatcher>FORWARD</dispatcher>
    * </filter-mapping>
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testMixedServletIncludeFilter()
@@ -15940,6 +15979,8 @@ public void testJspXmlpositiveContentType()
    *   <dispatcher>INCLUDE</dispatcher>
    *   <dispatcher>FORWARD</dispatcher>                       <==
    * </filter-mapping>
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testMixedServletForwardFilter() throws Exception {
@@ -15965,6 +16006,8 @@ public void testJspXmlpositiveContentType()
    *   <dispatcher>INCLUDE</dispatcher>
    *   <dispatcher>FORWARD</dispatcher>
    * </filter-mapping>
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testMixedServletRequestFilter() throws Exception {
@@ -15979,6 +16022,8 @@ public void testJspXmlpositiveContentType()
 
   /**
    * Used to test the invocation order of filters.
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testFilterOrder1() throws Exception {
@@ -15992,6 +16037,8 @@ public void testJspXmlpositiveContentType()
 
   /**
    * Used to test the invocation order of filters.
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testFilterOrder2() throws Exception {
@@ -16006,6 +16053,8 @@ public void testJspXmlpositiveContentType()
   /**
    * Test if we can load a static file via include (an absolute path that is
    * relative to the current context).
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testStaticFileInclude()
@@ -16025,6 +16074,8 @@ public void testJspXmlpositiveContentType()
    * URL: /foo/bar
    * ServletPath: /foo
    * Pathinfo: /bar
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testRequestPathsUnderWildcardServletMapping()
@@ -16040,12 +16091,13 @@ public void testJspXmlpositiveContentType()
 
   /**
    * Test an exact servlet mapping will return path info as null.
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testRequestPathInfoExactServletMapping()
       throws Exception {
     HttpRequestAsserter get = createGetAssertion();
-    get = createGetAssertion();
     get.setUri("/contextpath/servletpath/exactmatch");
     get.setExpectedContentType("text/plain");
     get.setExpectedResponseCode(200);
@@ -16068,6 +16120,8 @@ public void testJspXmlpositiveContentType()
    * TODO: the /* mapping required for this test interferes with the default
    * static file servlet. Need figure out a way how to test them together,
    * i.e. under the same context path.
+   *
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testRequestPathsUnderWildcardOnlyServletMapping()

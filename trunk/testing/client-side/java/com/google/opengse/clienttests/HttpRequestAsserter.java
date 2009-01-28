@@ -36,6 +36,7 @@ import java.util.*;
  */
 public class HttpRequestAsserter {
   private String urlToGet;
+  private URL url;
   private boolean followRedirects;
   private boolean doInput;
   private final boolean doOutput;
@@ -168,14 +169,8 @@ public class HttpRequestAsserter {
   }
 
   private boolean weHaveHeaderExpectations() {
-    if (expectedResponseHeaders != null && !expectedResponseHeaders.isEmpty()) {
-      return true;
-    }
-    if (unexpectedResponseHeaders != null
-        && !unexpectedResponseHeaders.isEmpty()) {
-      return true;
-    }
-    return false;
+    return (expectedResponseHeaders != null && !expectedResponseHeaders.isEmpty() || (unexpectedResponseHeaders != null
+        && !unexpectedResponseHeaders.isEmpty()));
   }
 
   public Map<String, Set<String>> getNormalizedHeaders() {
@@ -201,7 +196,7 @@ public class HttpRequestAsserter {
     return responseCookies;
   }
 
-  private void checkHeaderExpectations(HttpURLConnection urlConnection) {
+  private void checkHeaderExpectations() {
     Set<String> actualHeaders = new TreeSet<String>(uheaders.keySet());
     /*
      * Check that we see all of the headers we expect to see
@@ -247,9 +242,10 @@ public class HttpRequestAsserter {
 
   private static Set<String> toSet(String[] lines) {
     Set<String> set = new TreeSet<String>();
-    for (String line : lines) {
-      set.add(line);
-    }
+    Collections.addAll(set, lines);
+//    for (String line : lines) {
+//      set.add(line);
+//    }
     return set;
   }
 
@@ -275,10 +271,12 @@ public class HttpRequestAsserter {
   }
 
   public void connectToServerAndAssert() throws IOException {
-    if (urlToGet == null) {
+    if (urlToGet == null && url == null) {
       Assert.fail("No uri set!");
     }
-    URL url = new URL(urlToGet);
+    if (url == null) {
+      url = new URL(urlToGet);
+    }
     conn = (HttpURLConnection) url.openConnection();
     conn.setInstanceFollowRedirects(followRedirects);
     conn.setDoInput(doInput);
@@ -301,7 +299,7 @@ public class HttpRequestAsserter {
     getNormalizedHeaders(conn);
     grabResponseCookies();
     if (weHaveHeaderExpectations()) {
-      checkHeaderExpectations(conn);
+      checkHeaderExpectations();
     }
     String contentType = conn.getContentType();
     Assert.assertNotNull("null content-type", contentType);
@@ -457,6 +455,9 @@ public class HttpRequestAsserter {
   /**
    * Convert an InputStream to a string, but does not close the InputStream.
    *
+   * @param istr the input stream to copy
+   * @return the converted string
+   * @throws IOException if there was a problem reading from the input stream
    */
   private static String toString(InputStream istr) throws IOException {
     Reader reader = new InputStreamReader(istr);
