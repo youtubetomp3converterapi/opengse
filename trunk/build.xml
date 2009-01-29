@@ -3,6 +3,7 @@
 
   <property name="opengse.jar" value="${basedir}/minigse/opengse.jar"/>
   <property name="tomcat.dir" value="${basedir}/engines/apache-tomcat-6.0.18"/>
+  <property name="tomcat.zip" value="${basedir}/engines/apache-tomcat-6.0.18.zip"/>
   <property name="tomcat.bootstrap.jar" value="${tomcat.dir}/bin/bootstrap.jar"/>
   
   <target name="help">
@@ -44,7 +45,19 @@
 
   </target>
 
-  <target name="deploy-wars-in-tomcat">
+  <target name="check-if-tomcat-is-unzipped">
+    <available property="tomcat.is.unzipped" file="${tomcat.dir}"/>
+  </target>
+
+  <target name="unzip-tomcat-distribution" depends="check-if-tomcat-is-unzipped" unless="tomcat.is.unzipped">
+    <echo>
+      unzipping tomcat...
+    </echo>
+    <unzip dest="${basedir}/engines" src="${tomcat.zip}">
+    </unzip>
+  </target>
+
+  <target name="deploy-wars-in-tomcat" depends="unzip-tomcat-distribution">
     <echo>
       Deploying tomcat in ${tomcat.dir}
     </echo>
