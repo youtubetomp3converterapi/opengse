@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	     version="2.4"> 
+	
+    <display-name>Test web.xml file</display-name>
+    <description>
+        Test web.xml file
+    </description>
+
+	<servlet>
+		<servlet-name>servlet1</servlet-name>
+		<servlet-class>com.google.experimental.mwomack.webxml.WebXmlConfiguratorTest$MockServlet1</servlet-class>
+		<init-param>
+			<param-name>param1</param-name>
+			<param-value>value1</param-value>
+		</init-param>
+		<init-param>
+			<param-name>param2</param-name>
+			<param-value>value2</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>servlet2</servlet-name>
+		<servlet-class>com.google.experimental.mwomack.webxml.WebXmlConfiguratorTest$MockServlet2</servlet-class>
+		<init-param>
+			<param-name>param11</param-name>
+			<param-value>value11</param-value>
+		</init-param>
+		<init-param>
+			<param-name>param22</param-name>
+			<param-value>value22</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+</web-app>
