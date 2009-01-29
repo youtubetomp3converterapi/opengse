@@ -169,8 +169,8 @@ public class HttpRequestAsserter {
   }
 
   private boolean weHaveHeaderExpectations() {
-    return (expectedResponseHeaders != null && !expectedResponseHeaders.isEmpty() || (unexpectedResponseHeaders != null
-        && !unexpectedResponseHeaders.isEmpty()));
+    return (expectedResponseHeaders   != null && !expectedResponseHeaders.isEmpty() 
+        || (unexpectedResponseHeaders != null && !unexpectedResponseHeaders.isEmpty()));
   }
 
   public Map<String, Set<String>> getNormalizedHeaders() {
