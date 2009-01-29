@@ -2,8 +2,9 @@
 <project name="opengse" default="help">
 
   <property name="opengse.jar" value="${basedir}/minigse/opengse.jar"/>
-  <property name="tomcat.dir" value="${basedir}/engines/apache-tomcat-6.0.18"/>
-  <property name="tomcat.zip" value="${basedir}/engines/apache-tomcat-6.0.18.zip"/>
+  <property name="tomcat.version" value="apache-tomcat-6.0.18"/>
+  <property name="tomcat.dir" value="${basedir}/engines/${tomcat.version}"/>
+  <property name="tomcat.zip" value="${basedir}/engines/${tomcat.version}.zip"/>
   <property name="tomcat.bootstrap.jar" value="${tomcat.dir}/bin/bootstrap.jar"/>
   
   <target name="help">
@@ -18,6 +19,9 @@
 
     deploy-wars-in-mini-engine: Deploys the war files used for server-side testing
       in the "mini" servlet engine
+
+    deploy-wars-in-tomcat: Deploys the war files used for server-side testing
+      in the ${tomcat.version} servlet engine
     </echo>
   </target>
 
@@ -76,9 +80,6 @@
       <sysproperty key="catalina.home" value="${tomcat.dir}"/>
       <sysproperty key="java.io.tmpdir" value="${tomcat.dir}/temp"/>
       <arg value="-config"/>
-<!--
-      <arg value="${tomcat.dir}/conf/server.xml"/>
--->      
       <arg value="${basedir}/engines/tomcat-config.xml"/>
       <arg value="start"/>
     </java>
