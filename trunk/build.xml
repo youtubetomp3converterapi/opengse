@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="opengse" default="help">
 
-  <property name="opengse.jar" value="${basedir}/minigse/opengse.jar"/>
+  <property name="opengse.jar" value="${basedir}/engines/minigse/opengse.jar"/>
   <property name="tomcat.version" value="apache-tomcat-6.0.18"/>
   <property name="tomcat.dir" value="${basedir}/engines/${tomcat.version}"/>
   <property name="tomcat.zip" value="${basedir}/engines/${tomcat.version}.zip"/>
@@ -11,15 +11,18 @@
     <echo>
   Helpful targets:
 
-    build-minigse:  Creates the opengse.jar file in ${basedir}/minigse
+    build-minigse:  Creates the opengse.jar file in ${basedir}/engines/minigse
       Use this "mini" servlet engine to run the server-side tests
+
 
     build-wars: Creates the war files used for server-side testing. These
       war files can be deployed in any servlet engine (not just the "mini" servlet engine)
 
+
     deploy-wars-in-mini-engine: Deploys the war files used for server-side testing
       in the "mini" servlet engine
 
+      
     deploy-wars-in-tomcat: Deploys the war files used for server-side testing
       in the ${tomcat.version} servlet engine
     </echo>
@@ -27,7 +30,7 @@
 
 
   <target name="build-minigse">
-    <ant dir="${basedir}/minigse"/>
+    <ant dir="${basedir}/engines/minigse"/>
   </target>
 
 

@@ -2,9 +2,10 @@
 <project name="minigse" default="build">
 
   <!-- Define some directories -->
-  <property name="opengse.dir" location="${basedir}/.."/>
+  <property name="opengse.dir" location="${basedir}/../.."/>
   <property name="out.dir" value="${opengse.dir}/out"/>
   <property name="nio.dir" value="${opengse.dir}/transports/nio"/>
+  <property name="blocking-transport.dir" value="${opengse.dir}/transports/blocking"/>
   <property name="classes.dir" value="${out.dir}/minigse/classes"/>
   <property name="java.dir" value="${basedir}/java"/>
   <property name="lib.dir" value="${basedir}/lib" />
@@ -81,6 +82,7 @@
 
   <target name="build-transports" depends="build-thin">
     <ant dir="${nio.dir}"/>
+    <ant dir="${blocking-transport.dir}"/>
   </target>
 
 

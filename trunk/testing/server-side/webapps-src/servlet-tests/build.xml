@@ -12,7 +12,7 @@
   <property name="web.exploded.dir" value="${exploded.dir}/servlet-tests"/>
   <property name="classes.dir" value="${web.exploded.dir}/WEB-INF/classes"/>
 
-  <property name="main.lib.dir" value="${opengse.dir}/minigse/lib" />
+  <property name="main.lib.dir" value="${opengse.dir}/engines/minigse/lib" />
   <property name="servlet.jar" value="${main.lib.dir}/servlet-api-2.5.jar" />
   <property name="jsp-api.jar" value="${main.lib.dir}/jsp-api-2.4.jar" />
 
