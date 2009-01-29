@@ -10,7 +10,7 @@
       <maximumStackSize value="32" />
       <properties />
     </buildFile>
-    <buildFile url="file://$PROJECT_DIR$/minigse/build.xml">
+    <buildFile url="file://$PROJECT_DIR$/engines/minigse/build.xml">
       <additionalClassPath />
       <antReference projectDefault="true" />
       <customJdkName value="" />
@@ -462,25 +462,25 @@
   <component name="libraryTable">
     <library name="Jasper 5.0.28">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/minigse/lib/ant-launcher.jar!/" />
-        <root url="jar://$PROJECT_DIR$/minigse/lib/ant.jar!/" />
-        <root url="jar://$PROJECT_DIR$/minigse/lib/commons-el-1.0.jar!/" />
-        <root url="jar://$PROJECT_DIR$/minigse/lib/jasper-compiler-5.0.28.jar!/" />
-        <root url="jar://$PROJECT_DIR$/minigse/lib/jasper-runtime-5.0.28.jar!/" />
+        <root url="jar://$PROJECT_DIR$/engines/minigse/lib/ant-launcher.jar!/" />
+        <root url="jar://$PROJECT_DIR$/engines/minigse/lib/ant.jar!/" />
+        <root url="jar://$PROJECT_DIR$/engines/minigse/lib/commons-el-1.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/engines/minigse/lib/jasper-compiler-5.0.28.jar!/" />
+        <root url="jar://$PROJECT_DIR$/engines/minigse/lib/jasper-runtime-5.0.28.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/minigse/lib/commons-el-1.0-src.jar!/" />
-        <root url="jar://$PROJECT_DIR$/minigse/lib/jasper-runtime-5.0.28-src.jar!/" />
+        <root url="jar://$PROJECT_DIR$/engines/minigse/lib/commons-el-1.0-src.jar!/" />
+        <root url="jar://$PROJECT_DIR$/engines/minigse/lib/jasper-runtime-5.0.28-src.jar!/" />
       </SOURCES>
     </library>
     <library name="JSTL">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/minigse/lib/jstl-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/engines/minigse/lib/jstl-1.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/minigse/lib/jstl-1.1-src.jar!/" />
+        <root url="jar://$PROJECT_DIR$/engines/minigse/lib/jstl-1.1-src.jar!/" />
       </SOURCES>
     </library>
     <library name="JUnit">
@@ -494,23 +494,23 @@
     </library>
     <library name="Servlet API">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/minigse/lib/servlet-api-2.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/engines/minigse/lib/servlet-api-2.5.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/minigse/lib/servlet-api-2.5-src.zip!/" />
+        <root url="jar://$PROJECT_DIR$/engines/minigse/lib/servlet-api-2.5-src.zip!/" />
       </SOURCES>
     </library>
     <library name="JSP API">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/minigse/lib/jsp-api-2.4.jar!/" />
+        <root url="jar://$PROJECT_DIR$/engines/minigse/lib/jsp-api-2.4.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
     </library>
     <library name="Jakarta stuff">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/minigse/lib/commons-logging-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/engines/minigse/lib/commons-logging-1.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
