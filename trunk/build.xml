@@ -2,6 +2,8 @@
 <project name="opengse" default="help">
 
   <property name="opengse.jar" value="${basedir}/minigse/opengse.jar"/>
+  <property name="tomcat.dir" value="${basedir}/engines/apache-tomcat-6.0.18"/>
+  <property name="tomcat.bootstrap.jar" value="${tomcat.dir}/bin/bootstrap.jar"/>
   
   <target name="help">
     <echo>
@@ -38,6 +40,34 @@
         >
       <arg value="--webapps=${basedir}/testing/server-side/webapps"/>
       <arg value="--port=8080"/>
+    </java>
+
+  </target>
+
+  <target name="deploy-wars-in-tomcat">
+    <echo>
+      Deploying tomcat in ${tomcat.dir}
+    </echo>
+    <available property="bootstrap.jar.exists" file="${tomcat.bootstrap.jar}"/>
+    <fail unless="bootstrap.jar.exists"
+          message="Cannot find ${tomcat.bootstrap.jar}"/>
+    <java
+        classpath="${tomcat.bootstrap.jar}"
+        classname="org.apache.catalina.startup.Bootstrap"
+        fork="true"
+        >
+      <sysproperty key="java.util.logging.manager" value="org.apache.juli.ClassLoaderLogManager"/>
+      <sysproperty key="java.util.logging.config.file" value="${tomcat.dir}/conf/logging.properties"/>
+      <sysproperty key="java.endorsed.dirs" value="${tomcat.dir}/endorsed"/>
+      <sysproperty key="catalina.base" value="${tomcat.dir}"/>
+      <sysproperty key="catalina.home" value="${tomcat.dir}"/>
+      <sysproperty key="java.io.tmpdir" value="${tomcat.dir}/temp"/>
+      <arg value="-config"/>
+<!--
+      <arg value="${tomcat.dir}/conf/server.xml"/>
+-->      
+      <arg value="${basedir}/engines/tomcat-config.xml"/>
+      <arg value="start"/>
     </java>
 
   </target>
