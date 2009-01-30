@@ -24,14 +24,17 @@ import javax.servlet.ServletRequest;
 import javax.servlet.FilterChain;
 
 /**
- * An implementation of RequestHandler that only returns 503's
+ * An implementation of RequestHandler that is used when a servlet
+ * is permanently unavailable
+ *
+ * 
  *
  * @author Mike Jennings
  */
-public class UnavailableHandler implements FilterChain {
+public class PermanentlyUnavailableHandler implements FilterChain {
   public void doFilter(ServletRequest request,
       ServletResponse resp) throws IOException, ServletException {
     HttpServletResponse response = (HttpServletResponse) resp;
-    response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
   }
 }

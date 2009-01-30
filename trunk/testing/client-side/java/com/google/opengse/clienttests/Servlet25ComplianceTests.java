@@ -734,7 +734,8 @@ public class Servlet25ComplianceTests extends ServletTestCaseWhichConnectsToARem
 
     httpAssert.setRequest(
         "GET /servlet-tests/DoInit1Test HTTP/1.0");
-    httpAssert.setReturnCode("503");
+    // we expect a 404 indicating a resource is "permanently" unavailable
+    httpAssert.setReturnCode("404");
     httpAssert.setTestName("DoInit1Test");
     httpAssert.setTestStrategy(
         "A negative test for the init method. We will throw UnavailableException from inside init. The Servlet should not be initialized");
@@ -5227,7 +5228,9 @@ public class Servlet25ComplianceTests extends ServletTestCaseWhichConnectsToARem
 
     httpAssert.setRequest(
         "GET /servlet-tests/HttpServletDoInit1Test HTTP/1.0");
-    httpAssert.setReturnCode("503");
+    // we expect a 404 indicating a resource is "permanently" unavailable
+    // (for "temporary" unavailability, we would expect a 503
+    httpAssert.setReturnCode("404");
     httpAssert.setTestName("HttpServletDoInit1Test");
     httpAssert.setTestStrategy(
         "A negative test for the init method. We will throw UnavailableException from inside init.The Servlet should not be initialized");
