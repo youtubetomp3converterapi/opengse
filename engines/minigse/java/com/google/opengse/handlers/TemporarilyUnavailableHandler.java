@@ -14,10 +14,24 @@
 
 package com.google.opengse.handlers;
 
-import com.google.opengse.UnwrittenTestCase;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.ServletResponse;
+import javax.servlet.ServletRequest;
+import javax.servlet.FilterChain;
 
 /**
- * Unit test for {@link PermanentlyUnavailableHandler}.
+ * An implementation of RequestHandler that only returns 503's
+ *
+ * @author Mike Jennings
  */
-public class UnavailableHandlerTest extends UnwrittenTestCase {
+public class TemporarilyUnavailableHandler implements FilterChain {
+  public void doFilter(ServletRequest request,
+      ServletResponse resp) throws IOException, ServletException {
+    HttpServletResponse response = (HttpServletResponse) resp;
+    response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+  }
 }
