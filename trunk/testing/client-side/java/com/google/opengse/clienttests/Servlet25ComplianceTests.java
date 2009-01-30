@@ -15711,7 +15711,7 @@ public void testJspXmlpositiveContentType()
   }
 
   /**
-   * 500 is generated for an uncaught sessoin exception.
+   * 500 is generated for an uncaught session exception.
    *
    * @throws Exception if anything goes wrong
    */
