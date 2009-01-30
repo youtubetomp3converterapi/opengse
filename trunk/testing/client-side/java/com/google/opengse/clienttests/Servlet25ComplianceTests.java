@@ -32,7 +32,7 @@ import javax.servlet.http.Cookie;
  *
  * @author Mike Jennings
  */
-public class Servlet25ComplianceTests extends ServletTestCaseWhichConnectsToARemoteServer {
+public class Servlet25ComplianceTests extends ServletTestsWhichConnectToARemoteServer {
 
 // servlet-tests
 
