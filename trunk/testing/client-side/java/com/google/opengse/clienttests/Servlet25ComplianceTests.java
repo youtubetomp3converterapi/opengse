@@ -32,7 +32,7 @@ import javax.servlet.http.Cookie;
  *
  * @author Mike Jennings
  */
-public class Servlet25ComplianceTests extends ServerTestCaseWhichConnectsToARemoteServer {
+public class Servlet25ComplianceTests extends ServletTestCaseWhichConnectsToARemoteServer {
 
 // servlet-tests
 
@@ -737,7 +737,7 @@ public class Servlet25ComplianceTests extends ServerTestCaseWhichConnectsToARemo
     httpAssert.setReturnCode("503");
     httpAssert.setTestName("DoInit1Test");
     httpAssert.setTestStrategy(
-        "A negative test for the init method. We will throw UnavailableException from inside init.The Servlet should not be initialized");
+        "A negative test for the init method. We will throw UnavailableException from inside init. The Servlet should not be initialized");
     if (httpAssert.hasFailed()) {
       httpFail();
     }

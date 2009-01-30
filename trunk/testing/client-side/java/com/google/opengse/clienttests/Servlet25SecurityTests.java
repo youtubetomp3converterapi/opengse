@@ -9,7 +9,7 @@ import org.junit.Test;
  *
  * @author Mike Jennings
  */
-public class Servlet25SecurityTests extends ServerTestCaseWhichConnectsToARemoteServer {
+public class Servlet25SecurityTests extends ServletTestCaseWhichConnectsToARemoteServer {
 
   /**
    * A role-name may be specified with the servlet, with an optional role-link,
