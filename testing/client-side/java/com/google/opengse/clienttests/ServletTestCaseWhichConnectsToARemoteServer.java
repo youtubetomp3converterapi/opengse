@@ -19,7 +19,7 @@ import org.junit.BeforeClass;
  * To connect to a port other than 8080, define the "port" system property.
  * @author Mike Jennings
  */
-public class ServerTestCaseWhichConnectsToARemoteServer {
+public class ServletTestCaseWhichConnectsToARemoteServer {
   private final StringWriter sw = new StringWriter();
   private final PrintWriter out = new PrintWriter(sw);
   private Properties props;

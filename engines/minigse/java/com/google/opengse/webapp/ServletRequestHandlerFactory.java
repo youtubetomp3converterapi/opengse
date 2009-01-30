@@ -63,7 +63,7 @@ class ServletRequestHandlerFactory
     if (!initialized) {
       try {
         initialize();
-      } catch (ServletException e) {
+      } catch (Throwable e) {
         /* ignored */
       }
     }
