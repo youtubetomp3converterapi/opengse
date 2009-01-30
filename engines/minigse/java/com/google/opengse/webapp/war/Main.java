@@ -41,6 +41,8 @@ import java.io.FileNotFoundException;
  * @author Mike Jennings
  */
 public class Main {
+  private static final String WEBAPP_DOT = "webapp.";
+
   private Main() { /* Entry point: do not instantiate */ }
 
   private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
@@ -126,16 +128,49 @@ public class Main {
     }
   }
 
+  /**
+   * Get all the properties that look like webapp.foo=... webapp.bar=... etc.
+   * @param props
+   * @return
+   */
+  private static List<String> getWebAppKeys(Properties props) {
+    List<String> webappKeys = new ArrayList<String>();
+    for (Object okey : props.keySet()) {
+      String key = okey.toString();
+      if (key.startsWith(WEBAPP_DOT)) {
+        String context = key.substring(WEBAPP_DOT.length());
+        if (contextIsValid(context)) {
+          webappKeys.add(key);
+        } else {
+          System.err.println("'" + context + "' is not a valid context");
+        }
+      }
+    }
+    return webappKeys;
+  }
+
+  private static boolean contextIsValid(String context) {
+    if (context.indexOf(".") > -1 || context.indexOf('/') > -1) {
+      return false;
+    }
+    if (context.trim().length() == 0) {
+      return false;
+    }
+    return true;
+  }
+
   public static WebAppCollection getWebAppCollection(Properties props) throws
       ClassNotFoundException, IOException, WebAppConfigurationException,
       InstantiationException, IllegalAccessException {
     File webappsDir = PropertiesUtil.getFile(props, "webapps");
     File webapp = PropertiesUtil.getFile(props, "webapp");
+    List<String> webappKeys = getWebAppKeys(props);
 
-    if (webappsDir == null && webapp == null) {
+    if (webappsDir == null && webapp == null && webappKeys.isEmpty()) {
       System.err.println("No webapp or webapps property found.");
       System.err.println("Please use --webapp=/path/to/file.war ");
       System.err.println("or --webapp=/path/to/webapp ");
+      System.err.println("or --webapp.somecontext=/path/to/webapp ");
       System.err.println("or --webapps=/path/to/wars or --props=/path/to/file.properties");
       System.err.println("or --create to create a skeleton web application");
       return null;
@@ -143,6 +178,14 @@ public class Main {
 
     if (webapp != null && webappsDir != null) {
       System.err.println("Found both webapp=" + webapp
+          + " and webapps=" + webappsDir + " properties set");
+      return null;
+    }
+
+    if (!webappKeys.isEmpty() && webappsDir != null) {
+      String webappKey = webappKeys.iterator().next();
+      File webappValue = PropertiesUtil.getFile(props, webappKey);
+      System.err.println("Found both " + webappKey + "=" + webappValue
           + " and webapps=" + webappsDir + " properties set");
       return null;
     }
@@ -156,24 +199,50 @@ public class Main {
     int port = Integer.parseInt(sport);
     props.setProperty(ServletEngineConfigurationImpl.KEY_PORT,
             Integer.toString(port));
-    return getWebApps(props);
-  }
 
-
-  private static WebAppCollection getWebApps(Properties props)
-      throws IOException, ClassNotFoundException, WebAppConfigurationException,
-      IllegalAccessException, InstantiationException {
-    File webapp = PropertiesUtil.getFile(props, "webapp");
-    File webapps = PropertiesUtil.getFile(props, "webapps");
     if (webapp != null) {
       return getWebApp(props);
     }
 
+    if (webappsDir != null) {
+      return getWebApps(props, webappsDir);
+    }
+    return getWebApps(props, webappKeys);
+  }
+
+
+  private static WebAppCollection getWebApps(Properties props, List<String> webappKeys)
+      throws IOException, ClassNotFoundException, WebAppConfigurationException,
+      IllegalAccessException, InstantiationException {
+
+    File deployDir = WarDeployer.getDeployDir(props);
+    // must be a directory of webapps
+    WebappDeployInfo[] warsToDeploy = new WebappDeployInfo[webappKeys.size()];
+    int i = 0;
+    for (String webappKey : webappKeys) {
+      String context = webappKey.substring(WEBAPP_DOT.length());
+      File warOrDirectory = PropertiesUtil.getFile(props, webappKey);
+      warsToDeploy[i++] = new WebappDeployInfo(context, warOrDirectory, deployDir); 
+    }
+    if (warsToDeploy == null || warsToDeploy.length == 0) {
+      System.err.println("No webapps found!");
+      return null;
+    }
+    return WarDeployer.deploy(props, warsToDeploy);
+  }
+
+
+
+
+  private static WebAppCollection getWebApps(Properties props, File webappsDir)
+      throws IOException, ClassNotFoundException, WebAppConfigurationException,
+      IllegalAccessException, InstantiationException {
+
     // must be a directory of webapps
     File[] warsToDeploy;
-    warsToDeploy = getWarsInDirectory(webapps);
+    warsToDeploy = getWarsInDirectory(webappsDir);
     if (warsToDeploy == null || warsToDeploy.length == 0) {
-      System.err.println("No war files found in " + webapps);
+      System.err.println("No war files found in " + webappsDir);
       return null;
     }
     return WarDeployer.deploy(props, warsToDeploy);

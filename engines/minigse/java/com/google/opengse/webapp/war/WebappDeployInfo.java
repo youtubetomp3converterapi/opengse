@@ -57,7 +57,7 @@ public final class WebappDeployInfo {
         this.deployDirectory = deployDirectory;
       }
       // for a war file, the context directory is a subdirectory of the deploy directory
-      this.contextDirectory = new File(deployDirectory, this.contextName);
+      this.contextDirectory = new File(this.deployDirectory, this.contextName);
     }
   }
 
