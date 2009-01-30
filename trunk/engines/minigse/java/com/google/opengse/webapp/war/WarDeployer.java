@@ -40,7 +40,6 @@ public final class WarDeployer {
   private static final Logger LOGGER =
       Logger.getLogger(WarDeployer.class.getName());
 
-  private static final String ROOT = "ROOT";
   private static final String DEPLOYDIR = "deploydir";
   private static final String WAR_EXTENSION = ".war";
 
@@ -54,27 +53,23 @@ public final class WarDeployer {
   public static WebAppCollection deploy(Properties props, File... warsToDeploy)
       throws ClassNotFoundException, IOException, WebAppConfigurationException,
           InstantiationException, IllegalAccessException {
-    File rootWar = null;
+    File rootWarOrDirectory = null;
     List<File> nonRootWars = new ArrayList<File>();
-    /*
-     * TODO:  What should happen if there's more than one ROOT.war in the
-     * same directory?
-     */
     for (File war : warsToDeploy) {
-      if (war.getName().equals("ROOT.war")) {
-        rootWar = war;
+      String warname = war.getName();
+      if (warname.equals("ROOT.war") || warname.equals("ROOT")) {
+        rootWarOrDirectory = war;
       } else {
         nonRootWars.add(war);
       }
     }
     WebAppCollection webAppCollection;
-    if (rootWar == null) {
+    if (rootWarOrDirectory == null) {
       webAppCollection = WebAppCollectionFactory.create(props);
     } else {
-      webAppCollection = deployRootWar(props, rootWar);
+      webAppCollection = deployRootWebapp(props, rootWarOrDirectory);
     }
-    ServletContainerContext containerContext
-        = webAppCollection.getContainerContext();
+    ServletContainerContext containerContext = webAppCollection.getContainerContext();
     List<WebApp> webapps = new ArrayList<WebApp>();
     for (File nonRootWar : nonRootWars) {
       webapps.add(deployWar(props, nonRootWar, containerContext));
@@ -85,45 +80,126 @@ public final class WarDeployer {
     return webAppCollection;
   }
 
-  private static WebApp deployWar(Properties props, File warFile,
-      ServletContainerContext containerContext)
-      throws IOException, ClassNotFoundException, WebAppConfigurationException,
-      IllegalAccessException, InstantiationException {
-    LOGGER.info("Deploying " + warFile);
-    String warname = warFile.getName();
-    int dot = warname.indexOf(WAR_EXTENSION);
-    File deploydir = PropertiesUtil.getFile(props, DEPLOYDIR);
-    if (deploydir == null) {
-      deploydir = warFile.getParentFile();
+
+  public static WebAppCollection deploy(Properties props, WebappDeployInfo... warsOrDirectoriesToDeploy)
+      throws ClassNotFoundException, IOException, WebAppConfigurationException,
+          InstantiationException, IllegalAccessException {
+    WebappDeployInfo rootWebappInfo = null;
+    List<WebappDeployInfo> nonRootWarsOrDirectories = new ArrayList<WebappDeployInfo>();
+    for (WebappDeployInfo warOrDirectory : warsOrDirectoriesToDeploy) {
+      if (warOrDirectory.isRoot()) {
+        rootWebappInfo = warOrDirectory;
+      } else {
+        nonRootWarsOrDirectories.add(warOrDirectory);
+      }
     }
-    String contextname = warname.substring(0, dot);
-    File contextdir = new File(deploydir, contextname);
-    if (WarUtil.warIsDifferentFromExploded(warFile, contextdir)) {
-      WarUtil.explodeWarFile(warFile, contextdir);
-    }
-    String uriPrefix;
-    if (ROOT.equals(contextname)) {
-      uriPrefix = "";
+    WebAppCollection webAppCollection;
+    if (rootWebappInfo == null) {
+      webAppCollection = WebAppCollectionFactory.create(props);
     } else {
-      uriPrefix = "/" + contextname;
+      webAppCollection = deployRootWebapp(props, rootWebappInfo);
     }
-    return WebAppFactory.createWebApp(contextdir, uriPrefix, containerContext);
+    ServletContainerContext containerContext = webAppCollection.getContainerContext();
+    List<WebApp> webapps = new ArrayList<WebApp>();
+    for (WebappDeployInfo nonRootWarOrDirectory : nonRootWarsOrDirectories) {
+      webapps.add(deployWebapp(containerContext, nonRootWarOrDirectory));
+    }
+    for (WebApp webapp : webapps) {
+      webAppCollection.addWebApp(webapp);
+    }
+    return webAppCollection;
   }
 
-  private static WebAppCollection deployRootWar(Properties props, File warFile)
+  private static WebApp deployWar(Properties props, File warFile
+                                    , ServletContainerContext containerContext)
       throws IOException, ClassNotFoundException, WebAppConfigurationException,
-      IllegalAccessException, InstantiationException {
+              IllegalAccessException, InstantiationException {
     LOGGER.info("Deploying " + warFile);
     String warname = warFile.getName();
     int dot = warname.indexOf(WAR_EXTENSION);
+    String contextname = warname.substring(0, dot);
+    LOGGER.info("Deploying " + warFile);
+    File deployDir = PropertiesUtil.getFile(props, DEPLOYDIR);
+    WebappDeployInfo webappInfo = new WebappDeployInfo(contextname, warFile, deployDir);
+    return deployWebapp(containerContext, webappInfo);
+  }
+
+  /**
+   * Deploys a war file
+   * 
+   * @param containerContext the container context to use
+   * @param webappInfo the war file plus other information (context name etc.)
+   * @return a WebApp representing the war file
+   * @throws IOException
+   * @throws ClassNotFoundException
+   * @throws WebAppConfigurationException
+   * @throws IllegalAccessException
+   * @throws InstantiationException
+   */
+  public static WebApp deployWebapp(ServletContainerContext containerContext, WebappDeployInfo webappInfo)
+      throws IOException, ClassNotFoundException, WebAppConfigurationException,
+      IllegalAccessException, InstantiationException {
+    File warFileOrDir = webappInfo.getWarFileOrDirectory();
+    if (warFileOrDir.isFile()) {
+      LOGGER.info("Deploying " + warFileOrDir);
+      if (WarUtil.warIsDifferentFromExploded(warFileOrDir, webappInfo.getContextDirectory())) {
+        WarUtil.explodeWarFile(warFileOrDir, webappInfo.getContextDirectory());
+      }
+    }
+    return WebAppFactory.createWebApp(webappInfo.getContextDirectory(), webappInfo.getURIPrefix()
+        ,containerContext);
+  }
+
+  /**
+   * Turns the given warFileOrDirectory into a WebAppCollection with the given warFileOrDirectory
+   * as the root webapp for the WebAppCollection
+   * 
+   * @param props
+   * @param warFileOrDirectory
+   * @return
+   * @throws IOException
+   * @throws ClassNotFoundException
+   * @throws WebAppConfigurationException
+   * @throws IllegalAccessException
+   * @throws InstantiationException
+   */
+  private static WebAppCollection deployRootWebapp(Properties props, File warFileOrDirectory)
+      throws IOException, ClassNotFoundException, WebAppConfigurationException,
+      IllegalAccessException, InstantiationException {
+    if (warFileOrDirectory.isDirectory()) {
+      return WebAppCollectionFactory.createWithRootWebapp(props,warFileOrDirectory);
+    }
+    LOGGER.info("Deploying " + warFileOrDirectory);
+    String warname = warFileOrDirectory.getName();
+    int dot = warname.indexOf(WAR_EXTENSION);
     File deploydir = PropertiesUtil.getFile(props, DEPLOYDIR);
     if (deploydir == null) {
-      deploydir = warFile.getParentFile();
+      deploydir = warFileOrDirectory.getParentFile();
     }
     String contextname = warname.substring(0, dot);
     File contextdir = new File(deploydir, contextname);
-    if (WarUtil.warIsDifferentFromExploded(warFile, contextdir)) {
-      WarUtil.explodeWarFile(warFile, contextdir);
+    if (WarUtil.warIsDifferentFromExploded(warFileOrDirectory, contextdir)) {
+      WarUtil.explodeWarFile(warFileOrDirectory, contextdir);
+    }
+    return WebAppCollectionFactory.createWithRootWebapp(props, contextdir);
+  }
+
+
+  public static File getDeployDir(Properties props) throws IOException {
+    return PropertiesUtil.getFile(props, DEPLOYDIR);
+  }
+
+  private static WebAppCollection deployRootWebapp(Properties props, WebappDeployInfo webappInfo)
+      throws IOException, ClassNotFoundException, WebAppConfigurationException,
+      IllegalAccessException, InstantiationException {
+    File warFileOrDirectory = webappInfo.getWarFileOrDirectory();
+    if (warFileOrDirectory.isDirectory()) {
+      return WebAppCollectionFactory.createWithRootWebapp(props, warFileOrDirectory);
+    }
+    LOGGER.info("Deploying " + warFileOrDirectory);
+    File contextdir = webappInfo.getContextDirectory();
+    if (WarUtil.warIsDifferentFromExploded(warFileOrDirectory, contextdir)) {
+      WarUtil.explodeWarFile(warFileOrDirectory, contextdir);
     }
     return WebAppCollectionFactory.createWithRootWebapp(props, contextdir);
   }
