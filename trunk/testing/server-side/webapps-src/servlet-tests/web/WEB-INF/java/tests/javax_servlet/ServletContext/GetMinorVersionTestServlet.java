@@ -75,7 +75,7 @@ public class GetMinorVersionTestServlet extends GenericServlet {
         PrintWriter out = response.getWriter();
         ServletConfig config = this.getServletConfig();
         ServletContext context = config.getServletContext();
-        int expectedResult = 3;
+        int expectedResult = 5; // servlet 2.5
         int result = context.getMinorVersion();
 
         if ( result == expectedResult ) {
