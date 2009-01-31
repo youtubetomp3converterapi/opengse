@@ -449,6 +449,10 @@ public class HttpAssertion {
     this.returnCode = code;
   }
 
+  public void setReturnCode(int code) {
+    this.returnCode = Integer.toString(code);
+  }
+
   /**
    * Describe <code>setReturnCodeMsg</code> Sets the expected
    * return message to be found in the server's
