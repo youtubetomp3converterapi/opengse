@@ -53,6 +53,10 @@ public final class ClassDefinition {
     this.superClass = superClass;
   }
 
+  public void setSuperClass(Class<?> clazz) {
+    setSuperClass(clazz.getSimpleName());
+  }
+
   public void write(PrintWriter out) {
     if (comment != null) {
       out.println("// " + comment);

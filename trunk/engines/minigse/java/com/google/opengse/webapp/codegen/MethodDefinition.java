@@ -17,6 +17,7 @@ package com.google.opengse.webapp.codegen;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * @author jennings
@@ -28,16 +29,21 @@ public final class MethodDefinition {
   private String returnType;
   private final String methodName;
   private final List<String> lines;
+  private List<String> throwsClauses;
+  private List<String> args;
 
   public MethodDefinition(String methodName) {
     this.methodName = methodName;
     isPublic = true;
     returnType = "void";
     lines = new ArrayList<String>();
+    throwsClauses = new ArrayList<String>();
+    args = new ArrayList<String>();
   }
 
-  public void addLine(String line) {
+  public MethodDefinition addLine(String line) {
     lines.add(line);
+    return this;
   }
 
   public void write(PrintWriter out) {
@@ -49,7 +55,9 @@ public final class MethodDefinition {
       out.print("static ");
     }
     out.print(returnType + " " + methodName + "(");
+    printArgs(out);
     out.print(") ");
+    printThrowsClauses(out);
     out.println("{");
     for (String line : lines) {
       out.println("    " + line);
@@ -57,19 +65,63 @@ public final class MethodDefinition {
     out.println("  }");
   }
 
-  public void setStatic(boolean aStatic) {
+  private void printThrowsClauses(PrintWriter out) {
+    if (throwsClauses.isEmpty()) {
+      return;
+    }
+    Iterator<String> iter = throwsClauses.iterator();
+    out.print("throws " + iter.next());
+    while(iter.hasNext()) {
+      out.print(", " + iter.next());
+    }
+    out.print(" ");
+  }
+
+  private void printArgs(PrintWriter out) {
+    if (args.isEmpty()) {
+      return;
+    }
+    Iterator<String> iter = args.iterator();
+    out.print(iter.next());
+    while(iter.hasNext()) {
+      out.print(", " + iter.next());
+    }
+  }
+
+  public MethodDefinition addArg(String type, String name) {
+    args.add(type + " " + name);
+    return this;
+  }
+
+  public MethodDefinition addArg(Class<?> type, String name) {
+    return addArg(type.getSimpleName(), name);
+  }
+
+  public MethodDefinition setStatic(boolean aStatic) {
     isStatic = aStatic;
+    return this;
   }
 
-  public void setReturnType(String returnType) {
+  public MethodDefinition setReturnType(String returnType) {
     this.returnType = returnType;
+    return this;
   }
 
-  public void setReturnType(Class<?> clazz) {
-    setReturnType(clazz.getSimpleName());
+  public MethodDefinition setReturnType(Class<?> clazz) {
+    return setReturnType(clazz.getSimpleName());
   }
 
-  public void setPublic(boolean aPublic) {
+  public MethodDefinition addThrowsClause(Class<?> clazz) {
+    return addThrowsClause(clazz.getSimpleName());
+  }
+
+  public MethodDefinition addThrowsClause(String exceptionType) {
+    throwsClauses.add(exceptionType);
+    return this;
+  }
+
+  public MethodDefinition setPublic(boolean aPublic) {
     isPublic = aPublic;
+    return this;
   }
 }
