@@ -73,6 +73,13 @@ public class ServletTestsWhichFailUnderTomcat extends ServletTestsWhichConnectTo
     }
   }
 
+  /**
+   * Uses tests.javax_servlet_http.HttpServletRequest.GetHeadersTestServlet
+   *  Returns all the values of the specified request header as an Enumeration of String objects.
+   *  Specified in the Java Servlet Pages Specification v2.3, Sec 14.
+   *
+   * @throws Exception
+   */
   @Test
   public void testGetHeaders()
       throws Exception {

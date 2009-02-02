@@ -60,12 +60,16 @@
 
 package tests.javax_servlet_http.HttpServletRequest;
 
+import common.util.StaticLog;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.ServletConfig;
 import java.util.Enumeration;
 import java.util.Vector;
+import java.util.Set;
+import java.util.HashSet;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -76,7 +80,83 @@ import java.io.PrintWriter;
 
 public class GetHeadersTestServlet extends HttpServlet {
 
-    public void service ( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
+  private static final String TEST_PASSED_MESSAGE = "GetHeadersTest test PASSED";
+  private static final String TEST_FAILED_MESSAGE = "GetHeadersTest test FAILED";
+  private static final String MYHEADERVALUE1 = "en-us";
+  private static final String MYHEADERVALUE2 = "ga-us";
+  private static final String MYHEADERVALUE1_COMMA_2 = MYHEADERVALUE1 + ", " + MYHEADERVALUE2;
+
+  public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    PrintWriter out = response.getWriter();
+
+    StaticLog.resetLog();
+
+    String headerName = "Accept-Language";
+    Set<String> headerValues;
+    try {
+      headerValues = getHeaderValues(request, headerName);
+      if (headerValues.contains(MYHEADERVALUE1) && headerValues.contains(MYHEADERVALUE2)) {
+        headerValues.remove(MYHEADERVALUE1);
+        headerValues.remove(MYHEADERVALUE2);
+        if (headerValues.isEmpty()) {
+          out.println(TEST_PASSED_MESSAGE);
+        } else {
+          out.println(TEST_FAILED_MESSAGE);
+          out.println("    HttpServletRequestWrapper.getHeaders(" + headerName + ") method did not return the correct number of headers <BR>");
+          out.println("    Other headers received were :<BR>");
+          for (String otherHeader : headerValues) {
+            out.println("     " + otherHeader + "<BR>");
+          }
+
+        }
+      } else {
+        if (headerValues.contains(MYHEADERVALUE1_COMMA_2) && headerValues.size() == 1) {
+          out.println(TEST_PASSED_MESSAGE);
+        } else {
+          if (!headerValues.contains(MYHEADERVALUE1)) {
+            printHeaderNotFound(out, headerName, MYHEADERVALUE1);
+          }
+          if (!headerValues.contains(MYHEADERVALUE2)) {
+            printHeaderNotFound(out, headerName, MYHEADERVALUE2);
+          }
+        }
+      }
+    } catch (IOException ex) {
+      out.println(TEST_FAILED_MESSAGE);
+      out.println("    HttpServletRequestWrapper.getHeaders(" + headerName + ") method return the same header name twice <BR>");
+      ex.printStackTrace(out);
+    }
+
+
+    Enumeration<String> e = StaticLog.readFromLog();
+
+    while (e.hasMoreElements()) {
+      String tmp = e.nextElement();
+      out.println(tmp);
+    }
+  }
+
+  private static void printHeaderNotFound(PrintWriter out, String headerName, String headerValue) {
+    out.println(TEST_FAILED_MESSAGE);
+    out.println("    HttpServletRequestWrapper.getHeaders(" + headerName
+        + ") method did not return header value '" + headerValue + "' <BR>");
+  }
+
+  private static Set<String> getHeaderValues(HttpServletRequest request, String headerName) throws IOException {
+    Enumeration<String> values = (Enumeration<String>) request.getHeaders(headerName);
+    Set<String> set = new HashSet<String>();
+    while (values.hasMoreElements()) {
+      String value = values.nextElement();
+      if (!set.add(value)) {
+        throw new IOException("Duplicate value: " + value);
+      }
+    }
+    return set;
+  }
+
+
+    public void service_old ( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 
         PrintWriter out = response.getWriter();
 
