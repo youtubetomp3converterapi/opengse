@@ -41,6 +41,14 @@ public class ServletTestsWhichFailUnderTomcat extends ServletTestsWhichConnectTo
   }
 
 
+  /**
+   * Uses tests.javax_servlet_http.HttpServletRequestWrapper.HttpServletRequestWrapperGetHeadersTestServlet
+   *
+   * Test for default behavior of this method to return getHeaders(String name) on the
+   * wrapped request object, specified in the Java Servlet Pages Specification v2.3, Sec 14
+   * 
+   * @throws Exception
+   */
   @Test
   public void testHttpServletRequestWrapperGetHeaders()
       throws Exception {
