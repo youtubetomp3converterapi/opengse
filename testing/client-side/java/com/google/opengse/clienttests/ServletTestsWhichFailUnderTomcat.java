@@ -49,13 +49,15 @@ public class ServletTestsWhichFailUnderTomcat extends ServletTestsWhichConnectTo
     assertNotNull("Invalid cookie", cookie.getPath());
 
     // now we send that cookie back to the server
-    get = createGetAssertion();
-    get.setUri("/contextpath/sessioninfo");
+    get = createGetAssertion("/contextpath/sessioninfo");
 //    get.expectHeader("SET-COOKIE");
     get.setExpectedResponseCode(200);
     get.setExpectedContentType("text/plain");
-    cookie.setValue(cookie.getValue() + "foo");
+    String originalSessionId = cookie.getValue();
+    String requestedId = originalSessionId + "foo";
+    cookie.setValue(requestedId);
     get.addRequestCookie(cookie);
+    get.setProperty("requestedId", requestedId);
     get.setExpectedResponseViaResource(
         "com/google/opengse/golden/noSessionRequested.txt");
     get.connectToServerAndAssert();

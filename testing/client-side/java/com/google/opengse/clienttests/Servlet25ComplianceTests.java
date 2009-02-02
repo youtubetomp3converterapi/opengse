@@ -15334,6 +15334,7 @@ public void testJspXmlpositiveContentType()
     get.addRequestCookie(cookie);
     get.setExpectedResponseViaResource(
         "com/google/opengse/golden/noSessionRequested.txt");
+    get.setProperty("requestedId", "null");
     get.connectToServerAndAssert();
   }
 
