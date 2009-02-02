@@ -85,6 +85,13 @@ public class HttpRequestAsserter {
     setPort("${port}");
   }
 
+  public void setProperty(String key, String value) {
+    if (value == null || value.indexOf('$') > -1) {
+      throw new IllegalArgumentException("Cannot set " + key + "=" + value);
+    }
+    props.setProperty(key, value);
+  }
+
   /**
    * <code>setHost</code> sets hostname where
    * the target server is running. Defaults to
@@ -323,6 +330,7 @@ public class HttpRequestAsserter {
       Assert.assertEquals("Bad Content-Type charset",
               expectedContentTypeCharset, contentTypeCharset);
     }
+    goldenText = getAliasedProperty(bodyKey);
     if (goldenText != null) {
       String body = toStringAndClose(conn.getInputStream());
       matchGoldenFile(goldenText, body);
@@ -410,7 +418,6 @@ public class HttpRequestAsserter {
     // the next 2 lines converts things like ${host} in the expected body
     // to things like "localhost" or "127.0.0.1"
     props.setProperty(bodyKey, expectedResponse);
-    goldenText = getAliasedProperty(bodyKey);
   }
 
   public void setExpectedErrorMessageContains(String expectedContainedErrorMessage) {
