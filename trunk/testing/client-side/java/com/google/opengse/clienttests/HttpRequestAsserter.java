@@ -51,6 +51,7 @@ public class HttpRequestAsserter {
   private Set<String> unexpectedResponseHeaders;
   private Map<String, String> requestHeaders;
   private Set<String> expectedResponseLines;
+  private String expectedContainedErrorMessage;
   private Set<String> unexpectedResponseLines;
   private Integer expectedResponseCode;
   Map<String, Set<String>> uheaders;
@@ -71,6 +72,7 @@ public class HttpRequestAsserter {
     disableKeepAlive = true;
     setExpectedContentType("text/plain");
     expectedContentTypeCharset = null; // don't care
+    expectedContainedErrorMessage = null; // don't care
     expectedResponseHeaders = null;
     unexpectedResponseHeaders = null;
     expectedResponseLines = null;
@@ -337,7 +339,19 @@ public class HttpRequestAsserter {
       return;
     }
 
-    String[] responseLines = toStringsAndClose(conn.getInputStream());
+    String[] responseLines;
+    InputStream errorStream = conn.getErrorStream();
+    if (errorStream != null) {
+      String errorMessage = toStringAndClose(errorStream);
+      if (expectedContainedErrorMessage != null) {
+        Assert.assertTrue("Could not find '"
+            + expectedContainedErrorMessage +"' in '" + errorMessage + "'"
+            , errorMessage.indexOf(expectedContainedErrorMessage) != -1);
+      }
+      responseLines = new String[0];
+    } else {
+      responseLines = toStringsAndClose(conn.getInputStream());
+    }
     Set<String> responseLinesSet = toSet(responseLines);
     if (expectedResponseLines != null) {
       expectedResponseLines.removeAll(responseLinesSet);
@@ -399,6 +413,9 @@ public class HttpRequestAsserter {
     goldenText = getAliasedProperty(bodyKey);
   }
 
+  public void setExpectedErrorMessageContains(String expectedContainedErrorMessage) {
+    this.expectedContainedErrorMessage = expectedContainedErrorMessage;
+  }
 
   public void setExpectedResponseLine(String expectedResponseLine) {
     if (expectedResponseLines == null) {

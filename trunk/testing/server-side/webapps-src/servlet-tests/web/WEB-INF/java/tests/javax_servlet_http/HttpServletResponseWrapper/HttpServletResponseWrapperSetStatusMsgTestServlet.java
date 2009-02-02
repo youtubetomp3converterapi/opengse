@@ -60,20 +60,21 @@
 
 package tests.javax_servlet_http.HttpServletResponseWrapper;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
- *	A Test for setStatus(int) method
+ *	A Test for sendError(int) method (was a test for setStatus)
  */
 
 public class HttpServletResponseWrapperSetStatusMsgTestServlet extends HttpServlet {
 
-    public void service ( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        response.setStatus( HttpServletResponse.SC_OK, "in HttpServletResponseWrapperSetStatusMsgTest servlet" );
+        response.sendError( HttpServletResponse.SC_FORBIDDEN, "in HttpServletResponseWrapperSetStatusMsgTest servlet" );
 
     }
 }

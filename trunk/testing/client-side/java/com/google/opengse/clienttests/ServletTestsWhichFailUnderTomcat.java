@@ -26,28 +26,18 @@ import java.util.List;
  */
 public class ServletTestsWhichFailUnderTomcat extends ServletTestsWhichConnectToARemoteServer {
 
+
+  /*
+  Uses tests.javax_servlet_http.HttpServletResponseWrapper.HttpServletResponseWrapperSetStatusMsgTestServlet on the server
+   */
   @Test
   public void testHttpServletResponseWrapperSetStatusMsg()
       throws Exception {
-    HttpAssertion httpAssert = createAssertion();
-    httpAssert.setAssertion(
-        "Test for default behavior of this method is to call setStatus(int, String) on the wrapped response object, specified in the Java Servlet Pages Specification v2.3, Sec 14 - javax.servlet.HttpServletResponseWrapper. setStatus(int sc, String msg) method");
-    httpAssert.setDebug("0");
-    httpAssert.setExactMatch("true");
-    httpAssert.setExpectHeaders("GenericResponseWrapper:setStatusMsg");
-
-
-    httpAssert.setRequest(
-        "GET /servlet-tests/hsresw/HttpServletResponseWrapperSetStatusMsgTest HTTP/1.0");
-    httpAssert.setReturnCode("200");
-    httpAssert.setReturnCodeMsg(
-        "in HttpServletResponseWrapperSetStatusMsgTest servlet");
-    httpAssert.setTestName("HttpServletResponseWrapperSetStatusMsgTest");
-    httpAssert.setTestStrategy(
-        "Client calls a servlet who's response has been wrapped. The wrapper object adds a specific header to the response object and calls the responses setStatus method.");
-    if (httpAssert.hasFailed()) {
-      httpFail();
-    }
+    HttpRequestAsserter get = createGetAssertion("/servlet-tests/hsresw/HttpServletResponseWrapperSetStatusMsgTest");
+    get.setExpectedContentType("text/html");
+    get.setExpectedResponseCode(SC_FORBIDDEN);
+    get.setExpectedErrorMessageContains("in HttpServletResponseWrapperSetStatusMsgTest servlet");
+    get.connectToServerAndAssert();
   }
 
 
