@@ -62,100 +62,85 @@ package tests.javax_servlet_http.HttpServletRequestWrapper;
 
 import javax.servlet.http.*;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Set;
+import java.util.HashSet;
+
 import common.util.StaticLog;
 
 /**
- *	A  Test for getHeader(String)  Method
+ * A  Test for getHeader(String)  Method
  */
 
 public class HttpServletRequestWrapperGetHeadersTestServlet extends HttpServlet {
 
-    StaticLog sl = new StaticLog();
+  public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    public void service ( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
+    PrintWriter out = response.getWriter();
 
-        PrintWriter out = response.getWriter();
+    StaticLog.resetLog();
 
-        sl.resetLog();
-
-        int count = 0;
-        int expectedCount = 2;
-        String expectedResult1 = "myheadervalue1";
-        boolean expectedResult1Found = false;
-        String expectedResult2 = "myheadervalue2";
-        boolean expectedResult2Found = false;
-        String param = "MyHeader";
-        Enumeration en = request.getHeaders( param );
-
-        if ( en.hasMoreElements() ) {
-            Vector v = new Vector();
-
-            while ( en.hasMoreElements() ) {
-                String name = ( String ) en.nextElement();
-
-                if ( name.equalsIgnoreCase( expectedResult1 ) ) {
-                    if ( !expectedResult1Found ) {
-                        count++;
-                        expectedResult1Found = true;
-                    } else {
-                        out.println( "HttpServletRequestWrapperGetHeadersTest test FAILED <BR>" );
-                        out.println( "    HttpServletRequestWrapper.getHeaders(" + param + ") method return the same header name twice <BR>" );
-                        out.println( "    The header already received was " + expectedResult1 + " <BR>" );
-                    }
-                } else if ( name.equalsIgnoreCase( expectedResult2 ) ) {
-                    if ( !expectedResult2Found ) {
-                        count++;
-                        expectedResult2Found = true;
-                    } else {
-                        out.println( "HttpServletRequestWrapperGetHeadersTest test FAILED <BR>" );
-                        out.println( "    HttpServletRequestWrapper.getHeaders(" + param + ") method return the same header name twice <BR>" );
-                        out.println( "    The header already received was " + expectedResult2 + " <BR>" );
-                    }
-                } else {
-                    v.add( name );
-                }
-            }
-
-            if ( count != expectedCount ) {
-                out.println( "HttpServletRequestWrapperGetHeadersTest test FAILED <BR>" );
-                out.println( "    HttpServletRequestWrapper.getHeaders(" + param + ") method did not return the correct number of headers <BR>" );
-                out.println( "    Expected count = " + expectedCount + "<BR>" );
-                out.println( "    Actual count = " + count + "<BR>" );
-                out.println( "    The expected headers received were :<BR>" );
-
-                if ( expectedResult1Found ) {
-                    out.println( expectedResult1 + "<BR>" );
-                }
-
-                if ( expectedResult2Found ) {
-                    out.println( expectedResult2 + "<BR>" );
-                }
-
-                out.println( "    Other headers received were :<BR>" );
-
-                for ( int i = 0;i <= v.size() - 1;i++ ) {
-                    out.println( "     " + v.elementAt( i ).toString() + "<BR>" );
-                }
-            } else {
-                out.println( "HttpServletRequestWrapperGetHeadersTest test PASSED<BR>" );
-            }
+    String expectedResult1 = "myheadervalue1";
+    String expectedResult2 = "myheadervalue2";
+    String param = "MyHeader";
+    Set<String> headerValues;
+    try {
+      headerValues = getHeaderValues(request, param);
+      if (headerValues.contains(expectedResult1) && headerValues.contains(expectedResult2)) {
+        headerValues.remove(expectedResult1);
+        headerValues.remove(expectedResult2);
+        if (headerValues.isEmpty()) {
+          out.println("HttpServletRequestWrapperGetHeadersTest test PASSED<BR>");
         } else {
-            out.println( "HttpServletRequestWrapperGetHeadersTest test FAILED <BR>" );
-            out.println( "    HttpServletRequestWrapper.getHeaders(" + param + ") returned an empty enumeration<BR>" );
+          out.println("HttpServletRequestWrapperGetHeadersTest test FAILED <BR>");
+          out.println("    HttpServletRequestWrapper.getHeaders(" + param + ") method did not return the correct number of headers <BR>");
+          out.println("    Other headers received were :<BR>");
+          for (String otherHeader : headerValues) {
+            out.println("     " + otherHeader + "<BR>");
+          }
+
         }
-
-
-        Enumeration e = sl.readFromLog();
-
-        while ( e.hasMoreElements() ) {
-            String tmp = ( String ) e.nextElement();
-            out.println( tmp );
+      } else {
+        if (!headerValues.contains(expectedResult1)) {
+          printHeaderNotFound(out, param, expectedResult1);
         }
+        if (!headerValues.contains(expectedResult2)) {
+          printHeaderNotFound(out, param, expectedResult2);
+        }
+      }
+    } catch (IOException ex) {
+      out.println("HttpServletRequestWrapperGetHeadersTest test FAILED <BR>");
+      out.println("    HttpServletRequestWrapper.getHeaders(" + param + ") method return the same header name twice <BR>");
+      ex.printStackTrace(out);
     }
+
+
+    Enumeration<String> e = StaticLog.readFromLog();
+
+    while (e.hasMoreElements()) {
+      String tmp = e.nextElement();
+      out.println(tmp);
+    }
+  }
+
+  private static void printHeaderNotFound(PrintWriter out, String headerName, String headerValue) {
+    out.println("HttpServletRequestWrapperGetHeadersTest test FAILED <BR>");
+    out.println("    HttpServletRequestWrapper.getHeaders(" + headerName
+        + ") method did not return header value '" + headerValue + "' <BR>");
+  }
+
+  private static Set<String> getHeaderValues(HttpServletRequest request, String headerName) throws IOException {
+    Enumeration<String> values = (Enumeration<String>) request.getHeaders(headerName);
+    Set<String> set = new HashSet<String>();
+    while (values.hasMoreElements()) {
+      String value = values.nextElement();
+      if (!set.add(value)) {
+        throw new IOException("Duplicate value: " + value);
+      }
+    }
+    return set;
+  }
 }
