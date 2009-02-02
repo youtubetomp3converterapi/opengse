@@ -65,7 +65,7 @@ import java.util.Enumeration;
 
 public final class StaticLog {
 
-    private static Vector v = new Vector();
+    private static Vector<String> v = new Vector<String>();
 
     public static void resetLog() {
         v.removeAllElements();
@@ -75,7 +75,7 @@ public final class StaticLog {
         v.add( msg );
     }
 
-    public static Enumeration readFromLog() {
+    public static Enumeration<String> readFromLog() {
         return ( v.elements() );
     }
 }
