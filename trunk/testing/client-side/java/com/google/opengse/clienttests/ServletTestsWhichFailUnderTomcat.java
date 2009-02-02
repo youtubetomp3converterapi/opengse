@@ -26,84 +26,6 @@ import java.util.List;
  */
 public class ServletTestsWhichFailUnderTomcat extends ServletTestsWhichConnectToARemoteServer {
 
-
-  /*
-  Uses tests.javax_servlet_http.HttpServletResponseWrapper.HttpServletResponseWrapperSetStatusMsgTestServlet on the server
-   */
-  @Test
-  public void testHttpServletResponseWrapperSetStatusMsg()
-      throws Exception {
-    HttpRequestAsserter get = createGetAssertion("/servlet-tests/hsresw/HttpServletResponseWrapperSetStatusMsgTest");
-    get.setExpectedContentType("text/html");
-    get.setExpectedResponseCode(SC_FORBIDDEN);
-    get.setExpectedErrorMessageContains("in HttpServletResponseWrapperSetStatusMsgTest servlet");
-    get.connectToServerAndAssert();
-  }
-
-
-  /**
-   * Uses tests.javax_servlet_http.HttpServletRequestWrapper.HttpServletRequestWrapperGetHeadersTestServlet
-   *
-   * Test for default behavior of this method to return getHeaders(String name) on the
-   * wrapped request object, specified in the Java Servlet Pages Specification v2.3, Sec 14
-   * 
-   * @throws Exception
-   */
-  @Test
-  public void testHttpServletRequestWrapperGetHeaders()
-      throws Exception {
-    HttpAssertion httpAssert = createAssertion();
-    httpAssert.setAssertion(
-        "Test for default behavior of this method to return getHeaders(String name) on the wrapped request object, specified in the Java Servlet Pages Specification v2.3, Sec 14");
-    httpAssert.setDebug("0");
-    httpAssert.setExactMatch("true");
-    httpAssert.setGoldenResource(
-        "watchdog/resources/servlet-golden/javax_servlet_http/HttpServletRequestWrapper/HttpServletRequestWrapperGetHeadersTest.html");
-
-
-    httpAssert.setRequest(
-        "GET /servlet-tests/hsreqw/HttpServletRequestWrapperGetHeadersTest HTTP/1.0");
-    httpAssert.setRequestHeaders(
-        "MyHeader:myheadervalue1|MyHeader:myheadervalue2");
-    httpAssert.setTestName("HttpServletRequestWrapperGetHeadersTest");
-    httpAssert.setTestStrategy(
-        "Client calls a servlet who's request has been wrapped. The wrapper object writes a message to a static log file and calls the wrapped objects method. Servlet the tests the returned value and returns the result of the test plus the contents of the static log file.");
-    if (httpAssert.hasFailed()) {
-      httpFail();
-    }
-  }
-
-  /**
-   * Uses tests.javax_servlet_http.HttpServletRequest.GetHeadersTestServlet
-   *  Returns all the values of the specified request header as an Enumeration of String objects.
-   *  Specified in the Java Servlet Pages Specification v2.3, Sec 14.
-   *
-   * @throws Exception
-   */
-  @Test
-  public void testGetHeaders()
-      throws Exception {
-    HttpAssertion httpAssert = createAssertion();
-    httpAssert.setAssertion(
-        "Returns all the values of the specified request header as an Enumeration of String objects.,specified in the Java Servlet Pages Specification v2.3, Sec 14");
-    httpAssert.setDebug("0");
-    httpAssert.setExactMatch("true");
-    httpAssert.setGoldenResource(
-        "watchdog/resources/servlet-golden/javax_servlet_http/HttpServletRequest/GetHeadersTest.html");
-
-
-    httpAssert.setRequest(
-        "GET /servlet-tests/GetHeadersTest HTTP/1.0");
-    httpAssert.setRequestHeaders(
-        "Accept-Language:en-us|Accept-Language:ga-us");
-    httpAssert.setTestName("GetHeadersTest");
-    httpAssert.setTestStrategy(
-        "A test for HttpServletRequest.getHeaders() method.");
-    if (httpAssert.hasFailed()) {
-      httpFail();
-    }
-  }
-
   /**
    * Test what request headers we have sent by invoking the servlet that
    * responds to "*.hdr"
@@ -192,46 +114,6 @@ public class ServletTestsWhichFailUnderTomcat extends ServletTestsWhichConnectTo
   }
 
   /**
-   * The filter should only be triggered via a forward dispatching.
-   * web.xml:
-   * <filter-mapping>
-   * <filter-name>ServletForwardFilter</filter-name>
-   * <url-pattern>/ForwardedDispatcherFilterTest</url-pattern>
-   * <dispatcher>FORWARD</dispatcher>
-   * </filter-mapping>
-   *
-   * @throws Exception if anything goes wrong
-   */
-  @Test
-  public void testForwardOnlyDispatcherFilter()
-      throws Exception {
-    HttpRequestAsserter get = createGetAssertion();
-    get.setUri("/contextpath/ForwardedDispatcherFilterTest");
-    get.setExpectedResponseCode(200);
-    get.setUnexpectedResponseLine("Hello from ServletForwardFilter request");
-    get.setUnexpectedResponseLine("Hello from ServletForwardFilter response");
-    get.connectToServerAndAssert();
-
-    get = createGetAssertion();
-    get.setUri(
-        "/contextpath/DispatcherInclude?includeTarget=/ForwardedDispatcherFilterTest");
-    get.setExpectedResponseCode(200);
-    get.setUnexpectedResponseLine("Hello from ServletForwardFilter request");
-    get.setUnexpectedResponseLine("Hello from ServletForwardFilter response");
-    get.connectToServerAndAssert();
-
-    get = createGetAssertion();
-    get.setUri(
-        "/contextpath/DispatcherForward?forwardTarget=/ForwardedDispatcherFilterTest");
-    get.setExpectedResponseCode(200);
-    get.setExpectedResponseLine(
-        "Hello from ServletForwardFilter request");
-    get.setExpectedResponseLine(
-        "Hello from ServletForwardFilter response");
-    get.connectToServerAndAssert();
-  }
-
-  /**
    * 500 is generated for an uncaught session exception.
    *
    * @throws Exception if anything goes wrong
@@ -306,6 +188,54 @@ public class ServletTestsWhichFailUnderTomcat extends ServletTestsWhichConnectTo
     get.setExpectedResponseCode(200);
     get.setExpectedResponseLine("servletPath=");      // =""
     get.setExpectedResponseLine("pathInfo=/servletpath2/pathinfo");
+    get.connectToServerAndAssert();
+  }
+
+
+  /**
+   * The filter should only be triggered via an error page dispatching.
+   * web.xml:
+   * <filter-mapping>
+   * <filter-name>ServletErrorFilter</filter-name>
+   * <url-pattern>/ErroredDispatcherFilterTest</url-pattern>
+   * <dispatcher>ERROR</dispatcher>
+   * </filter-mapping>
+   *
+   * @throws Exception if anything goes wrong
+   *
+   */
+  @Test
+  public void testErrorDispatcherFilter() throws Exception {
+    HttpRequestAsserter get = createGetAssertion();
+    get.setUri("/contextpath/Error599");
+    get.setExpectedResponseCode(200);
+    get.setExpectedResponseLine(
+        "Hello from ServletErrorFilter request");
+    get.setExpectedResponseLine(
+        "Hello from ServletErrorFilter response");
+    get.connectToServerAndAssert();
+
+    get = createGetAssertion();
+    get.setUri("/contextpath/ErroredDispatcherFilterTest");
+    get.setExpectedResponseCode(200);
+    get.setUnexpectedResponseLine("Hello from ServletErrorFilter request");
+    get.setUnexpectedResponseLine("Hello from ServletErrorFilter response");
+    get.connectToServerAndAssert();
+
+    get = createGetAssertion();
+    get.setUri(
+        "/contextpath/DispatcherInclude?includeTarget=/ErroredDispatcherFilterTest");
+    get.setExpectedResponseCode(200);
+    get.setUnexpectedResponseLine("Hello from ServletErrorFilter request");
+    get.setUnexpectedResponseLine("Hello from ServletErrorFilter response");
+    get.connectToServerAndAssert();
+
+    get = createGetAssertion();
+    get.setUri(
+        "/contextpath/DispatcherForward?forwardTarget=/ErroredDispatcherFilterTest");
+    get.setExpectedResponseCode(200);
+    get.setUnexpectedResponseLine("Hello from ServletErrorFilter request");
+    get.setUnexpectedResponseLine("Hello from ServletErrorFilter response");
     get.connectToServerAndAssert();
   }
   
