@@ -7587,6 +7587,14 @@ public class Servlet25ComplianceTests extends ServletTestsWhichConnectToARemoteS
     }
   }
 
+  /**
+   * Uses tests.javax_servlet_http.HttpServletRequestWrapper.HttpServletRequestWrapperGetHeadersTestServlet
+   *
+   * Test for default behavior of this method to return getHeaders(String name) on the
+   * wrapped request object, specified in the Java Servlet Pages Specification v2.3, Sec 14
+   *
+   * @throws Exception
+   */
   @Test
   public void testHttpServletRequestWrapperGetHeaders()
       throws Exception {
@@ -7611,6 +7619,13 @@ public class Servlet25ComplianceTests extends ServletTestsWhichConnectToARemoteS
     }
   }
 
+  /**
+   * Uses tests.javax_servlet_http.HttpServletRequest.GetHeadersTestServlet
+   *  Returns all the values of the specified request header as an Enumeration of String objects.
+   *  Specified in the Java Servlet Pages Specification v2.3, Sec 14.
+   *
+   * @throws Exception
+   */
   @Test
   public void testGetHeaders()
       throws Exception {
