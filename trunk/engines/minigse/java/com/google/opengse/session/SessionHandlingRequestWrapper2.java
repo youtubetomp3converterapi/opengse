@@ -72,7 +72,9 @@ public final class SessionHandlingRequestWrapper2 extends HttpServletRequestWrap
     }
     if (requested_session_id == null) {
       requested_session_id = getParameter(SESSION_PARAM_NAME);
-      is_session_id_from_url = true;
+      if (requested_session_id != null) {
+        is_session_id_from_url = true;
+      }
     }
     sessionAlreadyExtractedFromRequest = true;
   }

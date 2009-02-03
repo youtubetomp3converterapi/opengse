@@ -5552,6 +5552,11 @@ public class Servlet25ComplianceTests extends ServletTestsWhichConnectToARemoteS
     }
   }
 
+
+  /**
+   * Uses tests.javax_servlet_http.HttpServletRequestWrapper.HttpServletRequestWrapperIsRequestedSessionIdFromURL_01TestServlet
+   * @throws Exception
+   */
   @Test
   public void testHttpServletRequestWrapperIsRequestedSessionIdFromURL_01()
       throws Exception {
@@ -15330,11 +15335,12 @@ public void testJspXmlpositiveContentType()
 //    get.expectHeader("SET-COOKIE");
     get.setExpectedResponseCode(200);
     get.setExpectedContentType("text/plain");
-    cookie.setValue(cookie.getValue() + "foo");
+    String requestedId = cookie.getValue() + "foo";
+    cookie.setValue(requestedId);
     get.addRequestCookie(cookie);
     get.setExpectedResponseViaResource(
         "com/google/opengse/golden/noSessionRequested.txt");
-    get.setProperty("requestedId", "null");
+    get.setProperty("requestedId", requestedId);
     get.connectToServerAndAssert();
   }
 

@@ -271,10 +271,10 @@ final class WebAppCollectionImpl implements WebAppCollection {
           "No webapps started which can handle '" + requestURI + "'");
     }
     if (sessionsEnabled) {
-      request = new SessionHandlingRequestWrapper(
-          request, getSessionCache(), response);
-//      request = new SessionHandlingRequestWrapper2(
-//          request, getHttpSessions(), response);
+//      request = new SessionHandlingRequestWrapper(
+//          request, getSessionCache(), response);
+      request = new SessionHandlingRequestWrapper2(
+          request, getHttpSessions(), response);
     }
     request = new WebAppRequestWrapper(request, webapp);
     response = new WebAppResponseWrapper(

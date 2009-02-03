@@ -1,8 +1,8 @@
-requestedId=null
-isRequestedIdFromCookie=false
+requestedId=${requestedId}
+isRequestedIdFromCookie=true
 isRequestedIdFromUrl=false
 isRequestedIdValid=false
 after session creation: requestedId=${requestedId}
-after session creation: isRequestedIdFromCookie=false
+after session creation: isRequestedIdFromCookie=true
 after session creation: isRequestedIdFromUrl=false
 after session creation: isRequestedIdValid=false
