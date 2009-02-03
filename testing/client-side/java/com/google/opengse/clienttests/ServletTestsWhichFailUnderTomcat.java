@@ -242,5 +242,6 @@ public class ServletTestsWhichFailUnderTomcat extends ServletTestsWhichConnectTo
     get.setUnexpectedResponseLine("Hello from ServletErrorFilter response");
     get.connectToServerAndAssert();
   }
+
   
 }

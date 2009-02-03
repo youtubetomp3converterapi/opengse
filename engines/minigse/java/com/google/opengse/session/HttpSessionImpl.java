@@ -1,7 +1,14 @@
 package com.google.opengse.session;
 
-import javax.servlet.http.HttpServletRequest;
+import com.google.opengse.util.IteratorEnumeration;
+
+import javax.servlet.http.HttpSessionBindingListener;
+import javax.servlet.http.HttpSessionBindingEvent;
 import java.util.Enumeration;
+import java.util.Map;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Author: Mike Jennings
@@ -16,6 +23,7 @@ final class HttpSessionImpl extends AbstractHttpSession {
   boolean isInvalidated;
   private int maxInactiveInterval;
   private boolean sessionIsNew;
+  private Map<String, Object> sessionObjects;
 
   HttpSessionImpl(HttpSessionsImpl parent, String id, long creationTime) {
     this.parent = parent;
@@ -23,6 +31,7 @@ final class HttpSessionImpl extends AbstractHttpSession {
     this.creationTime = creationTime;
     this.lastAccessedTime = creationTime;
     this.sessionIsNew = true;
+    sessionObjects = Collections.synchronizedMap(new HashMap<String, Object>());
   }
 
   /**
@@ -168,7 +177,7 @@ final class HttpSessionImpl extends AbstractHttpSession {
    */
   public Object getAttribute(String name) {
     maybeThrowIllegalStateException();
-    return null;
+    return sessionObjects.get(name);
   }
 
   /**
@@ -187,8 +196,7 @@ final class HttpSessionImpl extends AbstractHttpSession {
    */
   public Enumeration<String> getAttributeNames() {
     maybeThrowIllegalStateException();
-    // IteratorEnumeration
-    return new EmptyEnumeration<String>();
+    return new IteratorEnumeration<String>(sessionObjects.keySet().iterator());
   }
 
   /**
@@ -207,7 +215,8 @@ final class HttpSessionImpl extends AbstractHttpSession {
    */
   public String[] getValueNames() {
     maybeThrowIllegalStateException();
-    return new String[0];
+    Set<String> keySet = sessionObjects.keySet();
+    return keySet.toArray(new String[keySet.size()]);
   }
 
   /**
@@ -241,6 +250,12 @@ final class HttpSessionImpl extends AbstractHttpSession {
    */
   public void setAttribute(String name, Object value) {
     maybeThrowIllegalStateException();
+    sessionObjects.put(name, value);
+    // notify binding listeners
+    if (value instanceof HttpSessionBindingListener) {
+      HttpSessionBindingEvent event = new HttpSessionBindingEvent(this, name, value);
+      ((HttpSessionBindingListener) value).valueBound(event);
+    }
   }
 
   /**
@@ -266,6 +281,12 @@ final class HttpSessionImpl extends AbstractHttpSession {
    */
   public void removeAttribute(String name) {
     maybeThrowIllegalStateException();
+    Object value = sessionObjects.remove(name);
+    if (value instanceof HttpSessionBindingListener) {
+      HttpSessionBindingEvent event = new HttpSessionBindingEvent(this, name, value);
+      ((HttpSessionBindingListener) value).valueUnbound(event);
+    }
+
   }
 
 
@@ -294,15 +315,4 @@ final class HttpSessionImpl extends AbstractHttpSession {
     sessionIsNew = false;
   }
 
-  private static class EmptyEnumeration<T> implements Enumeration<T> {
-
-    public boolean hasMoreElements() {
-      return false;
-    }
-
-    public T nextElement() {
-      return null;
-    }
-  }
-  
 }
