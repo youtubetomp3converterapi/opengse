@@ -18,6 +18,8 @@ import com.google.opengse.configuration.WebAppConfigurationException;
 import com.google.opengse.util.PropertiesUtil;
 import com.google.opengse.session.SessionCache;
 import com.google.opengse.session.SessionCacheFactory;
+import com.google.opengse.session.HttpSessions;
+import com.google.opengse.session.SessionHandlingRequestWrapper2;
 import com.google.opengse.jndi.JNDIMain;
 
 import java.io.File;
@@ -51,6 +53,7 @@ final class WebAppCollectionImpl implements WebAppCollection {
   private final ServletContainerContext containerContext;
   private final Properties props;
   private SessionCache session_cache_;
+  private HttpSessions httpSessions;
   private static final String CONTEXTKEY_SESSIONCACHE
       = SessionCache.class.getName();
   private final boolean sessionsEnabled;
@@ -96,6 +99,17 @@ final class WebAppCollectionImpl implements WebAppCollection {
 
   public ServletContainerContext getContainerContext() {
     return containerContext;
+  }
+
+  private synchronized HttpSessions getHttpSessions() {
+    if (httpSessions == null) {
+      try {
+        httpSessions = JNDIMain.lookup(HttpSessions.class);
+      } catch (NamingException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return httpSessions;
   }
 
   private synchronized SessionCache getSessionCache() {
@@ -259,6 +273,8 @@ final class WebAppCollectionImpl implements WebAppCollection {
     if (sessionsEnabled) {
       request = new SessionHandlingRequestWrapper(
           request, getSessionCache(), response);
+//      request = new SessionHandlingRequestWrapper2(
+//          request, getHttpSessions(), response);
     }
     request = new WebAppRequestWrapper(request, webapp);
     response = new WebAppResponseWrapper(
