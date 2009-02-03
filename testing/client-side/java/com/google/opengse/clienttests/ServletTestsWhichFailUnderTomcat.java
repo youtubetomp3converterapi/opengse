@@ -30,6 +30,8 @@ public class ServletTestsWhichFailUnderTomcat extends ServletTestsWhichConnectTo
    * Test what request headers we have sent by invoking the servlet that
    * responds to "*.hdr"
    *
+   * Uses com.google.opengse.testlet.HttpSession.SessionInfoTestlet
+   *
    * @throws Exception if anything goes wrong
    */
   @Test
