@@ -90,8 +90,10 @@ public class ServletTestsWhichFailUnderTomcat extends ServletTestsWhichConnectTo
      * see a query string of "woo=hoo&to=something" (in this particular case,
      * "something" is "/bar/foo.test%3Fwoo=hoo"
      */
+//    get.setExpectedResponseLine(
+//        "queryString=woo=hoo&to=/bar/foo.test?woo=hoo");
     get.setExpectedResponseLine(
-        "queryString=woo=hoo&to=/bar/foo.test?woo=hoo");
+        "queryString=woo=hoo&to=/bar/foo.test%3Fwoo%3Dhoo");
     get.setExpectedResponseLine(
         "attribute javax.servlet.forward.context_path=/contextpath");
     get.setExpectedResponseLine(
