@@ -114,7 +114,8 @@ public class ServletTestsWhichFailUnderTomcat extends ServletTestsWhichConnectTo
       throws Exception {
     HttpRequestAsserter get = createGetAssertion();
     get.setUri("/contextpath/XPoweredByHeaderTest");
-    get.setExpectedPassResponseLine();
+    get.expectHeader("X-Powered-By");
+//    get.setExpectedPassResponseLine();
     get.setExpectedResponseCode(200);
     get.connectToServerAndAssert();
   }
