@@ -16,7 +16,6 @@ package com.google.opengse.clienttests;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.util.List;
 import java.io.FileNotFoundException;
@@ -5156,7 +5155,7 @@ public class Servlet25ComplianceTests extends ServletTestsWhichConnectToARemoteS
    *
    * Uses tests.javax_servlet_http.HttpServletResponseWrapper.HttpServletResponseWrapperSetStatusMsgTestServlet on the server
    * 
-   * @throws Exception
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testHttpServletResponseWrapperSetStatusMsg()
@@ -5555,7 +5554,7 @@ public class Servlet25ComplianceTests extends ServletTestsWhichConnectToARemoteS
 
   /**
    * Uses tests.javax_servlet_http.HttpServletRequestWrapper.HttpServletRequestWrapperIsRequestedSessionIdFromURL_01TestServlet
-   * @throws Exception
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testHttpServletRequestWrapperIsRequestedSessionIdFromURL_01()
@@ -7598,7 +7597,7 @@ public class Servlet25ComplianceTests extends ServletTestsWhichConnectToARemoteS
    * Test for default behavior of this method to return getHeaders(String name) on the
    * wrapped request object, specified in the Java Servlet Pages Specification v2.3, Sec 14
    *
-   * @throws Exception
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testHttpServletRequestWrapperGetHeaders()
@@ -7629,7 +7628,7 @@ public class Servlet25ComplianceTests extends ServletTestsWhichConnectToARemoteS
    *  Returns all the values of the specified request header as an Enumeration of String objects.
    *  Specified in the Java Servlet Pages Specification v2.3, Sec 14.
    *
-   * @throws Exception
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testGetHeaders()
@@ -15471,9 +15470,8 @@ public void testJspXmlpositiveContentType()
   @Test
   public void testXPoweredByHeader()
       throws Exception {
-    HttpRequestAsserter get = createGetAssertion();
-    get.setUri("/contextpath/XPoweredByHeaderTest");
-    get.setExpectedPassResponseLine();
+    HttpRequestAsserter get = createGetAssertion("/contextpath/XPoweredByHeaderTest");
+    get.expectHeader("X-Powered-By");
     get.setExpectedResponseCode(200);
     get.connectToServerAndAssert();
   }
