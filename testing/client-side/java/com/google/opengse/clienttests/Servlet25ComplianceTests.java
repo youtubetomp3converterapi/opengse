@@ -15397,6 +15397,7 @@ public void testJspXmlpositiveContentType()
   /**
    * Tells the forwarding servlet to forward the request to
    * {@code /bar/foo.test?woo=hoo} then checks the result.
+   * Uses com.google.opengse.testlet.ForwardTestlet on the server
    *
    * @throws Exception if anything goes wrong
    */
@@ -15420,7 +15421,7 @@ public void testJspXmlpositiveContentType()
      * "something" is "/bar/foo.test%3Fwoo=hoo"
      */
     get.setExpectedResponseLine(
-        "queryString=woo=hoo&to=/bar/foo.test?woo=hoo");
+        "queryString=woo=hoo&to=/bar/foo.test%3Fwoo%3Dhoo");
     get.setExpectedResponseLine(
         "attribute javax.servlet.forward.context_path=/contextpath");
     get.setExpectedResponseLine(

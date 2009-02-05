@@ -112,7 +112,7 @@ public final class ForwardRequestWrapper
      * called.
      */
     final String originalRequestURI = request.getRequestURI();
-    queryString = forwardedPath.getQuery();
+    queryString = forwardedPath.getRawQuery();
     final String tmpServletPath = forwardedPath.getPath();
     final String contextPath = request.getContextPath();
     servletPath = tmpServletPath.substring(contextPath.length());

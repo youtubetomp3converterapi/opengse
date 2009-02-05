@@ -26,8 +26,13 @@ public class ForwardTestlet extends HttpServlet {
       sendError(response, "Need to set the 'to' parameter");
       return;
     }
+    // forwardTo = "/bar/foo.test?woo=hoo"
+
     String queryString = request.getQueryString();
+    // queryString="to=/bar/foo.test%3Fwoo%3Dhoo"
+    
     log("queryString=" + queryString);
+    // getRequestDispatcher("/bar/foo.test?woo=hoo&to=/bar/foo.test%3Fwoo%3Dhoo"
     RequestDispatcher dispatcher = request.getRequestDispatcher(forwardTo + "&" + queryString);
     if (dispatcher == null) {
       sendError(response, "No dispatcher found for '" + forwardTo + "'");

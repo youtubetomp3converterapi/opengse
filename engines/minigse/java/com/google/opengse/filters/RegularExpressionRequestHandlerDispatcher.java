@@ -22,6 +22,8 @@ import javax.servlet.FilterChain;
  * It understands the "dispatcher" type in selecting the correct handler for
  * applying filters.
  *
+ * TODO(jennings): refactor this?
+ *
  * @author Wenbo Zhu
  */
 public class RegularExpressionRequestHandlerDispatcher {

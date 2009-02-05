@@ -119,6 +119,7 @@ public class RegularExpressionRequestHandler implements FilterChain {
   public void doFilter(ServletRequest req,
       ServletResponse response) throws IOException, ServletException {
     HttpServletRequest request = (HttpServletRequest) req;
+    // TODO(jennings): get a requestURI from the request and use getHandler() above
     String path = request.getServletPath();
     for (Entry entry : entries) {
       HttpServletRequest wrappedRequest = matchingRequest(path, request, entry);
