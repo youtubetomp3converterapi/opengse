@@ -15729,6 +15729,7 @@ public void testJspXmlpositiveContentType()
 
   /**
    * 500 is generated for an uncaught session exception.
+   * Uses com.google.opengse.testlet.Error.UnhandledSessionExceptionTestlet
    *
    * @throws Exception if anything goes wrong
    */
