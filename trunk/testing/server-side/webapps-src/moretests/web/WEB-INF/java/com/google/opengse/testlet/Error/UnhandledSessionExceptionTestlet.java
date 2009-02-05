@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * @author Wenbo Zhu
@@ -18,9 +19,21 @@ public class UnhandledSessionExceptionTestlet extends HttpServlet {
   protected void service(HttpServletRequest request,
       HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("text/plain");
+    PrintWriter out = response.getWriter();
     String id = request.getParameter("id");
-    HttpSession session = request.getSession( true );
-    session.setAttribute("id", id);             // may throw exception
+    HttpSession session = request.getSession(false);
+    if (session != null) {
+      session.invalidate();
+    }
+    session = request.getSession( true );
+    // SessionAttributeChangeListener throws IllegalArgumentException if it sees an attribute called
+    // "noMoreAttribute"
+    try {
+      session.setAttribute("id", id);             // may throw exception
+      out.println("FAILED");
+    } catch(Throwable t) {
+      out.println("PASSED");
+    }
     session.setMaxInactiveInterval(1);
   }
 }
