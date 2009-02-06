@@ -15735,11 +15735,9 @@ public void testJspXmlpositiveContentType()
    */
   @Test
   public void testUnhandledSessionException() throws Exception {
-    HttpRequestAsserter get = createGetAssertion();
-    get.setUri(
-        "/contextpath/UnhandledSessionExceptionTest?id=noMoreAttribute");
+    HttpRequestAsserter get = createGetAssertion("/contextpath/UnhandledSessionExceptionTest?id=noMoreAttribute");
     get.setExpectedResponseCode(500);
-    get.setExpectedContentType("text/html");
+    get.setExpectedContentTypeIsAny();
     get.connectToServerAndAssert();
   }
 
