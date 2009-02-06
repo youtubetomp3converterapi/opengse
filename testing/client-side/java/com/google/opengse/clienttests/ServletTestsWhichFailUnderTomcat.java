@@ -146,11 +146,12 @@ public class ServletTestsWhichFailUnderTomcat extends ServletTestsWhichConnectTo
    */
   @Test
   public void testPathWithoutTrailingSlashWelcomeFileAccess() throws Exception {
-    HttpRequestAsserter get = createGetAssertion();
-    get.setUri("/contextpath/welcome");
+    HttpRequestAsserter get = createGetAssertion("/contextpath/welcome");
+    // tomcat sends a redirect to the above url with a slash appended
+    // so we need to follow it
+    get.setFollowRedirects(true);
     get.setExpectedResponseCode(200);
-    get.setExpectedResponseLine(
-        "welcome1");
+    get.setExpectedResponseLine("welcome1");
     get.connectToServerAndAssert();
   }
 
