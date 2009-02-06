@@ -116,7 +116,7 @@ public class ErrorPageManager {
     }
   }
 
-  private synchronized void handleError(
+  synchronized void handleError(
       int errorCode, String errorMessage, String servletName,
       HttpServletRequest request, HttpServletResponseWrapper response)
     throws IOException, ServletException {
@@ -124,12 +124,20 @@ public class ErrorPageManager {
         (HttpServletResponse) response.getResponse();
     String uri = getUriForErrorCode(errorCode);
     if (uri == null) {
-      originalResponse.sendError(errorCode, errorMessage);
+      if (errorMessage == null) {
+        originalResponse.sendError(errorCode);
+      } else {
+        originalResponse.sendError(errorCode, errorMessage);
+      }
       return;
     }
     RequestDispatcher errorDispatcher = request.getRequestDispatcher(uri);
     if (errorDispatcher == null) {
-      originalResponse.sendError(errorCode, errorMessage);
+      if (errorMessage == null) {
+        originalResponse.sendError(errorCode);
+      } else {
+        originalResponse.sendError(errorCode, errorMessage);
+      }
       return;
     }
     request.setAttribute(STATUS_CODE_ATTRIBUTE, Integer.toString(errorCode));
@@ -139,25 +147,10 @@ public class ErrorPageManager {
     dispatchErrorRequest(errorDispatcher, request, response);
   }
 
-  private synchronized void handleError(
+  synchronized void handleError(
       int errorCode, String servletName, HttpServletRequest request,
       HttpServletResponseWrapper response) throws IOException, ServletException {
-    HttpServletResponse originalResponse =
-        (HttpServletResponse) response.getResponse();
-    String uri = getUriForErrorCode(errorCode);
-    if (uri == null) {
-      originalResponse.sendError(errorCode);
-      return;
-    }
-    RequestDispatcher errorDispatcher = request.getRequestDispatcher(uri);
-    if (errorDispatcher == null) {
-      originalResponse.sendError(errorCode);
-      return;
-    }
-    request.setAttribute(STATUS_CODE_ATTRIBUTE, Integer.toString(errorCode));
-    request.setAttribute(REQUEST_URI_ATTRIBUTE, getRequestUri(request));
-    request.setAttribute(SERVLET_NAME_ATTRIBUTE, servletName);
-    dispatchErrorRequest(errorDispatcher, request, response);
+    handleError(errorCode, null, servletName, request, response);
   }
 
   /**
@@ -184,67 +177,11 @@ public class ErrorPageManager {
     }
   }
 
-  class ErrorCodeResponseWrapper extends HttpServletResponseWrapper {
-    private final HttpServletRequest request;
-    private final String servletName;
-    private boolean errorSent;
-
-    public ErrorCodeResponseWrapper(
-        HttpServletRequest request, HttpServletResponse response,
-        String servletName) {
-      super(response);
-      this.request = request;
-      this.servletName = servletName;
-      errorSent = false;
-    }
-
-
-    @Override
-    public void sendError(int sc) throws IOException {
-      try {
-        errorSent = true;
-        handleError(sc, servletName, request, this);
-      } catch (ServletException e) {
-        throw new IOException("ServletException: " + e.getMessage());
-      }
-    }
-
-    @Override
-    public void sendError(int sc, String msg) throws IOException {
-      try {
-        errorSent = true;
-        handleError(sc, msg, servletName, request, this);
-      } catch (ServletException e) {
-        throw new IOException("ServletException: " + e.getMessage());
-      }
-    }
-
-    @Override
-    public void addHeader(String name, String value) {
-      if (!errorSent) {
-        super.addHeader(name, value);
-      }
-    }
-
-    @Override
-    public void addDateHeader(String name, long date) {
-      if (!errorSent) {
-        super.addDateHeader(name, date);
-      }
-    }
-
-    @Override
-    public void addIntHeader(String name, int value) {
-      if (!errorSent) {
-        super.addIntHeader(name, value);
-      }
-    }
-  }
 
   private HttpServletResponse wrapResponse(
       HttpServletRequest request, HttpServletResponse response,
       String servletName) {
-    return new ErrorCodeResponseWrapper(request, response, servletName);
+    return new ErrorCodeResponseWrapper(this, request, response, servletName);
   }
 
 

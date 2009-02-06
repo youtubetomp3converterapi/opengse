@@ -33,6 +33,7 @@ public class UnhandledSessionExceptionTestlet extends HttpServlet {
       out.println("FAILED");
     } catch(Throwable t) {
       out.println("PASSED");
+      throw new IllegalArgumentException("Force an error code of 500");
     }
     session.setMaxInactiveInterval(1);
   }
