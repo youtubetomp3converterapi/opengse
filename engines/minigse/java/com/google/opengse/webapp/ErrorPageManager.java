@@ -118,7 +118,7 @@ public class ErrorPageManager {
 
   private synchronized void handleError(
       int errorCode, String errorMessage, String servletName,
-      HttpServletRequest request, ErrorCodeResponseWrapper response)
+      HttpServletRequest request, HttpServletResponseWrapper response)
     throws IOException, ServletException {
     HttpServletResponse originalResponse =
         (HttpServletResponse) response.getResponse();
@@ -141,7 +141,7 @@ public class ErrorPageManager {
 
   private synchronized void handleError(
       int errorCode, String servletName, HttpServletRequest request,
-      ErrorCodeResponseWrapper response) throws IOException, ServletException {
+      HttpServletResponseWrapper response) throws IOException, ServletException {
     HttpServletResponse originalResponse =
         (HttpServletResponse) response.getResponse();
     String uri = getUriForErrorCode(errorCode);
