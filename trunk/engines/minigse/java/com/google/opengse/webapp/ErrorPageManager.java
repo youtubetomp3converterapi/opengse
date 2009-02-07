@@ -122,6 +122,7 @@ public class ErrorPageManager {
     throws IOException, ServletException {
     HttpServletResponse originalResponse =
         (HttpServletResponse) response.getResponse();
+    originalResponse.setStatus(errorCode);     
     String uri = getUriForErrorCode(errorCode);
     if (uri == null) {
       if (errorMessage == null) {

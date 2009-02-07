@@ -15696,7 +15696,7 @@ public void testJspXmlpositiveContentType()
   public void testErrorDispatcherFilter() throws Exception {
     HttpRequestAsserter get = createGetAssertion();
     get.setUri("/contextpath/Error599");
-    get.setExpectedResponseCode(200);
+    get.setExpectedResponseCode(599);
     get.setExpectedResponseLine(
         "Hello from ServletErrorFilter request");
     get.setExpectedResponseLine(
