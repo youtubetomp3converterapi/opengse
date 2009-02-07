@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
+ * Any uncaught exception from  SessionAttributeChangeListener should result in
+ * a 500 status.
+ *
  * @author Wenbo Zhu
  */
 public class UnhandledSessionExceptionTestlet extends HttpServlet {
