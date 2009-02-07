@@ -15878,9 +15878,9 @@ public void testJspXmlpositiveContentType()
   public void testPathMatchingWelcomeFileAccess() throws Exception {
     HttpRequestAsserter get = createGetAssertion();
     get.setUri("/contextpath/welcome/welcome");
+    get.setFollowRedirects(true);
     get.setExpectedResponseCode(200);
-    get.setExpectedResponseLine(
-        "welcome2");
+    get.setExpectedResponseLine("welcome2");
     get.connectToServerAndAssert();
   }
 
