@@ -31,8 +31,8 @@ public class WildcardServletDispatchFilter implements Filter {
       String path = servletPath + pathInfo;
       if (path.indexOf(SERVLETPATH2_PATHINFO) != -1 || path.startsWith(SERVLETPATH2_PATHINFO)) {
         response.setContentType("text/plain");
-        response.getWriter().println("servletPath=" + servletPath);
-        response.getWriter().println("pathInfo=" + pathInfo);
+        response.getWriter().println("WildcardServletDispatchFilter.servletPath=" + servletPath);
+        response.getWriter().println("WildcardServletDispatchFilter.pathInfo=" + pathInfo);
         return; // don't pass things along the chain
       }
     }
