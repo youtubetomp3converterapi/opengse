@@ -16151,8 +16151,8 @@ public void testJspXmlpositiveContentType()
     get.setUri("/contextpath/servletpath2/pathinfo");
     get.setExpectedContentType("text/plain");
     get.setExpectedResponseCode(200);
-    get.setExpectedResponseLine("servletPath=");      // =""
-    get.setExpectedResponseLine("pathInfo=/servletpath2/pathinfo");
+    get.setExpectedResponseLine("WildcardServletDispatchFilter.servletPath=");      // =""
+    get.setExpectedResponseLine("WildcardServletDispatchFilter.pathInfo=/servletpath2/pathinfo");
     get.connectToServerAndAssert();
   }
 }
