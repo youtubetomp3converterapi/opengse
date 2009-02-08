@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="moretests" default="build">
   <!-- global build properties -->
+  <property name="webapp-name" value="contextpath"/>
   <property name="web.dir" value="${basedir}/web"/>
   <property name="opengse.dir" location="${basedir}/../../../.."/>
   <property name="server-side.dir" location="${basedir}/../.."/>
   <property name="webapps.dir" value="${server-side.dir}/webapps"/>
-  <property name="war.file" value="${webapps.dir}/contextpath.war"/>
+  <property name="war.file" value="${webapps.dir}/${webapp-name}.war"/>
+  <property name="dir.to.delete" value="${webapps.dir}/${webapp-name}"/>
   <property name="java.dir" value="${web.dir}/WEB-INF/java" />
   <property name="out.dir" value="${opengse.dir}/out"/>
   <property name="exploded.dir" value="${out.dir}/exploded"/>
-  <property name="web.exploded.dir" value="${exploded.dir}/moretests"/>
+  <property name="web.exploded.dir" value="${exploded.dir}/${webapp-name}"/>
   <property name="classes.dir" value="${web.exploded.dir}/WEB-INF/classes"/>
 
   <property name="main.lib.dir" value="${opengse.dir}/engines/minigse/lib" />
@@ -64,6 +66,7 @@
   </target>
 
   <target name="create-exploded-dir">
+    <delete dir="${dir.to.delete}"/>
     <delete dir="${web.exploded.dir}"/>
     <mkdir dir="${web.exploded.dir}"/>
   </target>
