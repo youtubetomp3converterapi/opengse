@@ -45,7 +45,7 @@ public class ServletTestsWhichFailUnderJetty extends ServletTestsWhichConnectToA
         "GET /servlet-tests/hsreqw/HttpServletRequestWrapperGetRequestURLTest HTTP/1.0");
     // we don't support variables  - like org.apache.watchdog.task.GTest
     httpAssert.setRequestHeaders(
-        "prefix:http|server:${host}|port:${port}|servletpath:_servlet-tests_hsreqw_HttpServletRequestWrapperGetRequestURLTest");
+        "prefix:http|serverName:${host}|port:${port}|servletpath:_servlet-tests_hsreqw_HttpServletRequestWrapperGetRequestURLTest");
     //httpAssert.setRequestHeaders(
     //    "prefix:http|server:${host}|port:${port}|servletpath:_servlet-tests_hsreqw_HttpServletRequestWrapperGetRequestURLTest");
     httpAssert.setTestName("HttpServletRequestWrapperGetRequestURLTest");
