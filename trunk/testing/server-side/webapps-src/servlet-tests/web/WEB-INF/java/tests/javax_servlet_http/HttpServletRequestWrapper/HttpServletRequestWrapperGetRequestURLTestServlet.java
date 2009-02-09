@@ -75,13 +75,12 @@ import common.util.StaticLog;
 public class HttpServletRequestWrapperGetRequestURLTestServlet extends HttpServlet {
 
     StaticLog sl = new StaticLog();
+  private static final String SERVER = "serverName";
 
-    public void service ( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
+  public void service ( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 
         PrintWriter out = response.getWriter();
         sl.resetLog();
-
-        String url = null;
 
         boolean found1 = false;
         boolean found2 = false;
@@ -94,19 +93,19 @@ public class HttpServletRequestWrapperGetRequestURLTestServlet extends HttpServl
         String path = null;
 
         for (Enumeration e = request.getHeaderNames(); e.hasMoreElements(); ) {
-            String temp = (String) e.nextElement();
+            String headerName = (String) e.nextElement();
 
-            if ( temp.equals( "prefix" ) ) {
-                prefix = request.getHeader( temp );
+            if ( headerName.equals( "prefix" ) ) {
+                prefix = request.getHeader( headerName );
                 found1 = true;
-            } else if ( temp.equals( "server" ) ) {
-                server = request.getHeader( temp );
+            } else if ( headerName.equals(SERVER) ) {
+                server = request.getHeader( headerName );
                 found2 = true;
-            } else if ( temp.equals( "port" ) ) {
-                port = request.getHeader( temp );
+            } else if ( headerName.equals( "port" ) ) {
+                port = request.getHeader( headerName );
                 found3 = true;
-            } else if ( temp.equals( "servletpath" ) ) {
-                path = request.getHeader( temp ).replace( '_', '/' );
+            } else if ( headerName.equals( "servletpath" ) ) {
+                path = request.getHeader( headerName ).replace( '_', '/' );
                 found4 = true;
             }
         }
