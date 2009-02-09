@@ -7290,6 +7290,10 @@ public class Servlet25ComplianceTests extends ServletTestsWhichConnectToARemoteS
     }
   }
 
+  /**
+   * Uses tests.javax_servlet_http.HttpServletRequestWrapper.HttpServletRequestWrapperGetRequestURLTestServlet
+   * @throws Exception
+   */
   @Test
   public void testHttpServletRequestWrapperGetRequestURL()
       throws Exception {
