@@ -16147,8 +16147,7 @@ public void testJspXmlpositiveContentType()
   @Test
   public void testRequestPathsUnderWildcardOnlyServletMapping()
       throws Exception {
-    HttpRequestAsserter get = createGetAssertion();
-    get.setUri("/contextpath/servletpath2/pathinfo");
+    HttpRequestAsserter get = createGetAssertion("/contextpath/servletpath2/pathinfo");
     get.setExpectedContentType("text/plain");
     get.setExpectedResponseCode(200);
     get.setExpectedResponseLine("WildcardServletDispatchFilter.servletPath=");      // =""
