@@ -2,11 +2,19 @@
 <project name="opengse" default="help">
 
   <property name="opengse.jar" value="${basedir}/engines/minigse/opengse.jar"/>
+  <property name="webapps.dir" value="${basedir}/testing/server-side/webapps"/>
+
   <property name="tomcat.version" value="apache-tomcat-6.0.18"/>
   <property name="tomcat.dir" value="${basedir}/engines/${tomcat.version}"/>
   <property name="tomcat.zip" value="${basedir}/engines/${tomcat.version}.zip"/>
   <property name="tomcat.bootstrap.jar" value="${tomcat.dir}/bin/bootstrap.jar"/>
-  
+
+  <property name="jetty.version" value="jetty-6.1.15.rc3"/>
+  <property name="jetty.dir" value="${basedir}/engines/${jetty.version}"/>
+  <property name="jetty.logs.dir" value="${basedir}/engines/${jetty.version}-logs"/>
+  <property name="jetty.zip" value="${basedir}/engines/${jetty.version}.zip"/>
+  <property name="jetty.start.jar" value="${jetty.dir}/start.jar"/>
+
   <target name="help">
     <echo>
   Helpful targets:
@@ -25,6 +33,9 @@
       
     deploy-wars-in-tomcat: Deploys the war files used for server-side testing
       in the ${tomcat.version} servlet engine
+
+    deploy-wars-in-jetty: Deploys the war files used for server-side testing
+      in the ${jetty.version} servlet engine  
     </echo>
   </target>
 
@@ -85,6 +96,40 @@
       <arg value="-config"/>
       <arg value="${basedir}/engines/tomcat-config.xml"/>
       <arg value="start"/>
+    </java>
+
+  </target>
+
+
+  <target name="check-if-jetty-is-unzipped">
+    <available property="jetty.is.unzipped" file="${jetty.dir}"/>
+  </target>
+
+  <target name="unzip-jetty-distribution" depends="check-if-jetty-is-unzipped" unless="jetty.is.unzipped">
+    <echo>
+      unzipping jetty...
+    </echo>
+    <unzip dest="${basedir}/engines" src="${jetty.zip}">
+    </unzip>
+    <mkdir dir="${jetty.logs.dir}"/>
+  </target>
+
+
+  <target name="deploy-wars-in-jetty" depends="unzip-jetty-distribution">
+    <echo>
+      Deploying jetty in ${jetty.dir}
+    </echo>
+    <available property="start.jar.exists" file="${jetty.start.jar}"/>
+    <fail unless="start.jar.exists"
+          message="Cannot find ${jetty.start.jar}"/>
+    <java
+        jar="${jetty.start.jar}"
+        fork="true"
+        >
+      <sysproperty key="jetty.home" value="${jetty.dir}"/>
+      <sysproperty key="jetty.logs" value="${jetty.logs.dir}"/>
+      <sysproperty key="opengse.webapps.dir" value="${webapps.dir}"/>
+      <arg value="${basedir}/engines/jetty-config.xml"/>
     </java>
 
   </target>
