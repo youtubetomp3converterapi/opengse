@@ -25,6 +25,10 @@ import java.util.List;
  * Time: 3:24:23 PM
  */
 public class ServletTestsWhichFailUnderJetty extends ServletTestsWhichConnectToARemoteServer {
+  /**
+   * Uses tests.javax_servlet_http.HttpServletRequestWrapper.HttpServletRequestWrapperGetRequestURLTestServlet
+   * @throws Exception
+   */
   @Test
   public void testHttpServletRequestWrapperGetRequestURL()
       throws Exception {
