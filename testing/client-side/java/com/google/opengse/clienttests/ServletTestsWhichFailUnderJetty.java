@@ -25,36 +25,6 @@ import java.util.List;
  * Time: 3:24:23 PM
  */
 public class ServletTestsWhichFailUnderJetty extends ServletTestsWhichConnectToARemoteServer {
-  /**
-   * Uses tests.javax_servlet_http.HttpServletRequestWrapper.HttpServletRequestWrapperGetRequestURLTestServlet
-   * @throws Exception
-   */
-  @Test
-  public void testHttpServletRequestWrapperGetRequestURL()
-      throws Exception {
-    HttpAssertion httpAssert = createAssertion();
-    httpAssert.setAssertion(
-        "Test for default behavior of this method to return getRequestURL() on the wrapped request object, specified in the Java Servlet Pages Specification v2.3, Sec 14");
-    httpAssert.setDebug("0");
-    httpAssert.setExactMatch("true");
-    httpAssert.setGoldenResource(
-        "watchdog/resources/servlet-golden/javax_servlet_http/HttpServletRequestWrapper/HttpServletRequestWrapperGetRequestURLTest.html");
-
-
-    httpAssert.setRequest(
-        "GET /servlet-tests/hsreqw/HttpServletRequestWrapperGetRequestURLTest HTTP/1.0");
-    // we don't support variables  - like org.apache.watchdog.task.GTest
-    httpAssert.setRequestHeaders(
-        "prefix:http|serverName:${host}|port:${port}|servletpath:_servlet-tests_hsreqw_HttpServletRequestWrapperGetRequestURLTest");
-    //httpAssert.setRequestHeaders(
-    //    "prefix:http|server:${host}|port:${port}|servletpath:_servlet-tests_hsreqw_HttpServletRequestWrapperGetRequestURLTest");
-    httpAssert.setTestName("HttpServletRequestWrapperGetRequestURLTest");
-    httpAssert.setTestStrategy(
-        "Client calls a servlet who's request has been wrapped. The wrapper object writes a message to a static log file and calls the wrapped objects method. Servlet the tests the returned value and returns the result of the test plus the contents of the static log file.");
-    if (httpAssert.hasFailed()) {
-      httpFail();
-    }
-  }
 
   @Test
   public void testpositiveContentType()
