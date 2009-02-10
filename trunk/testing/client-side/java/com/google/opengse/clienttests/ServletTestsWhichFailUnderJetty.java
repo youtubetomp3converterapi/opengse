@@ -13,11 +13,6 @@
 package com.google.opengse.clienttests;
 
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import javax.servlet.http.Cookie;
-import java.util.List;
 
 /**
  * Author: Mike Jennings
@@ -26,49 +21,28 @@ import java.util.List;
  */
 public class ServletTestsWhichFailUnderJetty extends ServletTestsWhichConnectToARemoteServer {
 
-  @Test
-  public void testpositiveContentType()
-      throws Exception {
-    HttpAssertion httpAssert = createAssertion();
-    httpAssert.setAssertion(
-        "When the contentType attribute of the page  directive is specified, it will set the character encoding and MIME type in the response to the client. JavaServer Pages Specification v1.2, Sec. 2.10.1");
-    httpAssert.setDebug("0");
-    httpAssert.setExactMatch("false");
-    httpAssert.setExpectHeaders("Content-Type:text/plain;charset=ISO-8859-1");
-    httpAssert.setFirstTask("true");
 
+  /**
+   *  When the contentType attribute of the page  directive is specified, it will set the character
+   *  encoding and MIME type in the response to the client.
+   *  JavaServer Pages Specification v1.2, Sec. 2.10.1
+   *
+   * Strategy: Using the page directive, set the  contentType attribute to
+   *    'text/plain;charset=ISO-8859-1'.
+   * Verify on the client side that the Content-Type header was properly set in the  response.
 
-    httpAssert.setRequest(
-        "GET /jsp-tests/jsp/core_syntax/directives/page/content/positiveContenttype.jsp HTTP/1.0");
-    httpAssert.setTestName("positiveContentTypeTest");
-    httpAssert.setTestStrategy(
-        "Using the page directive, set the  contentType attribute to 'text/plain;charset=ISO-8859-1'. Verify on the client side that the  Content-Type header was properly set in the  response.");
-    if (httpAssert.hasFailed()) {
-      httpFail();
-    }
-  }
-
-
+   *
+   * @throws Exception
+   */
   @Test
   public void testJspXmlpositiveContentType()
       throws Exception {
-    HttpAssertion httpAssert = createAssertion();
-    httpAssert.setAssertion(
-        "When the contentType attribute of the page  directive is specified, it will set the character encoding and MIME type in the response to the client. JavaServer Pages Specification v1.2, Sec. 2.10.1");
-    httpAssert.setDebug("0");
-    httpAssert.setExactMatch("false");
-    httpAssert.setExpectHeaders("Content-Type:text/plain;charset=ISO-8859-1");
-    httpAssert.setFirstTask("true");
-
-
-    httpAssert.setRequest(
-        "GET /jsp-tests/jsp/core_syntax/directives/page/content/positiveContenttypeXML.jsp HTTP/1.0");
-    httpAssert.setTestName("positiveContentTypeTest");
-    httpAssert.setTestStrategy(
-        "Using the page directive, set the  contentType attribute to 'text/plain;charset=ISO-8859-1'. Verify on the client side that the  Content-Type header was properly set in the  response.");
-    if (httpAssert.hasFailed()) {
-      httpFail();
-    }
+    HttpRequestAsserter get = createGetAssertion("/jsp-tests/jsp/core_syntax/directives/page/content/positiveContenttypeXML.jsp");
+    get.setExpectedContentType("text/plain");
+    get.setExpectedResponseCode(200);
+    get.setExpectedContentType("text/plain");
+    get.setExpectedContentTypeCharset("ISO-8859-1");
+    get.connectToServerAndAssert();
   }
 
 
