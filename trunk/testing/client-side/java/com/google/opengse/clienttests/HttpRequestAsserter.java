@@ -328,7 +328,7 @@ public class HttpRequestAsserter {
     }
     if (expectedContentTypeCharset != null) {
       Assert.assertEquals("Bad Content-Type charset",
-              expectedContentTypeCharset, contentTypeCharset);
+              expectedContentTypeCharset.toUpperCase(), contentTypeCharset.toUpperCase());
     }
     goldenText = getAliasedProperty(bodyKey);
     if (goldenText != null) {
