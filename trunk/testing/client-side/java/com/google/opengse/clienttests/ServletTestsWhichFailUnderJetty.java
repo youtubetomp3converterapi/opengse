@@ -21,31 +21,6 @@ import org.junit.Test;
  */
 public class ServletTestsWhichFailUnderJetty extends ServletTestsWhichConnectToARemoteServer {
 
-
-  /**
-   *  When the contentType attribute of the page  directive is specified, it will set the character
-   *  encoding and MIME type in the response to the client.
-   *  JavaServer Pages Specification v1.2, Sec. 2.10.1
-   *
-   * Strategy: Using the page directive, set the  contentType attribute to
-   *    'text/plain;charset=ISO-8859-1'.
-   * Verify on the client side that the Content-Type header was properly set in the  response.
-
-   *
-   * @throws Exception
-   */
-  @Test
-  public void testJspXmlpositiveContentType()
-      throws Exception {
-    HttpRequestAsserter get = createGetAssertion("/jsp-tests/jsp/core_syntax/directives/page/content/positiveContenttypeXML.jsp");
-    get.setExpectedContentType("text/plain");
-    get.setExpectedResponseCode(200);
-    get.setExpectedContentType("text/plain");
-    get.setExpectedContentTypeCharset("ISO-8859-1");
-    get.connectToServerAndAssert();
-  }
-
-
   /**
    * See XPoweredByHeaderTestlet for the expected header format.
    *

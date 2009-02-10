@@ -71,54 +71,5 @@ public class ServletTestsWhichFailUnderTomcat extends ServletTestsWhichConnectTo
     get.setExpectedResponseLine("WildcardServletDispatchFilter.pathInfo=/servletpath2/pathinfo");
     get.connectToServerAndAssert();
   }
-
-
-  /**
-   * The filter should only be triggered via an error page dispatching.
-   * web.xml:
-   * <filter-mapping>
-   * <filter-name>ServletErrorFilter</filter-name>
-   * <url-pattern>/ErroredDispatcherFilterTest</url-pattern>
-   * <dispatcher>ERROR</dispatcher>
-   * </filter-mapping>
-   *
-   * @throws Exception if anything goes wrong
-   *
-   */
-  @Test
-  public void testErrorDispatcherFilter() throws Exception {
-    HttpRequestAsserter get = createGetAssertion();
-    get.setUri("/contextpath/Error599");
-    get.setExpectedResponseCode(599);
-    get.setExpectedResponseLine(
-        "Hello from ServletErrorFilter request");
-    get.setExpectedResponseLine(
-        "Hello from ServletErrorFilter response");
-    get.connectToServerAndAssert();
-
-    get = createGetAssertion();
-    get.setUri("/contextpath/ErroredDispatcherFilterTest");
-    get.setExpectedResponseCode(200);
-    get.setUnexpectedResponseLine("Hello from ServletErrorFilter request");
-    get.setUnexpectedResponseLine("Hello from ServletErrorFilter response");
-    get.connectToServerAndAssert();
-
-    get = createGetAssertion();
-    get.setUri(
-        "/contextpath/DispatcherInclude?includeTarget=/ErroredDispatcherFilterTest");
-    get.setExpectedResponseCode(200);
-    get.setUnexpectedResponseLine("Hello from ServletErrorFilter request");
-    get.setUnexpectedResponseLine("Hello from ServletErrorFilter response");
-    get.connectToServerAndAssert();
-
-    get = createGetAssertion();
-    get.setUri(
-        "/contextpath/DispatcherForward?forwardTarget=/ErroredDispatcherFilterTest");
-    get.setExpectedResponseCode(200);
-    get.setUnexpectedResponseLine("Hello from ServletErrorFilter request");
-    get.setUnexpectedResponseLine("Hello from ServletErrorFilter response");
-    get.connectToServerAndAssert();
-  }
-
   
 }
