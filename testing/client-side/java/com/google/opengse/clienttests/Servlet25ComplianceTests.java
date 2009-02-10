@@ -7292,7 +7292,7 @@ public class Servlet25ComplianceTests extends ServletTestsWhichConnectToARemoteS
 
   /**
    * Uses tests.javax_servlet_http.HttpServletRequestWrapper.HttpServletRequestWrapperGetRequestURLTestServlet
-   * @throws Exception
+   * @throws Exception if anything goes wrong
    */
   @Test
   public void testHttpServletRequestWrapperGetRequestURL()
@@ -7749,26 +7749,22 @@ public class Servlet25ComplianceTests extends ServletTestsWhichConnectToARemoteS
 
 // jsp-tests
 
+  /**
+   *
+   * When the contentType attribute of the page  directive is specified, it will set the character
+   * encoding and MIME type in the response to the client.
+   * JavaServer Pages Specification v1.2, Sec. 2.10.1;
+   *
+   * @throws Exception if anything goes wrong
+   */
   @Test
-  public void testpositiveContentType()
-      throws Exception {
-    HttpAssertion httpAssert = createAssertion();
-    httpAssert.setAssertion(
-        "When the contentType attribute of the page  directive is specified, it will set the character encoding and MIME type in the response to the client. JavaServer Pages Specification v1.2, Sec. 2.10.1");
-    httpAssert.setDebug("0");
-    httpAssert.setExactMatch("false");
-    httpAssert.setExpectHeaders("Content-Type:text/plain;charset=ISO-8859-1");
-    httpAssert.setFirstTask("true");
-
-
-    httpAssert.setRequest(
-        "GET /jsp-tests/jsp/core_syntax/directives/page/content/positiveContenttype.jsp HTTP/1.0");
-    httpAssert.setTestName("positiveContentTypeTest");
-    httpAssert.setTestStrategy(
-        "Using the page directive, set the  contentType attribute to 'text/plain;charset=ISO-8859-1'. Verify on the client side that the  Content-Type header was properly set in the  response.");
-    if (httpAssert.hasFailed()) {
-      httpFail();
-    }
+  public void testpositiveContentType() throws Exception {
+    HttpRequestAsserter get = createGetAssertion("/jsp-tests/jsp/core_syntax/directives/page/content/positiveContenttype.jsp");
+    get.setExpectedContentType("text/plain");
+    get.setExpectedResponseCode(200);
+    get.setExpectedContentType("text/plain");
+    get.setExpectedContentTypeCharset("ISO-8859-1");
+    get.connectToServerAndAssert();
   }
 
   @Test
@@ -11607,27 +11603,27 @@ public class Servlet25ComplianceTests extends ServletTestsWhichConnectToARemoteS
   }
 
 // jsp xml tests
+/**
+ *  When the contentType attribute of the page  directive is specified, it will set the character
+ *  encoding and MIME type in the response to the client.
+ *  JavaServer Pages Specification v1.2, Sec. 2.10.1
+ *
+ * Strategy: Using the page directive, set the  contentType attribute to
+ *    'text/plain;charset=ISO-8859-1'.
+ * Verify on the client side that the Content-Type header was properly set in the  response.
+
+ *
+ * @throws Exception if anything goes wrong
+ */
 @Test
-public void testJspXmlpositiveContentType()
-      throws Exception {
-  HttpAssertion httpAssert = createAssertion();
-  httpAssert.setAssertion(
-        "When the contentType attribute of the page  directive is specified, it will set the character encoding and MIME type in the response to the client. JavaServer Pages Specification v1.2, Sec. 2.10.1");
-  httpAssert.setDebug("0");
-  httpAssert.setExactMatch("false");
-  httpAssert.setExpectHeaders("Content-Type:text/plain;charset=ISO-8859-1");
-  httpAssert.setFirstTask("true");
-
-
-  httpAssert.setRequest(
-        "GET /jsp-tests/jsp/core_syntax/directives/page/content/positiveContenttypeXML.jsp HTTP/1.0");
-  httpAssert.setTestName("positiveContentTypeTest");
-  httpAssert.setTestStrategy(
-        "Using the page directive, set the  contentType attribute to 'text/plain;charset=ISO-8859-1'. Verify on the client side that the  Content-Type header was properly set in the  response.");
-  if (httpAssert.hasFailed()) {
-    httpFail();
+  public void testJspXmlpositiveContentType() throws Exception {
+    HttpRequestAsserter get = createGetAssertion("/jsp-tests/jsp/core_syntax/directives/page/content/positiveContenttypeXML.jsp");
+    get.setExpectedContentType("text/plain");
+    get.setExpectedResponseCode(200);
+    get.setExpectedContentType("text/plain");
+    get.setExpectedContentTypeCharset("ISO-8859-1");
+    get.connectToServerAndAssert();
   }
-}
 
   @Test
   public void testJspXmlnegativeDuplicateContentFatalTranslationError()
