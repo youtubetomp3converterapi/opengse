@@ -16154,4 +16154,19 @@ public class Servlet25ComplianceTests extends ServletTestsWhichConnectToARemoteS
     get.setExpectedResponseLine("WildcardServletDispatchFilter.pathInfo=/servletpath2/pathinfo");
     get.connectToServerAndAssert();
   }
+
+  /**
+   * Do a basic sanity-check on all of the URI-related methods
+   *
+   * @throws Exception if anything goes wrong
+   */
+  @Test
+  public void testSessionMaxInactiveInterval()
+      throws Exception {
+    // uses com.google.opengse.testlet.URITestlet on the server-side
+    HttpRequestAsserter get = createGetAssertion("/contextpath/sessionmaxinactiveinterval");
+    get.setExpectedPassResponseLine();
+    get.connectToServerAndAssert();
+  }
+
 }

@@ -48,6 +48,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>SessionMaxInactiveIntervalTestlet</servlet-name>
+    <servlet-class>com.google.opengse.testlet.HttpSession.SessionMaxInactiveIntervalTestlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>URITestlet</servlet-name>
     <servlet-class>com.google.opengse.testlet.URITestlet</servlet-class>
   </servlet>
@@ -123,6 +128,11 @@
     <url-pattern>/sessioninfo</url-pattern>
   </servlet-mapping>
 
+  <servlet-mapping>
+    <servlet-name>SessionMaxInactiveIntervalTestlet</servlet-name>
+    <url-pattern>/sessionmaxinactiveinterval</url-pattern>
+  </servlet-mapping>
+  
   <servlet-mapping>
     <servlet-name>SessionCookieTestlet</servlet-name>
     <url-pattern>/gimmecookie</url-pattern>
