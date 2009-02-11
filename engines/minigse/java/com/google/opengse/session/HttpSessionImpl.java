@@ -19,17 +19,18 @@ final class HttpSessionImpl extends AbstractHttpSession {
   private HttpSessionsImpl parent;
   private String id;
   private long creationTime;
-  private long lastAccessedTime;
+  private TimeKey lastAccessedTime;
   boolean isInvalidated;
   private int maxInactiveInterval;
   private boolean sessionIsNew;
   private Map<String, Object> sessionObjects;
 
-  HttpSessionImpl(HttpSessionsImpl parent, String id, long creationTime) {
+  HttpSessionImpl(HttpSessionsImpl parent, String id, int maxInactiveInterval) {
     this.parent = parent;
     this.id = id;
-    this.creationTime = creationTime;
-    this.lastAccessedTime = creationTime;
+    this.maxInactiveInterval = maxInactiveInterval;
+    creationTime = System.currentTimeMillis();
+    this.lastAccessedTime = new TimeKey(creationTime, id);
     this.sessionIsNew = true;
     sessionObjects = Collections.synchronizedMap(new HashMap<String, Object>());
   }
@@ -46,7 +47,14 @@ final class HttpSessionImpl extends AbstractHttpSession {
   public void invalidate() {
     maybeThrowIllegalStateException();
     parent.removeAndInvalidateSession(id);
+  }
+
+  void doInvalidation() {
+    if (isInvalidated) {
+      return;
+    }
     isInvalidated = true;
+    // TODO: check session objects in case they need to be notified of invalidation
   }
   
   /**
@@ -120,11 +128,11 @@ final class HttpSessionImpl extends AbstractHttpSession {
    */
   public long getLastAccessedTime() {
     maybeThrowIllegalStateException();
-    return lastAccessedTime;
+    return lastAccessedTime.time;
   }
 
-  void setLastAccessedTime(long lastAccessedTime) {
-    this.lastAccessedTime = lastAccessedTime;
+  TimeKey getLastAccessedTimeKey() {
+    return lastAccessedTime;
   }
 
    /**
