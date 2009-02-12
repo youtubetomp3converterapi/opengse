@@ -4,6 +4,7 @@ package com.google.opengse.testlet.Error;
 
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+import javax.servlet.http.HttpSession;
 
 /**
  * Throws an exception out of the the app code stack.
@@ -20,8 +21,12 @@ public class SessionTimeoutListener implements HttpSessionListener {
   }
 
   public void sessionDestroyed ( HttpSessionEvent se ) {
-    String id = (String) se.getSession().getAttribute("id");
-    if (id.equals("timedoutSession")) {
+    HttpSession session = se.getSession();
+    if (session == null) {
+      throw new NullPointerException("null session!");
+    }
+    String id = (String) session.getAttribute("id");
+    if (id != null && id.equals("timedoutSession")) {
       // timed-out
       throw new IllegalArgumentException("what the hell");
     }
