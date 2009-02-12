@@ -324,6 +324,20 @@
     <filter-class>com.google.opengse.testlet.Filter.WildcardServletDispatchFilter</filter-class>
   </filter>
 
+  <filter>
+    <filter-name>WildcardFilter</filter-name>
+    <filter-class>com.google.opengse.testlet.Filter.WildcardFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>WildcardFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
+
+
   <filter-mapping>
     <filter-name>WildcardServletDispatchFilter</filter-name>
     <servlet-name>*</servlet-name>   

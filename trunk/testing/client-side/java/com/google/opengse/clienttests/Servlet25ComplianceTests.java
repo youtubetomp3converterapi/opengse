@@ -16179,4 +16179,31 @@ public class Servlet25ComplianceTests extends ServletTestsWhichConnectToARemoteS
   }
 */
 
+  /**
+   * com.google.opengse.testlet.Filter.WildcardFilter is mapped to "/*" but only services
+   * a request if it sees "/servletpath3/" in either the pathInfo or servletPath. If it services
+   * the request, it prints out the value of the servletPath and pathInfo request attributes.
+   *
+   * From HttpServletRequest.getServletPath() javadoc:
+   *
+   * "  @return		a <code>String</code> containing
+   *  			the name or path of the servlet being
+   *  			called, as specified in the request URL,
+   *  			decoded, or an empty string if the servlet
+   *  			used to process the request is matched
+   *  			using the "/*" pattern."
+   *
+   * @throws Exception if anything goes wrong
+   */
+  @Test
+  public void testWildcardFilterPaths()
+      throws Exception {
+    HttpRequestAsserter get = createGetAssertion("/contextpath/servletpath3/foo");
+    get.setExpectedContentType("text/plain");
+    get.setExpectedResponseCode(200);
+    get.setExpectedResponseLine("WildcardFilter.servletPath=");      // =""
+    get.setExpectedResponseLine("WildcardFilter.pathInfo=/servletpath3/foo");
+    get.connectToServerAndAssert();
+  }
+
 }
