@@ -16156,17 +16156,27 @@ public class Servlet25ComplianceTests extends ServletTestsWhichConnectToARemoteS
   }
 
   /**
-   * Do a basic sanity-check on all of the URI-related methods
+   * Test HttpSession.setMaxInactiveInterval() method
    *
    * @throws Exception if anything goes wrong
    */
   @Test
-  public void testSessionMaxInactiveInterval()
-      throws Exception {
-    // uses com.google.opengse.testlet.URITestlet on the server-side
+  public void testSessionMaxInactiveInterval() throws Exception {
+    // uses com.google.opengse.testlet.HttpSession.SessionMaxInactiveIntervalTestlet on the server-side
     HttpRequestAsserter get = createGetAssertion("/contextpath/sessionmaxinactiveinterval");
     get.setExpectedPassResponseLine();
     get.connectToServerAndAssert();
   }
+
+/*
+  @Test
+  public void testSessionExpired()
+      throws Exception {
+    // uses com.google.opengse.testlet.HttpSession.SessionExpiredTestlet on the server-side
+    HttpRequestAsserter get = createGetAssertion("/contextpath/sessionexpired");
+    get.setExpectedPassResponseLine();
+    get.connectToServerAndAssert();
+  }
+*/
 
 }

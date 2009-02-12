@@ -53,6 +53,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>SessionExpiredTestlet</servlet-name>
+    <servlet-class>com.google.opengse.testlet.HttpSession.SessionExpiredTestlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>URITestlet</servlet-name>
     <servlet-class>com.google.opengse.testlet.URITestlet</servlet-class>
   </servlet>
@@ -131,6 +136,11 @@
   <servlet-mapping>
     <servlet-name>SessionMaxInactiveIntervalTestlet</servlet-name>
     <url-pattern>/sessionmaxinactiveinterval</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>SessionExpiredTestlet</servlet-name>
+    <url-pattern>/sessionexpired</url-pattern>
   </servlet-mapping>
   
   <servlet-mapping>
