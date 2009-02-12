@@ -43,7 +43,8 @@
 
     <mkdir dir="${classes.dir}"/>
     <javac srcdir="${java.dir}"
-      destdir="${classes.dir}">
+      destdir="${classes.dir}"
+      debug="true">
       <classpath>
         <pathelement location="${servlet.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
