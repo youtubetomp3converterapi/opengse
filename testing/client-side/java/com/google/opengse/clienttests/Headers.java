@@ -37,6 +37,10 @@ public class Headers {
     clear();
   }
 
+  public String toString() {
+    return requestHeaders.toString();
+  }
+
   public boolean isEmpty() {
     return requestHeaders.isEmpty();
   }
