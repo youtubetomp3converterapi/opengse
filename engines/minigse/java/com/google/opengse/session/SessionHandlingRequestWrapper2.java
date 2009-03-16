@@ -76,6 +76,7 @@ public final class SessionHandlingRequestWrapper2 extends HttpServletRequestWrap
         is_session_id_from_url = true;
       }
     }
+    session = httpSessions.lookupSession(requested_session_id);
     sessionAlreadyExtractedFromRequest = true;
   }
 
