@@ -22,6 +22,11 @@ public interface ServletEngineConfiguration {
   int getPort();
   int getMaxThreads();
   String getServerType();
+
+  boolean isSecure();
+
+  String[] getEnabledCipherSuites();
+
   boolean exitOnError();
   /**
    * Enable or disable support for chunked request bodies. This is an HTTP 1.1

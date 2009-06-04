@@ -22,6 +22,8 @@ import com.google.opengse.util.DispatchQueue;
 import com.google.opengse.util.DispatchQueueImpl;
 
 import javax.servlet.FilterChain;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLServerSocket;
 import java.io.IOException;
 import java.net.ServerSocket;
 
@@ -38,8 +40,15 @@ final class BlockingServletEngine implements ServletEngine {
 
   BlockingServletEngine(FilterChain dispatcher, ServletEngineConfiguration config)
       throws InterruptedException, IOException {
-    serverSocket = new ServerSocket(config.getPort());
     this.config = config;
+    if (config.isSecure()) {
+      SSLServerSocketFactory factory = (SSLServerSocketFactory)SSLServerSocketFactory.getDefault();
+      SSLServerSocket sslServerSocket = (SSLServerSocket)factory.createServerSocket(config.getPort());
+      sslServerSocket.setEnabledCipherSuites(config.getEnabledCipherSuites());
+      serverSocket = sslServerSocket;
+    } else {
+      serverSocket = new ServerSocket(config.getPort());
+    }
     int nthreads = config.getMaxThreads();
     queue = new DispatchQueueImpl(nthreads);
     handler = new HttpRequestHandlerAdapter(dispatcher);
