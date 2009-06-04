@@ -138,6 +138,11 @@
           </module>
         </modules>
       </facet-type>
+      <facet-type id="Spring">
+        <modules>
+          <module name="Opengse" />
+        </modules>
+      </facet-type>
     </autodetection-disabled>
   </component>
   <component name="IdProvider" IDEtalkID="FC23294050B449D89FAF5D540C07A886" />
