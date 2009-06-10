@@ -14,20 +14,29 @@
 
 package com.google.opengse.blockingcore;
 
+import java.io.IOException;
+
 /**
  * @author jennings
  *         Date: Jul 22, 2008
  */
 final class HttpRequestType {
   private static final String HTTP_1_0 = "HTTP/1.0";
-  private final String line;
+  private String type, data, version;
 
-  HttpRequestType(String line) {
-    this.line = line;
+  HttpRequestType(String line) throws IOException {
+    type = getType(line);
+    data = getRequestData(line);
+    version = getHttpVersion(line);
+    if (data == null) {
+      throw new IOException("Cannot parse '" + line + "'");
+    }
   }
 
   HttpRequestType(String type, String data, String version) {
-    line = type + " " + data + " " + version;
+    this.type = type;
+    this.data = data;
+    this.version = version;
   }
 
   HttpRequestType(String type, String data) {
@@ -35,6 +44,10 @@ final class HttpRequestType {
   }
 
   String getType() {
+    return type;
+  }
+
+  private static String getType(String line) {
     if (line == null) {
       return null;
     }
@@ -46,6 +59,10 @@ final class HttpRequestType {
   }
 
   String getRequestData() {
+    return data;
+  }
+
+  private static String getRequestData(String line) {
     int space = line.indexOf(' ');
     if (space == -1) {
       return null;
@@ -60,6 +77,10 @@ final class HttpRequestType {
   }
 
   String getHttpVersion() {
+    return version;
+  }
+
+  String getHttpVersion(String line) {
     int space = line.indexOf(' ');
     if (space == -1) {
       return HTTP_1_0;
@@ -74,7 +95,7 @@ final class HttpRequestType {
   }
 
   @Override public String toString() {
-    return line;
+    return type + " " + data + " " + version;
   }
 
 }
