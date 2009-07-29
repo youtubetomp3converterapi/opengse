@@ -48,14 +48,17 @@ public class FileServingServlet extends HttpServlet {
   @Override
   public void init() throws ServletException {
     super.init();
+
+    WebAppConfiguration config;
+    WebAppWelcomeFileList welcomeFileList;
     String contextdir = this.getServletContext().getRealPath("/");
     try {
-      config =
-          WebAppConfigurationFactory.getConfiguration(new File(contextdir));
+      config = WebAppConfigurationFactory.getConfiguration(new File(contextdir));
+      welcomeFileList = config.getWelcomeFileList();
     } catch (WebAppConfigurationException e) {
-      throw new ServletException(e);
+      // Errors on getting configuration from web.xml
+      welcomeFileList = null;
     }
-    WebAppWelcomeFileList welcomeFileList = config.getWelcomeFileList();
     if (welcomeFileList != null) {
       welcomeFiles = welcomeFileList.getWelcomeFiles();
       for (int i = 0; i < welcomeFiles.length; ++i) {
