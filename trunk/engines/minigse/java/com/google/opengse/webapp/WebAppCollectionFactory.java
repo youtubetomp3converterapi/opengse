@@ -69,6 +69,29 @@ public final class WebAppCollectionFactory {
     return webAppCollection;
   }
 
+
+  public static WebAppCollection createWithRootWebapp(Properties props,
+      File contextdir, WebAppConfiguration config)
+      throws
+      ClassNotFoundException, IOException, WebAppConfigurationException,
+      InstantiationException, IllegalAccessException {
+    // to solve the chicken&egg problem, we create a ServletContainerContext
+    // that will later delegate to a real implementation
+    ServletContainerContextWrapper containerContext
+        = new ServletContainerContextWrapper();
+    
+    WebApp rootWebapp = WebAppFactory.createWebApp(
+            "", contextdir, config, containerContext);
+
+
+    WebAppCollection webAppCollection = create(props, rootWebapp);
+    // now that we've created a WebAppCollection, we can use its container
+    // context as the delegate for the one used to create the root webapp
+    containerContext.setDelegate(webAppCollection.getContainerContext());
+    return webAppCollection;
+  }
+
+
   /**
    * Creates a web application collection with a single webapp.
    *
@@ -183,7 +206,7 @@ public final class WebAppCollectionFactory {
       ClassNotFoundException, IOException, WebAppConfigurationException,
       InstantiationException, IllegalAccessException {
     if (ROOT.equals(contextname)) {
-      return createWithRootWebapp(props, contextdir);
+      return createWithRootWebapp(props, contextdir, config);
     }
     if (contextname.indexOf('/') >= 0) {
       throw new WebAppConfigurationException(
