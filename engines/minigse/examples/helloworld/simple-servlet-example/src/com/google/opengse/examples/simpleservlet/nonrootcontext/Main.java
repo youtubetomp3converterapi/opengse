@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.opengse.examples.simpleservlet;
+package com.google.opengse.examples.simpleservlet.nonrootcontext;
 
 import com.google.opengse.webapp.WebAppConfigurationBuilder;
 import com.google.opengse.webapp.WebAppCollection;
 import com.google.opengse.webapp.WebAppCollectionFactory;
-import com.google.opengse.webapp.WebAppFactory;
 import com.google.opengse.ServletEngine;
 import com.google.opengse.ServletEngineConfiguration;
 import com.google.opengse.ServletEngineConfigurationImpl;
+import com.google.opengse.examples.simpleservlet.BasicServlet;
 import com.google.opengse.core.ServletEngineImpl;
 
-import java.util.Properties;
 import java.io.File;
 
 import javax.servlet.FilterChain;
