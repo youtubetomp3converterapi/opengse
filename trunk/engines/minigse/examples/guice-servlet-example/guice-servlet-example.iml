@@ -9,6 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Guice-Servlet" level="project" />
     <orderEntry type="library" name="OpenGSE" level="project" />
+    <orderEntry type="library" name="Guice" level="project" />
   </component>
 </module>
 
