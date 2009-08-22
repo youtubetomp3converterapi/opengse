@@ -329,6 +329,15 @@
         <root url="jar://$PROJECT_DIR$/lib/guice-servlet-snapshot-src.jar!/" />
       </SOURCES>
     </library>
+    <library name="Guice">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/guice-snapshot.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/guice-snapshot-src.jar!/" />
+      </SOURCES>
+    </library>
   </component>
 </project>
 
