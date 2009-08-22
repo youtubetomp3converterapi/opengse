@@ -37,7 +37,7 @@ public class Main {
     // We want "" to be returned by
     // javax.servlet.http.HttpServletRequest.getContextPath() (ie. the root context)
     // so we use the "ROOT" context name (this is so we can have files called ROOT.war and not
-    // .war
+    // "".war
     String context = "ROOT";
     // create a collection of webapps that just contains a single webapp
     WebAppCollection webapps
@@ -50,7 +50,7 @@ public class Main {
         = ServletEngineConfigurationImpl.create(PORT, MAX_THREADS);
     // the collection of webapps is our "request sink" (just done to illustrate)
     FilterChain requestSink = webapps;
-    // create an engine using the enging configuration and send all requests
+    // create an engine using the engine configuration and send all requests
     // to our request sink
     ServletEngine engine = ServletEngineImpl.create(requestSink, config);
     // run it
