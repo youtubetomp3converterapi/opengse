@@ -8,6 +8,7 @@ import com.google.opengse.ServletEngineConfigurationImpl;
 import com.google.opengse.ServletEngine;
 import com.google.opengse.examples.guice.BasicServlet;
 import com.google.opengse.core.ServletEngineImpl;
+import com.google.inject.servlet.GuiceFilter;
 
 import javax.servlet.FilterChain;
 import java.io.File;
@@ -27,6 +28,7 @@ public class Main {
     // This object will create our webapp's configuration for us
     WebAppConfigurationBuilder configBuilder = new WebAppConfigurationBuilder();
     // register our servlet to respond to the "/bar" pattern
+    configBuilder.addFilter(GuiceFilter.class, "/*");
     configBuilder.addServlet(BasicServlet.class, "/bar");
     // we need to be able to return a directory
     // when javax.servlet.ServletContext.getRealPath("/") is called
