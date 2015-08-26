@@ -1,0 +1,1 @@
+OpenGSE is a suite of servlet compliance tests that can be deployed in any servlet engine.
