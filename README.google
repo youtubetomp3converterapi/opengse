@@ -4,6 +4,7 @@ License: Apache 2.0
 License File: LICENSE
 Description: 
   Open-source Google Servlet Engine
+  
 OpenGSE is a suite of servlet spec compliance tests along with a minimal servlet engine which passes those tests (see http://java.sun.com/products/servlet/index.jsp if you don't know what servlets are).
 
 The tests consist of WAR files that you deploy to your favourite servlet engine and client-side code which you run against that servlet engine (see http://en.wikipedia.org/wiki/Sun_WAR_(file_format) for more information about WAR files).
